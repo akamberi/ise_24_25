@@ -3,16 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRental.DAL.Persistence.Repositories;
 
-public class CarBrandViewModel
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-}
-
 public interface ICarBrandsRepository : _IBaseRepository<CarBrand, int>
 {
     IEnumerable<CarBrand> FilterByName(string name);
-    IEnumerable<CarBrandViewModel> GetAllBrands();
+    CarBrand? GetByName(string name);
 }
 
 internal class CarBrandsRepository : _BaseRepository<CarBrand, int>, ICarBrandsRepository
@@ -29,12 +23,8 @@ internal class CarBrandsRepository : _BaseRepository<CarBrand, int>, ICarBrandsR
         return _dbSet.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
     }
 
-    public IEnumerable<CarBrandViewModel> GetAllBrands()
+    public CarBrand? GetByName(string name)
     {
-        return _dbSet.Select(x => new CarBrandViewModel
-        {
-            Id = x.Id,
-            Name = x.Name
-        }).ToList();
+        return _dbSet.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CarRental.DAL.Persistence.Entities;
+﻿using CarRental.Common.Enums;
+
+namespace CarRental.DAL.Persistence.Entities;
 
 public class CarFeature : BaseEntity
 {
