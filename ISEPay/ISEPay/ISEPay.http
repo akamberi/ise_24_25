@@ -1,0 +1,6 @@
+@ISEPay_HostAddress = http://localhost:5111
+
+GET {{ISEPay_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
