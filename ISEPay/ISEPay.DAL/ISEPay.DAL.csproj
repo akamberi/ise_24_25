@@ -6,11 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Persistence\Config\" />
-    <Folder Include="Persistence\Entities\" />
-  </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ISEPay.Common\ISEPay.Common.csproj" />
 	</ItemGroup>

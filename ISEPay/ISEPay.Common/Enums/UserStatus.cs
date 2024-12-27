@@ -8,4 +8,37 @@ namespace ISEPay.Common.Enums
         PENDING,
         BLACKLIST
     }
+
+    public enum FriendStatus
+    {
+        PENDING,
+        ACCEPTED,
+        REJECTED
+    }
+
+    public enum AccountStatus {
+        ACTIVE,
+        INACTIVE
+    }
+
+    public enum AccountType
+    {
+        SAVINGS,
+        CHECKING
+    }
+
+
+    public enum TransactionType
+    {
+        TRANSFER,
+        DEPOSIT,
+        WITHDRAWAL
+    }
+
+    public enum TransactionStatus
+    {
+        PENDING,
+        COMPLETED,
+        FAILED
+    }
 }

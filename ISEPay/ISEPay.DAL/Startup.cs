@@ -13,5 +13,13 @@ public static class Startup
             opt.UseSqlServer(config.GetConnectionString("ISEPay"));
         });
         services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<IRolesRepository, RolesRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
+       // services.AddScoped<IRolesRepository, RolesRepository>();
+    }
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("Application started!");
+        // Add your application logic here
     }
 }

@@ -1,7 +1,11 @@
 ﻿using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.Common.Enums;
+using ISEPay.Domain;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
+using Microsoft.AspNetCore.Identity;
+using ISEPay.Domain.Models;
+using System.Text;
 
 namespace ISEPay.BLL.Services.Scoped
 {
@@ -15,11 +19,12 @@ namespace ISEPay.BLL.Services.Scoped
         void DeleteUser(Guid userId);
         void ApproveUser(Guid userId); 
         void RejectUser(Guid userId);
+        AuthenticationResponse Authenticate(AuthenticationRequest
+            authenticationRequest);
+        UserResponse GetUser(Guid id);
+        List<UserResponse> GetAllUsers();
 
-        UserDTO GetUser(Guid id);
-        List<UserDTO> GetAllUsers();
-
-        List<UserDTO> GetUsersByStatus(UserStatus status);
+        List<UserResponse> GetUsersByStatus(UserStatus status);
 
         bool CheckEmail(string email);
         //void AddAdress(Guid userId , AddressDto addressDto);
@@ -29,38 +34,81 @@ namespace ISEPay.BLL.Services.Scoped
     {
         private readonly IUsersRepository userRepository;
         private readonly IRolesRepository roleRepository; // Add roleRepository as a dependency
-       // private readonly IPasswordEncoder passwordEncoder; // Assuming an encoder interface
-
-        public UserService(IUsersRepository userRepository, IRolesRepository roleRepository) //, IPasswordEncoder passwordEncoder)
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IAddressRepository addressRepository;
+        public UserService(IUsersRepository userRepository, IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher, IAddressRepository addressRepository) //, IPasswordEncoder passwordEncoder)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
+            _passwordHasher = passwordHasher;
+            this.addressRepository = addressRepository;
             //this.passwordEncoder = passwordEncoder;
         }
+
+        public AuthenticationResponse Authenticate(AuthenticationRequest authenticationRequest)
+        {
+            // Validate inputs (email, password)
+            if (string.IsNullOrWhiteSpace(authenticationRequest.Email) || string.IsNullOrWhiteSpace(authenticationRequest.Password))
+            {
+                throw new ArgumentException("Email and password are required.");
+            }
+
+            // Fetch user from repository based on email
+            var user = userRepository.GetAll().FirstOrDefault(u => u.Email == authenticationRequest.Email);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Invalid email or password.");
+            }
+
+            // Verify password using IPasswordHasher
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, authenticationRequest.Password);
+            if (result != PasswordVerificationResult.Success)
+            {
+                throw new UnauthorizedAccessException("Invalid email or password.");
+            }
+
+            // Generate a JWT token (or other token)
+            /*var token = _tokenService.GenerateToken(user);*/
+
+            // Return the AuthenticationResponse with user details and token
+            return new AuthenticationResponse(
+                user.Id,          // UserID
+                user.FullName,        // Name
+                user.Email,           // Email
+                user.PhoneNumber      // PhoneNumber
+            );
+          /*  {
+                // Optionally, include the token if needed in the response
+                Token = token
+            };*/
+        }
+
 
         public void CreateUser(UserDTO user)
         {
             var existingUser = userRepository.GetByPhoneNumber(user.PhoneNumber);
             if (existingUser != null)
             {
-               // Console.WriteLine("You cannot register with the same number");
-               
                 throw new InvalidOperationException("User cannot register with the same number");
             }
 
+            // Create user entity and hash the password
             var userToAdd = new User
             {
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
-                Password =  user.password,    //  passwordEncoder.Encode(user.Password), // do perdorim nje encoder per kte
                 Status = Common.Enums.UserStatus.PENDING,
-                CreatedAt= DateTime.Now
+                CreatedAt = DateTime.Now
             };
+
+            // Hash the password before saving it
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("User");
-            userToAdd.RoleID= role.Id;
+            userToAdd.RoleID = role.Id;
 
             userRepository.Add(userToAdd);
             userRepository.SaveChanges();
@@ -74,21 +122,21 @@ namespace ISEPay.BLL.Services.Scoped
             var existingUser = userRepository.GetByPhoneNumber(user.PhoneNumber);
             if (existingUser != null)
             {
-                // Console.WriteLine("You cannot register with the same number");
-
                 throw new InvalidOperationException("User cannot register with the same number");
             }
 
+            // Create user entity and hash the password
             var userToAdd = new User
             {
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
-                Password = user.password,    //  passwordEncoder.Encode(user.Password), // do perdorim nje encoder per kte
                 Status = Common.Enums.UserStatus.APPROVED,
                 CreatedAt = DateTime.Now
-
             };
+
+            // Hash the password before saving it
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("Admin");
@@ -98,26 +146,26 @@ namespace ISEPay.BLL.Services.Scoped
             userRepository.SaveChanges();
         }
 
-
         public void CreateAgentUser(UserDTO user)
         {
             var existingUser = userRepository.GetByPhoneNumber(user.PhoneNumber);
             if (existingUser != null)
             {
-                // Console.WriteLine("You cannot register with the same number");
-
                 throw new InvalidOperationException("User cannot register with the same number");
             }
 
+            // Create user entity and hash the password
             var userToAdd = new User
             {
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
-                Password = user.password,    //  passwordEncoder.Encode(user.Password), // do perdorim nje encoder per kte
                 Status = Common.Enums.UserStatus.PENDING,
                 CreatedAt = DateTime.Now
             };
+
+            // Hash the password before saving it
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("AGENT");
@@ -140,41 +188,50 @@ namespace ISEPay.BLL.Services.Scoped
 
 
 
-        public UserDTO GetUser(Guid userId)
+        public UserResponse GetUser(Guid userId)
         {
+            // Retrieve the user from the repository using the provided userId
             var user = userRepository.FindById(userId);
-            if( user == null)
+
+            // If no user is found, throw an exception
+            if (user == null)
             {
                 throw new KeyNotFoundException("User does not exist");
             }
 
-            return new UserDTO
-            {
-                FullName = user.FullName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
-            };
+            // Map the user entity to a UserResponse DTO and return it
+            var userResponse = new UserResponse(
+                user.Id,                 // userID
+                user.FullName,           // name
+                user.Email,              // email
+                user.PhoneNumber         // phoneNumber
+            );
+
+            return userResponse;  // Return the UserResponse
         }
 
-        public List<UserDTO> GetAllUsers()
+
+        public List<UserResponse> GetAllUsers()
         {
-            var users = userRepository.GetAll(); 
+            var users = userRepository.GetAll();
 
             if (users == null || !users.Any())
             {
-                throw new KeyNotFoundException("No users found");
+                throw new KeyNotFoundException("No users found.");
             }
 
-            var userDTOs = users.Select(user => new UserDTO
-            {
-                FullName = user.FullName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
-            }).ToList();
+            var userDTOs = users.Select(user => new UserResponse(
+                 user.Id,                  // userID
+                 user.FullName,            // name
+                 user.Email,               // email
+                 user.PhoneNumber          // phoneNumber
+             )).ToList();
+
 
             return userDTOs;
         }
-        public List<UserDTO> GetUsersByStatus(UserStatus status)
+
+        public List<UserResponse> GetUsersByStatus(UserStatus status)
         {
             // Retrieve all users from the repository
             var users = userRepository.GetAll();
@@ -193,12 +250,12 @@ namespace ISEPay.BLL.Services.Scoped
             }
 
             // Map filtered users to UserDTOs
-            var userDTOs = filteredUsers.Select(user => new UserDTO
-            {
-                FullName = user.FullName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
-            }).ToList();
+            var userDTOs = filteredUsers.Select(user => new UserResponse(
+                 user.Id,                  // userID
+                 user.FullName,            // name
+                 user.Email,               // email
+                 user.PhoneNumber          // phoneNumber
+             )).ToList();
 
             return userDTOs;
         }
@@ -246,45 +303,51 @@ namespace ISEPay.BLL.Services.Scoped
 
 
 
-        // logjika per te shtuar adresen e nje useri duhet test kur te kemi lidhjen me db
+          // to be developed 
+    /*     public void AddAddress(Guid userId, AddressDto addressDto)
+        {
+            // Retrieve the user by Id
+            var user = userRepository.FindById(userId);
 
-        /* public void AddAddress(Guid userId, AddressDto addressDto)
-         {
-             // Retrieve the user by Id
-             var user = userRepository.FindById(userId);
+            // Check if the user exists
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User does not exist");
+            }
 
-             // Check if the user exists
-             if (user == null)
-             {
-                 throw new KeyNotFoundException("User does not exist");
-             }
+            // Check if an address already exists for the user
+            var existingAddress = addressRepository
+                .FirstOrDefault(a => a.UserId == userId && a.Country == addressDto.Country &&
+                                     a.City == addressDto.City && a.Street == addressDto.Street &&
+                                     a.Zipcode == addressDto.Zipcode);
 
-             // Check if an address already exists for the user
-             var existingAddress = addressRepository
-                 .FirstOrDefault(a => a.UserId == userId && a.Country == addressDto.Country &&
-                                      a.City == addressDto.City && a.Street == addressDto.Street &&
-                                      a.Zipcode == addressDto.Zipcode);
+            if (existingAddress != null)
+            {
+                throw new InvalidOperationException("This address already exists for the user.");
+            }
 
-             if (existingAddress != null)
-             {
-                 throw new InvalidOperationException("This address already exists for the user.");
-             }
+            // Map AddressDto to Address entity
+            var address = new Address
+            {
+                Country = addressDto.Country,
+                City = addressDto.City,
+                Street = addressDto.Street,
+                Zipcode = addressDto.Zipcode
+            };
 
-             // Map AddressDto to Address entity
-             var address = new Address
-             {
-                 Country = addressDto.Country,
-                 City = addressDto.City,
-                 Street = addressDto.Street,
-                 Zipcode = addressDto.Zipcode
-             };
+            // Add the new address to the address repository
+            addressRepository.Add(address);
 
-             // Associate address with user
-             user.Address = address;
+            // Save changes to the address table to get the generated AddressId
+            addressRepository.SaveChanges();
 
-             // Save changes to the database
-             userRepository.SaveChanges();
-         }
-        */
+            // Update the user's AddressId to link to the newly created address
+            user.AdressID = address.Id;  // Assign the AddressId to the user
+
+            // Save the changes to the user
+            userRepository.SaveChanges();
+        }*/
+
+
     }
 }

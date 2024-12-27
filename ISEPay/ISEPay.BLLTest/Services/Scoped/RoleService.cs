@@ -1,5 +1,4 @@
 ﻿
-
 using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
@@ -15,7 +14,7 @@ namespace ISEPay.BLL.Services.Scoped
 
         
     }
-    internal class RoleService
+    internal class RoleService : IRoleService
     {
         private readonly IRolesRepository roleRepository;
         public RoleService( IRolesRepository roleRepository) 
@@ -25,7 +24,7 @@ namespace ISEPay.BLL.Services.Scoped
 
         public void CreateRole(RoleDto role)
         {
-            var existingRole = roleRepository.FilterByName(role.Name);
+            var existingRole = roleRepository.GetByName(role.Name);
 
             if (existingRole != null)
             {

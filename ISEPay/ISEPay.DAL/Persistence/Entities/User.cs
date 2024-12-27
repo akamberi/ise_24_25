@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using ISEPay.Common.Enums;
-using System.Net;
 
 namespace ISEPay.DAL.Persistence.Entities
 {
@@ -31,7 +32,7 @@ namespace ISEPay.DAL.Persistence.Entities
         [Required, DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public DateTime CreatedAt { get;  set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
         public UserStatus Status { get; set; } = UserStatus.PENDING;
 
@@ -41,9 +42,7 @@ namespace ISEPay.DAL.Persistence.Entities
         public Guid RoleID { get; set; }
         internal Role Role { get; set; }
 
-
-
+        // New collection for Accounts
+        //public ICollection<Account> Accounts { get; set; }// A user can have many accounts
     }
-
- 
 }

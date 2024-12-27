@@ -1,65 +1,80 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using ISEPay.DAL.Persistence.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using ISEPay.DAL.Persistence.Entities;
 
-namespace ISEPay.DAL.Persistence.Config
+internal class UserConfig : IEntityTypeConfiguration<User>
 {
-    internal class UserConfig : IEntityTypeConfiguration<User>
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        public void Configure(EntityTypeBuilder<User> builder)
-        {
+        builder.ToTable("Users");
 
-            builder.ToTable("Users");
+        // Primary Key
+        builder.HasKey(x => x.Id);
 
-            // Set primary key
-            builder.HasKey(x => x.Id);
+        // Properties
+        builder.Property(x => x.FullName)
+               .IsRequired()
+               .HasMaxLength(100);
 
-            // Configure properties
-            builder.Property(x => x.FullName)
-                   .IsRequired()
-                   .HasMaxLength(100);
+        builder.Property(x => x.Gender)
+               .HasMaxLength(10);
 
-            builder.Property(x => x.Gender)
-                   .HasMaxLength(10);
+        builder.Property(x => x.CardID)
+               .HasMaxLength(50);
 
-            builder.Property(x => x.Nationality)
-                   .HasMaxLength(50);
+        builder.Property(x => x.Nationality)
+               .HasMaxLength(50);
 
-            builder.Property(x => x.Birthday)
-                   .HasColumnType("date");
+        builder.Property(x => x.Birthday)
+               .HasColumnType("date");
 
-            builder.Property(x => x.BirthCity)
-                   .HasMaxLength(50);
+        builder.Property(x => x.BirthCity)
+               .HasMaxLength(50);
 
-            builder.Property(x => x.PhoneNumber)
-                   .HasMaxLength(15); // Adjust max length as needed for phone numbers
+        builder.Property(x => x.PhoneNumber)
+               .HasMaxLength(15);
 
-            builder.Property(x => x.Email)
-                   .IsRequired()
-                   .HasMaxLength(100);
+        builder.Property(x => x.Email)
+               .IsRequired()
+               .HasMaxLength(100);
 
-            builder.Property(x => x.Password)
-                   .IsRequired()
-                   .HasMaxLength(255); // Adjust for password hashing
+        builder.Property(x => x.Password)
+               .IsRequired()
+               .HasMaxLength(255);
 
-            builder.Property(x => x.CreatedAt)
-                   .IsRequired()
-                   .HasDefaultValueSql("GETUTCDATE()");
+        builder.Property(x => x.CreatedAt)
+               .IsRequired()
+               .HasDefaultValueSql("GETUTCDATE()");
 
-            builder.Property(x => x.UpdatedAt)
-                   .IsRequired();
+        builder.Property(x => x.UpdatedAt)
+               .IsRequired();
 
-            builder.Property(x => x.Status)
-                   .HasConversion<string>() // Store enum as string
-                   .IsRequired();
+        builder.Property(x => x.Status)
+               .HasConversion<string>()
+               .IsRequired();
 
-            // Configure unique index on Email
-            builder.HasIndex(x => x.Email)
-                   .IsUnique();
+        builder.Property(x => x.AdressID)
+               .IsRequired();
 
-            // Additional indexes if required
-            builder.HasIndex(x => x.PhoneNumber)
-                   .IsUnique(false); // Allows duplicates, change to true if unique is needed
-        }
+        builder.Property(x => x.RoleID)
+               .IsRequired();
+
+        // Relationships
+        builder.HasOne(x => x.Address)
+               .WithMany() // Adjust if Address has navigation property
+               .HasForeignKey(x => x.AdressID)
+               .IsRequired();
+
+        builder.HasOne(x => x.Role)
+               .WithMany() // Adjust if Role has navigation property
+               .HasForeignKey(x => x.RoleID)
+               .IsRequired();
+
+        // Indexes
+        builder.HasIndex(x => x.Email)
+               .IsUnique();
+
+        builder.HasIndex(x => x.PhoneNumber)
+               .IsUnique(false);
     }
 }
