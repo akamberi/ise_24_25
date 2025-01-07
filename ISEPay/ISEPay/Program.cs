@@ -1,17 +1,19 @@
-using ISEPay.BLL.Extensions;
+//using ISEPay.BLL.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.RegisterBLLServices(builder.Configuration);
+//builder.Services.RegisterBLLServices(builder.Configuration);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
+
+/*
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -28,11 +30,15 @@ app.MapGet("/weatherforecast", () =>
         ))
         .ToArray();
     return forecast;
-});
+});*/
+
+app.MapControllers();
 
 app.Run();
 
+
+/*
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+}*/

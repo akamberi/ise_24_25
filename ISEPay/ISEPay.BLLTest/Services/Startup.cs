@@ -4,6 +4,8 @@ using ISEPay.DAL.Persistence.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ISEPay.DAL.Persistence.Repositories;
+using ISEPay.DAL.Persistence;
 
 namespace ISEPay.BLL.Services;
 
@@ -20,6 +22,10 @@ public static class Startup
         services.RegisterDALServices(config);
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
+        
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IWalletRepository, WalletRepository>();
+        
         //services.AddScoped<IAD, RoleService>();
 
         /*   services.AddIdentityCore<User>()

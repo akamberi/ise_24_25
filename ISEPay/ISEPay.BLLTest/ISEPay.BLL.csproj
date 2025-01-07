@@ -11,4 +11,13 @@
         <ProjectReference Include="..\ISEPay.DAL\ISEPay.DAL.csproj" />
         <ProjectReference Include="..\ISEPay.Domain\ISEPay.Domain.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+    </ItemGroup>
 </Project>

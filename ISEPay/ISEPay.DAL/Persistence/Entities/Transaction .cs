@@ -6,6 +6,14 @@ namespace ISEPay.DAL.Persistence.Entities
 {
     public class Transaction : BaseEntity<Guid>
     {
+        
+        
+        public Guid WalletId { get; set; }
+        public Wallet Wallet { get; set; }
+        
+        
+        
+        
         public Guid? AccountInId { get; set; }
         public Account AccountIn { get; set; } // Navigation property for source account
 

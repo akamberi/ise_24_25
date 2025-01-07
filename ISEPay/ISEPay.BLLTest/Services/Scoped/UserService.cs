@@ -1,11 +1,13 @@
 ﻿using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.Common.Enums;
 using ISEPay.Domain;
-using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
-using Microsoft.AspNetCore.Identity;
-using ISEPay.Domain.Models;
+// using Microsoft.AspNetCore.Identity;
+// using ISEPay.Domain.Models;
 using System.Text;
+using ISEPay.Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using User = ISEPay.DAL.Persistence.Entities.User;
 
 namespace ISEPay.BLL.Services.Scoped
 {
@@ -36,13 +38,15 @@ namespace ISEPay.BLL.Services.Scoped
         private readonly IRolesRepository roleRepository; // Add roleRepository as a dependency
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAddressRepository addressRepository;
-        public UserService(IUsersRepository userRepository, IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher, IAddressRepository addressRepository) //, IPasswordEncoder passwordEncoder)
+        private readonly IAccountService _accountService;
+        public UserService(IUsersRepository userRepository, IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher, IAddressRepository addressRepository,IAccountService accountService) //, IPasswordEncoder passwordEncoder)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
             _passwordHasher = passwordHasher;
             this.addressRepository = addressRepository;
             //this.passwordEncoder = passwordEncoder;
+            _accountService = accountService;
         }
 
         public AuthenticationResponse Authenticate(AuthenticationRequest authenticationRequest)
@@ -111,8 +115,32 @@ namespace ISEPay.BLL.Services.Scoped
             userToAdd.RoleID = role.Id;
 
             userRepository.Add(userToAdd);
-            userRepository.SaveChanges();
+         userRepository.SaveChanges();
+         
+         
+         
+         
+          
+         // Pasi ta krijosh përdoruesin, thërrisni metodën që krijon llogarinë
+         // CreateAccountForUser(userToAdd.Id);
         }
+        
+        public async Task CreateAccountForUser(Guid userId)
+        {
+            // Krijo llogarinë për përdoruesin me këtë ID
+            var account = await _accountService.CreateAccount(userId);
+    
+            // Pasi të krijohet llogaria, mund të bësh ndonjë operacion tjetër
+            // si të lidhësh llogarinë me përdoruesin dhe ta ruash.
+            // Ky operacion mund të jetë asinkron ose sinchron.
+            var userToUpdate = userRepository.FindById(userId);
+            if (userToUpdate != null)
+            {
+                userToUpdate.AccountID = account.Id;
+                userRepository.SaveChanges();  // Ose ndonjë metodë tjetër për të ruajtur
+            }
+        }
+
 
 
 

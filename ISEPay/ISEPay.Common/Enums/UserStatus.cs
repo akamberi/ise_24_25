@@ -24,7 +24,20 @@ namespace ISEPay.Common.Enums
     public enum AccountType
     {
         SAVINGS,
-        CHECKING
+        CHECKING,
+        CURRENT
+    }
+
+    public enum WalletStatus
+    {
+        ACTIVE,
+        INACTIVE
+    }
+
+    public enum WalletType
+    {
+        SAVINGS,
+        CURRENT
     }
 
 
