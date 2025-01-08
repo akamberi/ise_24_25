@@ -61,14 +61,20 @@ internal class UserConfig : IEntityTypeConfiguration<User>
 
         // Relationships
         builder.HasOne(x => x.Address)
-               .WithMany() // Adjust if Address has navigation property
+               .WithMany() // Adjust if Address has a navigation property
                .HasForeignKey(x => x.AdressID)
                .IsRequired();
 
         builder.HasOne(x => x.Role)
-               .WithMany() // Adjust if Role has navigation property
+               .WithMany() // Adjust if Role has a navigation property
                .HasForeignKey(x => x.RoleID)
                .IsRequired();
+
+        // Configuration for Accounts
+        builder.HasMany(x => x.Accounts)
+               .WithOne(x => x.User) // Navigation property in Account pointing to User
+               .HasForeignKey(x => x.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
         builder.HasIndex(x => x.Email)

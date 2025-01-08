@@ -1,14 +1,12 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ISEPay.DAL;
-namespace ISEPay.BLL.Services.Scoped
+
+namespace ISEPay.BLL.ISEPay.Domain.Models
 {
-    internal class AdressService
+    internal class OtpRequestDto
     {
-       
     }
 }
-*/

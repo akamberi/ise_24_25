@@ -6,7 +6,7 @@ namespace ISEPay.Common.Enums
         APPROVED,
         REJECTED,
         PENDING,
-        BLACKLIST
+        Frozen
     }
 
     public enum FriendStatus
@@ -23,6 +23,7 @@ namespace ISEPay.Common.Enums
 
     public enum AccountType
     {
+        STANDARD,
         SAVINGS,
         CHECKING
     }

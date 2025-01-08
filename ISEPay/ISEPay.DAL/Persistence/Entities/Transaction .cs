@@ -7,14 +7,14 @@ namespace ISEPay.DAL.Persistence.Entities
     public class Transaction : BaseEntity<Guid>
     {
         public Guid? AccountInId { get; set; }
-        public Account AccountIn { get; set; } // Navigation property for source account
+        public Account AccountIn { get; set; } 
 
         public Guid? AccountOutId { get; set; }
-        public Account AccountOut { get; set; } // Navigation property for destination account
+        public Account AccountOut { get; set; } 
 
         public TransactionType Type { get; set; } // Enum for transaction type
 
-        public Guid? AgentId { get; set; } // Optional Agent's ID
+       // public Guid? AgentId { get; set; } // Optional Agent's ID
 
         public decimal? Amount { get; set; } // Transaction amount
 

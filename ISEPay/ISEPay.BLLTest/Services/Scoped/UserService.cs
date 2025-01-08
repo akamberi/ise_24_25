@@ -19,8 +19,6 @@ namespace ISEPay.BLL.Services.Scoped
         void DeleteUser(Guid userId);
         void ApproveUser(Guid userId); 
         void RejectUser(Guid userId);
-        AuthenticationResponse Authenticate(AuthenticationRequest
-            authenticationRequest);
         UserResponse GetUser(Guid id);
         List<UserResponse> GetAllUsers();
 
@@ -36,63 +34,37 @@ namespace ISEPay.BLL.Services.Scoped
         private readonly IRolesRepository roleRepository; // Add roleRepository as a dependency
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAddressRepository addressRepository;
-        public UserService(IUsersRepository userRepository, IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher, IAddressRepository addressRepository) //, IPasswordEncoder passwordEncoder)
+        private readonly IOtpService otpService;
+        private readonly IAccountService accountService;
+        public UserService(IUsersRepository userRepository,
+            IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher,
+            IAddressRepository addressRepository, IOtpService otpService,
+            IAccountService accountService) //, IPasswordEncoder passwordEncoder)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
             _passwordHasher = passwordHasher;
             this.addressRepository = addressRepository;
-            //this.passwordEncoder = passwordEncoder;
-        }
-
-        public AuthenticationResponse Authenticate(AuthenticationRequest authenticationRequest)
-        {
-            // Validate inputs (email, password)
-            if (string.IsNullOrWhiteSpace(authenticationRequest.Email) || string.IsNullOrWhiteSpace(authenticationRequest.Password))
-            {
-                throw new ArgumentException("Email and password are required.");
-            }
-
-            // Fetch user from repository based on email
-            var user = userRepository.GetAll().FirstOrDefault(u => u.Email == authenticationRequest.Email);
-
-            if (user == null)
-            {
-                throw new UnauthorizedAccessException("Invalid email or password.");
-            }
-
-            // Verify password using IPasswordHasher
-            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, authenticationRequest.Password);
-            if (result != PasswordVerificationResult.Success)
-            {
-                throw new UnauthorizedAccessException("Invalid email or password.");
-            }
-
-            // Generate a JWT token (or other token)
-            /*var token = _tokenService.GenerateToken(user);*/
-
-            // Return the AuthenticationResponse with user details and token
-            return new AuthenticationResponse(
-                user.Id,          // UserID
-                user.FullName,        // Name
-                user.Email,           // Email
-                user.PhoneNumber      // PhoneNumber
-            );
-          /*  {
-                // Optionally, include the token if needed in the response
-                Token = token
-            };*/
+            this.otpService = otpService;
+            this.accountService = accountService;
+                //this.passwordEncoder = passwordEncoder;
         }
 
 
         public void CreateUser(UserDTO user)
         {
+
             var existingUser = userRepository.GetByPhoneNumber(user.PhoneNumber);
             if (existingUser != null)
             {
                 throw new InvalidOperationException("User cannot register with the same number");
             }
+           /* bool otpValidation = otpService.ValidateOTP(user.Otp);
+            if (!otpValidation)
+            {
+                throw new InvalidOperationException("Otp excpired");
 
+            }*/
             // Create user entity and hash the password
             var userToAdd = new User
             {
@@ -100,6 +72,7 @@ namespace ISEPay.BLL.Services.Scoped
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
                 Status = Common.Enums.UserStatus.PENDING,
+                Gender =user.Gender,
                 CreatedAt = DateTime.Now
             };
 
@@ -272,6 +245,17 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new KeyNotFoundException("User does not exist");
             }
+            var userStatus = user.Status;
+            if(userStatus == UserStatus.APPROVED)
+            {
+                throw new Exception("User is already approved");
+
+            }
+            if(userStatus == UserStatus.PENDING)
+            {
+                accountService.CreateDefaultAccount(userId);
+
+            }
             user.Status = UserStatus.APPROVED;
             userRepository.SaveChanges();
         }
@@ -296,7 +280,7 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new KeyNotFoundException("User does not exist");
             }
-            user.Status = UserStatus.BLACKLIST;
+            user.Status = UserStatus.Frozen;
             userRepository.SaveChanges();
         }
 

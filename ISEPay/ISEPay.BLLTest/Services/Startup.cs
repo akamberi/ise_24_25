@@ -13,21 +13,16 @@ public static class Startup
     static void Main(string[] args)
     {
         Console.WriteLine("Test project starting...");
-        // You can add additional logic to run tests manually or handle setup here.
     }
     public static void RegisterBLLServices(this IServiceCollection services, IConfiguration config)
     {
         services.RegisterDALServices(config);
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
-        //services.AddScoped<IAD, RoleService>();
-
-        /*   services.AddIdentityCore<User>()
-              .AddRoles<Role>()
-              .AddEntityFrameworkStores<ApplicationDbContext>()
-              .AddDefaultTokenProviders();*/
-
-        // Alternatively, explicitly register IPasswordHasher
+        services.AddScoped<IOtpService,OTPService>(); 
+        services.AddScoped<IAccountService,AccountService>(); 
+       // services.AddScoped<IAddressService, AddressService>(); 
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
     }

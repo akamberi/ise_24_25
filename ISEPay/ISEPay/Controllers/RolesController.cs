@@ -2,10 +2,11 @@
 using ISEPay.BLL.ISEPay.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ISEPay.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("roles")]
     [ApiController]
     public class RolesController : ControllerBase
     {
@@ -17,8 +18,9 @@ namespace ISEPay.Controllers
             _roleService = roleService;
         }
 
-        // POST api/roles
+      
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         public IActionResult CreateRole([FromBody] RoleDto roleDto)
         {
             if (roleDto == null)

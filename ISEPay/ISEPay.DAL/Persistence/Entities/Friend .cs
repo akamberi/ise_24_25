@@ -7,12 +7,12 @@ namespace ISEPay.DAL.Persistence.Entities
 {
     public class Friend : BaseEntity<Guid>
     {
-        [Required]
+        //[Required]
         public Guid UserId { get; set; }
 
         internal User User { get; set; }
 
-        [Required]
+       // [Required]
         public Guid FriendId { get; set; }
 
         internal User FriendUser { get; set; }
@@ -21,6 +21,8 @@ namespace ISEPay.DAL.Persistence.Entities
         public FriendStatus Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 
   

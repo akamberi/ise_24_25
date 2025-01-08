@@ -10,6 +10,7 @@ namespace ISEPay.DAL.Persistence.Repositories
     {
         IEnumerable<Role> FilterByName(string name);
         Role? GetByName(string name);
+        Role? FindById(Guid id); // Add method in the interface
     }
 
     internal class RolesRepository : _BaseRepository<Role, Guid>, IRolesRepository
@@ -21,6 +22,12 @@ namespace ISEPay.DAL.Persistence.Repositories
         public new Role GetById(Guid id)
         {
             return base.GetById(id);
+        }
+
+        public Role? FindById(Guid id)
+        {
+            // Ensure null-safe handling for better error resilience
+            return _dbSet.FirstOrDefault(r => r.Id == id);
         }
 
         public IEnumerable<Role> FilterByName(string name)

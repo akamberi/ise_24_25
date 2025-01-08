@@ -12,9 +12,10 @@ namespace ISEPay.DAL.Persistence.Entities
         public AccountType Type { get; set; }   
 
         public Guid UserId { get; set; }
-        public User User { get; set; } 
+        public User User { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; } 
+        public ICollection<Transaction> IncomingTransactions { get; set; }
+        public ICollection<Transaction> OutgoingTransactions { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

@@ -8,6 +8,7 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
 {
     public class AddressDto
     {
+        public Guid userId { get; set; }
 
         public string Country { get; set; }
 

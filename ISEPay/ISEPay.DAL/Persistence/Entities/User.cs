@@ -43,6 +43,6 @@ namespace ISEPay.DAL.Persistence.Entities
         internal Role Role { get; set; }
 
         // New collection for Accounts
-        //public ICollection<Account> Accounts { get; set; }// A user can have many accounts
+       public ICollection<Account> Accounts { get; set; }// A user can have many accounts
     }
 }

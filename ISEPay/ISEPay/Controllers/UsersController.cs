@@ -4,6 +4,7 @@ using System;
 using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.BLL.Services.Scoped;
 using ISEPay.Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ISEPay.Controllers
 {
@@ -19,43 +20,11 @@ namespace ISEPay.Controllers
             _userService = userService;
         }
 
-        //Users pass: 12345678
-        //Admin pass: admin123
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] AuthenticationRequest authenticationRequest)
-        {
-            if (authenticationRequest == null)
-            {
-                return BadRequest(new { Message = "Invalid authentication request." });
-            }
-
-            try
-            {
-                // Call the Authenticate method from AuthenticationService
-                var response = _userService.Authenticate(authenticationRequest);
-
-                // Return a 200 OK response with the AuthenticationResponse
-                return Ok(response);
-            }
-            catch (ArgumentException ex)
-            {
-                // Handle validation errors, e.g., missing email/password
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                // Handle invalid credentials
-                return Unauthorized(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                // Handle other exceptions
-                return StatusCode(500, new { Message = "An error occurred during authentication.", Error = ex.Message });
-            }
-        }
-
+       
         // POST api/users/register
         [HttpPost("register")]
+        [Authorize(Policy = "Public")]
+
         public IActionResult Register([FromBody] UserDTO user)
         {
             try
@@ -79,6 +48,8 @@ namespace ISEPay.Controllers
 
 
         [HttpPost("register/admin")]
+        [Authorize(Policy = "Admin")]
+
         public IActionResult RegisterAdmin([FromBody] UserDTO user)
         {
             try
@@ -102,6 +73,8 @@ namespace ISEPay.Controllers
 
 
         [HttpPost("approve/{userId}")]
+        [Authorize(Policy = "Admin")]
+
         public IActionResult ApproveUser(Guid userId)
         {
             try
@@ -121,6 +94,8 @@ namespace ISEPay.Controllers
         }
 
         [HttpPost("reject/{userId}")]
+        [Authorize(Policy = "Admin")]
+
         public IActionResult RejectUser(Guid userId)
         {
             try
@@ -141,6 +116,8 @@ namespace ISEPay.Controllers
 
 
         [HttpDelete("delete/{userId}")]
+        [Authorize(Policy = "Admin")]
+
         public IActionResult DeleteUser(Guid userId)
         {
             try
@@ -161,6 +138,7 @@ namespace ISEPay.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public IActionResult GetAllUsers()
         {
             try
@@ -180,6 +158,7 @@ namespace ISEPay.Controllers
         }
 
         [HttpGet("status")]
+        [Authorize(Policy = "Admin")]
         public IActionResult GetUsersByStatus([FromQuery] UserStatus status)
         {
             try
@@ -208,6 +187,8 @@ namespace ISEPay.Controllers
         }
 
         [HttpGet("{userId}")]
+        [Authorize(Policy = "Admin")]
+
         public IActionResult GetUser(Guid userId)
         {
             try
