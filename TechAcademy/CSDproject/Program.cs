@@ -1,21 +1,62 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using DAL.Data;
+using DAL.Persistence.Seeding;
+using BLL.Services; // Add reference to BLL project
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Configure Identity with roles and email confirmation
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true; // Require email confirmation for sign in
+})
+.AddRoles<IdentityRole>() // Add role support
+.AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = true; // Ensure email confirmation is required
+});
+
+// Register EmailSender service with credentials from configuration
+builder.Services.AddTransient<IEmailSender, EmailSender>(serviceProvider =>
+{
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var email = config["EmailSettings:Email"]; // Fetch from config
+    var password = config["EmailSettings:Password"]; // Fetch from config
+    var emailSender = new EmailSender(email, password); // Pass credentials to EmailSender constructor
+    return emailSender;
+});
 
 var app = builder.Build();
+
+// Seed roles here before the app runs
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        // Seed roles using RoleSeeder
+        await RoleSeeder.SeedRoles(services);
+    }
+    catch (Exception ex)
+    {
+        // Log or handle any errors during role seeding
+        Console.WriteLine($"Error occurred seeding roles: {ex.Message}");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

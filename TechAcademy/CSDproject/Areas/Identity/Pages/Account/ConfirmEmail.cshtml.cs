@@ -1,51 +1,77 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CSDproject.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ConfirmEmailModel(UserManager<IdentityUser> userManager)
+        public ConfirmEmailModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
+
+        // Properties to store the userId and code received in the URL
+        public string UserId { get; set; }
+        public string Code { get; set; }
+
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {
+            // Validate input parameters
             if (userId == null || code == null)
             {
                 return RedirectToPage("/Index");
             }
 
+            // Find the user by their ID
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
+                // If the user is not found, return an error message
                 return NotFound($"Unable to load user with ID '{userId}'.");
             }
 
-            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            try
+            {
+                // Decode the confirmation code
+                code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            }
+            catch (Exception)
+            {
+                // If there is an issue decoding the code, show an error message
+                StatusMessage = "Error decoding the confirmation code.";
+                return Page();
+            }
+
+            // Confirm the user's email using the decoded code
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
-            return Page();
+            if (result.Succeeded)
+            {
+                // Sign the user in after email confirmation
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
+                StatusMessage = "Thank you for confirming your email. You are now signed in.";
+                return RedirectToPage("/Index"); // Redirect to home or any page after sign-in
+            }
+            else
+            {
+                StatusMessage = "Error confirming your email.";
+                return Page();
+            }
         }
     }
 }

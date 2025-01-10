@@ -5,4 +5,14 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<p>
+    Your registration was successful! To complete the process, please click the confirmation link below.
+</p>
+
+<p>
+    This app does not currently have a real email sender registered. Normally, you would receive an email to confirm your account. Click the link below to finish your registration.
+</p>
+
+<!-- Make sure the confirmation link is properly populated with UserId and Code -->
+<a href="@Url.Page("/Account/ConfirmEmail", new { userId = Model.UserId, code = Model.Code })" id="confirm-link">Click here to confirm your account</a>
