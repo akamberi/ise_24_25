@@ -1,0 +1,80 @@
+Index: ISEPay.BLLTest/ISEPay.BLL.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net8.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n\t<ItemGroup>\r\n\t\t<ProjectReference Include=\"..\\ISEPay.DAL\\ISEPay.DAL.csproj\" />\r\n\t</ItemGroup>\r\n\t<ItemGroup>\r\n\t\t<ProjectReference Include=\"..\\ISEPay.Domain\\ISEPay.Domain.csproj\" />\r\n\t</ItemGroup>\r\n\r\n</Project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ISEPay.BLLTest/ISEPay.BLL.csproj b/ISEPay.BLLTest/ISEPay.BLL.csproj
+--- a/ISEPay.BLLTest/ISEPay.BLL.csproj	(revision cbb1c9ae7ec91df020547d930a0411c4c312c99f)
++++ b/ISEPay.BLLTest/ISEPay.BLL.csproj	(date 1735681618298)
+@@ -1,17 +1,14 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+-
+-  <PropertyGroup>
+-    <OutputType>Exe</OutputType>
+-    <TargetFramework>net8.0</TargetFramework>
+-    <ImplicitUsings>enable</ImplicitUsings>
+-    <Nullable>enable</Nullable>
+-  </PropertyGroup>
++    <PropertyGroup>
++        <TargetFramework>net8.0</TargetFramework>
++        <ImplicitUsings>enable</ImplicitUsings>
++        <Nullable>enable</Nullable>
++        <OutputType>Library</OutputType>
++    </PropertyGroup>
+ 
+-	<ItemGroup>
+-		<ProjectReference Include="..\ISEPay.DAL\ISEPay.DAL.csproj" />
+-	</ItemGroup>
+-	<ItemGroup>
+-		<ProjectReference Include="..\ISEPay.Domain\ISEPay.Domain.csproj" />
+-	</ItemGroup>
+-
+-</Project>
++    <ItemGroup>
++        <ProjectReference Include="..\ISEPay.Common\ISEPay.Common.csproj" />
++        <ProjectReference Include="..\ISEPay.DAL\ISEPay.DAL.csproj" />
++        <ProjectReference Include="..\ISEPay.Domain\ISEPay.Domain.csproj" />
++    </ItemGroup>
++</Project>
+\ No newline at end of file
+Index: ISEPay/Program.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\nusing ISEPay.D\r\n\r\nvar builder = WebApplication.CreateBuilder(args);\r\n\r\n// Add services to the container.\r\nbuilder.Services.AddControllersWithViews();\r\nbuilder.Services.RegisterBLLServices(builder.Configuration);\r\n\r\nvar app = builder.Build();\r\n\r\n// Configure the HTTP request pipeline.\r\napp.UseHttpsRedirection();\r\n\r\nvar summaries = new[]\r\n{\r\n    \"Freezing\", \"Bracing\", \"Chilly\", \"Cool\", \"Mild\", \"Warm\", \"Balmy\", \"Hot\", \"Sweltering\", \"Scorching\"\r\n};\r\n\r\napp.MapGet(\"/weatherforecast\", () =>\r\n{\r\n    var forecast = Enumerable.Range(1, 5).Select(index =>\r\n        new WeatherForecast\r\n        (\r\n            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),\r\n            Random.Shared.Next(-20, 55),\r\n            summaries[Random.Shared.Next(summaries.Length)]\r\n        ))\r\n        .ToArray();\r\n    return forecast;\r\n});\r\n\r\napp.Run();\r\n\r\ninternal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)\r\n{\r\n    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ISEPay/Program.cs b/ISEPay/Program.cs
+--- a/ISEPay/Program.cs	(revision cbb1c9ae7ec91df020547d930a0411c4c312c99f)
++++ b/ISEPay/Program.cs	(date 1735825646046)
+@@ -1,5 +1,5 @@
++using ISEPay.BLL.Extensions;
+ 
+-using ISEPay.D
+ 
+ var builder = WebApplication.CreateBuilder(args);
+ 
+Index: ISEPay/ISEPay.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk.Web\">\r\n\r\n  <PropertyGroup>\r\n    <TargetFramework>net8.0</TargetFramework>\r\n    <Nullable>enable</Nullable>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n  </PropertyGroup>\r\n\r\n\r\n</Project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ISEPay/ISEPay.csproj b/ISEPay/ISEPay.csproj
+--- a/ISEPay/ISEPay.csproj	(revision cbb1c9ae7ec91df020547d930a0411c4c312c99f)
++++ b/ISEPay/ISEPay.csproj	(date 1735681341213)
+@@ -6,5 +6,11 @@
+     <ImplicitUsings>enable</ImplicitUsings>
+   </PropertyGroup>
+ 
++  <ItemGroup>
++    <ProjectReference Include="..\ISEPay.BLLTest\ISEPay.BLL.csproj" />
++    <ProjectReference Include="..\ISEPay.DAL\ISEPay.DAL.csproj" />
++    <ProjectReference Include="..\ISEPay.Domain\ISEPay.Domain.csproj" />
++  </ItemGroup>
++
+ 
+ </Project>
