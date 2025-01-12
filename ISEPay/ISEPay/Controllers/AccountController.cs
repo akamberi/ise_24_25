@@ -2,6 +2,9 @@
 using ISEPay.BLL.Services.Scoped;
 using ISEPay.BLL.ISEPay.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using ISEPay.DAL.Persistence;
+using ISEPay.Common.Enums;
+
 
 namespace ISEPay.Controllers
 {
@@ -10,10 +13,12 @@ namespace ISEPay.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
+        private readonly ISEPayDBContext _context;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService,ISEPayDBContext context)
         {
             this.accountService = accountService;
+            _context = context;
         }
 
         [HttpPost("add")]
@@ -47,5 +52,40 @@ namespace ISEPay.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpPost("deposit")]
+        [Authorize] 
+        public IActionResult Deposit([FromBody] DepositRequest depositRequest)
+        {
+            
+            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);
+
+            if (account == null)
+            {
+                return NotFound("Llogaria nuk u gjet.");
+            }
+
+            
+            account.Balance += depositRequest.Amount;
+
+            
+            var transaction = new ISEPay.DAL.Persistence.Entities.Transaction
+            {
+                AccountInId = depositRequest.AccountId,
+                AccountIn = account,
+                Type = TransactionType.DEPOSIT,
+                Amount = depositRequest.Amount,
+                Description= "Deposit",
+                Status = TransactionStatus.COMPLETED,
+                Timestamp = DateTime.Now
+            };
+            _context.Transactions.Add(transaction);
+
+            
+            _context.SaveChanges();
+
+            return Ok(new { Message = "Depozita u realizua me sukses!", NewBalance = account.Balance });
+        }
+        
+        
     }
 }
