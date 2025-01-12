@@ -13,7 +13,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="" />
+    <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Adress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Adress.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="antoneta-branch" />
+        <entry key="$PROJECT_DIR$/.." value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -42,6 +49,17 @@
     &quot;accountId&quot;: &quot;75b65ed6-8aee-4a4f-9091-6a65eb848852&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AddressService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Entities/Adress.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/AddressController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ISEPay/Controllers/RolesController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ISEPay/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ISEPay/Properties/launchSettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ISEPay/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -56,6 +74,7 @@
     ".NET Launch Settings Profile.ISEPay: http.executor": "Run",
     ".NET Project.ISEPay.BLL.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "antoneta-branch-2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -194,6 +213,7 @@
       <workItem from="1735307350389" duration="6635000" />
       <workItem from="1736368982829" duration="829000" />
       <workItem from="1736608696136" duration="1780000" />
+      <workItem from="1736624774468" duration="10715000" />
     </task>
     <servers />
   </component>
@@ -202,6 +222,17 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

@@ -6,16 +6,23 @@ using System.Linq;
 
 namespace ISEPay.DAL.Persistence.Repositories
 {
+    
     public interface IAddressRepository : _IBaseRepository<Address, Guid>
     {
-        IEnumerable<Address> FilterByCity(string city);
-        Address? GetByCity(string city);
+        Address? GetById(Guid userId); 
+        IEnumerable<Address> FilterByCity(string city); 
     }
 
     internal class AddressRepository : _BaseRepository<Address, Guid>, IAddressRepository
     {
+        private readonly ISEPayDBContext _context;
+
+        
+        
         public AddressRepository(ISEPayDBContext dbContext) : base(dbContext)
         {
+            _context = dbContext;
+
         }
 
         public new Address GetById(Guid id)
