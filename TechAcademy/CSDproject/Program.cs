@@ -5,13 +5,15 @@ using DAL.Data;
 using DAL.Persistence.Seeding;
 using BLL.Services; // Add reference to BLL project
 using Microsoft.Extensions.Configuration;
+using DALApplicationDbContext = DAL.Data.ApplicationDbContext;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<DALApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -21,7 +23,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.SignIn.RequireConfirmedAccount = true; // Require email confirmation for sign in
 })
 .AddRoles<IdentityRole>() // Add role support
-.AddEntityFrameworkStores<ApplicationDbContext>();
+.AddEntityFrameworkStores<DAL.Data.ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<IdentityOptions>(options =>
