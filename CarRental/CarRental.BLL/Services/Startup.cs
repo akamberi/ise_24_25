@@ -11,5 +11,6 @@ public static class Startup
     {
         services.RegisterDALServices(config);
         services.AddScoped<ICarBrandService, CarBrandService>();
+        services.AddHostedService<MailSenderService>();
     }
 }
