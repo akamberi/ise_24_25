@@ -15,11 +15,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Adress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Adress.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,20 +64,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.ISEPay: http.executor": "Run",
-    ".NET Project.ISEPay.BLL.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "antoneta-branch-2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.ISEPay: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.ISEPay.BLL.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;antoneta-branch-2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ISEPay: http">
     <configuration name="ISEPay.BLL" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -213,8 +208,18 @@
       <workItem from="1735307350389" duration="6635000" />
       <workItem from="1736368982829" duration="829000" />
       <workItem from="1736608696136" duration="1780000" />
-      <workItem from="1736624774468" duration="10715000" />
+      <workItem from="1736624774468" duration="11022000" />
+      <workItem from="1736982095299" duration="1834000" />
     </task>
+    <task id="LOCAL-00001" summary="AddAddress and EditAddress">
+      <option name="closed" value="true" />
+      <created>1736699092032</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1736699092033</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -236,5 +241,7 @@
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="AddAddress and EditAddress" />
+    <option name="LAST_COMMIT_MESSAGE" value="AddAddress and EditAddress" />
   </component>
 </project>

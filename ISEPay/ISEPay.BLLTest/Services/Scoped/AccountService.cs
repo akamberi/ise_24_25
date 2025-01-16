@@ -21,6 +21,7 @@ namespace ISEPay.BLL.Services.Scoped
 
         private readonly IAccountRepository accountRepository;
         private readonly IUsersRepository usersRepository;
+        
 
         public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository)
         {
@@ -63,7 +64,15 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new Exception("User is  not approved yet");
             }
+            
+            var existingAccount = accountRepository.FindAccountsByUserId(account.UserId)
+                .FirstOrDefault(a => a.Currency == account.Currency && a.Type == account.AccountType);
 
+            if (existingAccount != null)
+            {
+                throw new Exception("Account already exists for this user with the same currency and type");
+            }
+            
             var accountToAdd = new Account
             {
                 AccountNumber = GenerateAccountNumber(),

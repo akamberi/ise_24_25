@@ -10,6 +10,8 @@ namespace ISEPay.DAL.Persistence.Repositories
     {
         Account? FindAccountById(Guid accountId);
         IEnumerable<Account> FindAccountsByUserId(Guid userId);
+        
+        Account? FindAccountByAccountNumber(string accountNumber);
 
 
         internal class AccountsRepository : _BaseRepository<Account, Guid>, IAccountRepository
@@ -27,19 +29,7 @@ namespace ISEPay.DAL.Persistence.Repositories
                 _context.Accounts.Add(entity);
                 _context.SaveChanges();
             }
-
-            // Retrieve all accounts with user information
-
-
-            // Retrieve an account by ID with user information
-
-
-
-
-
-
-
-
+            
             // Retrieve an account by ID
             public Account? FindAccountById(Guid accountId)
             {
@@ -58,6 +48,15 @@ namespace ISEPay.DAL.Persistence.Repositories
             }
 
             // Retrieve a single account by city (via user's address)
+            
+            
+            public Account? FindAccountByAccountNumber(string accountNumber)
+            {
+                return _context.Accounts
+                    .Include(a => a.User)
+                    .FirstOrDefault(a => a.AccountNumber == accountNumber);
+            }
+            
 
         }
     }

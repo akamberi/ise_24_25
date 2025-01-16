@@ -21,7 +21,7 @@ public static class Startup
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IOtpService,OTPService>(); 
         services.AddScoped<IAccountService,AccountService>(); 
-       // services.AddScoped<IAddressService, AddressService>(); 
+       // services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
