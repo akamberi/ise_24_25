@@ -20,6 +20,7 @@ public static class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IOtpService,OTPService>(); 
+        services.AddScoped<ITransferService,TransferService>(); 
         services.AddScoped<IAccountService,AccountService>(); 
        // services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
