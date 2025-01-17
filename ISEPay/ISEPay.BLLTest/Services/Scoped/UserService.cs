@@ -11,7 +11,7 @@ namespace ISEPay.BLL.Services.Scoped
 {
     public interface IUserService
     {
-        void CreateUser(UserDTO user);
+        void CreateUser(UserDTO user);  
 
       //  void CreateUserWithRole(UserDTO user, RoleDto role);
         void CreateAdminUser(UserDTO user);
@@ -72,6 +72,7 @@ namespace ISEPay.BLL.Services.Scoped
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
                 Status = Common.Enums.UserStatus.PENDING,
+                CardID= user.CardId,
                 Gender =user.Gender,
                 CreatedAt = DateTime.Now
             };
