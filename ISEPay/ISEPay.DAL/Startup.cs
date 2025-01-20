@@ -19,6 +19,8 @@ public static class Startup
          services.AddScoped<IAccountRepository, AccountsRepository>();
          services.AddScoped<ITransactionsRepository, TransactionsRepository>();
         services.AddScoped<IRolesRepository, RolesRepository>();
+        services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+        services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
         
     }
     public static void Main(string[] args)

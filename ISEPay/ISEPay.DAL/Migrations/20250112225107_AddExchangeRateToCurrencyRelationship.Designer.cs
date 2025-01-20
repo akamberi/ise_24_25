@@ -4,6 +4,7 @@ using ISEPay.DAL.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISEPay.DAL.Migrations
 {
     [DbContext(typeof(ISEPayDBContext))]
-    partial class ISEPayDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250112225107_AddExchangeRateToCurrencyRelationship")]
+    partial class AddExchangeRateToCurrencyRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

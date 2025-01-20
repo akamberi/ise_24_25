@@ -4,6 +4,7 @@ using ISEPay.DAL.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISEPay.DAL.Migrations
 {
     [DbContext(typeof(ISEPayDBContext))]
-    partial class ISEPayDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250113103511_UpdateExchangeRatesDeleteBehavior")]
+    partial class UpdateExchangeRatesDeleteBehavior
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,13 +375,13 @@ namespace ISEPay.DAL.Migrations
                     b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "FromCurrency")
                         .WithMany("FromExchangeRates")
                         .HasForeignKey("FromCurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "ToCurrency")
                         .WithMany("ToExchangeRates")
                         .HasForeignKey("ToCurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("FromCurrency");

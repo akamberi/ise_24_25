@@ -4,6 +4,7 @@ using ISEPay.DAL.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISEPay.DAL.Migrations
 {
     [DbContext(typeof(ISEPayDBContext))]
-    partial class ISEPayDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250112222451_AddCurrencyEntity")]
+    partial class AddCurrencyEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,35 +141,6 @@ namespace ISEPay.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Currencies", (string)null);
-                });
-
-            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.ExchangeRate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EffectiveDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FromCurrencyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18, 6)");
-
-                    b.Property<Guid>("ToCurrencyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EffectiveDate");
-
-                    b.HasIndex("FromCurrencyId");
-
-                    b.HasIndex("ToCurrencyId");
-
-                    b.ToTable("ExchangeRates", (string)null);
                 });
 
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Permission", b =>
@@ -367,25 +341,6 @@ namespace ISEPay.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.ExchangeRate", b =>
-                {
-                    b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "FromCurrency")
-                        .WithMany("FromExchangeRates")
-                        .HasForeignKey("FromCurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "ToCurrency")
-                        .WithMany("ToExchangeRates")
-                        .HasForeignKey("ToCurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FromCurrency");
-
-                    b.Navigation("ToCurrency");
-                });
-
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Transaction", b =>
                 {
                     b.HasOne("ISEPay.DAL.Persistence.Entities.Account", "AccountIn")
@@ -423,13 +378,6 @@ namespace ISEPay.DAL.Migrations
                     b.Navigation("IncomingTransactions");
 
                     b.Navigation("OutgoingTransactions");
-                });
-
-            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Currency", b =>
-                {
-                    b.Navigation("FromExchangeRates");
-
-                    b.Navigation("ToExchangeRates");
                 });
 
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.User", b =>
