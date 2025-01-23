@@ -6,6 +6,7 @@ using ISEPay.DAL.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using ISEPay.Domain.Models;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ISEPay.BLL.Services.Scoped
 {
@@ -36,10 +37,11 @@ namespace ISEPay.BLL.Services.Scoped
         private readonly IAddressRepository addressRepository;
         private readonly IOtpService otpService;
         private readonly IAccountService accountService;
+        private readonly IAccountRepository accountRepository;
         public UserService(IUsersRepository userRepository,
             IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher,
             IAddressRepository addressRepository, IOtpService otpService,
-            IAccountService accountService) //, IPasswordEncoder passwordEncoder)
+            IAccountService accountService, IAccountRepository accountRepository) //, IPasswordEncoder passwordEncoder)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
@@ -47,6 +49,7 @@ namespace ISEPay.BLL.Services.Scoped
             this.addressRepository = addressRepository;
             this.otpService = otpService;
             this.accountService = accountService;
+            this.accountRepository = accountRepository;
                 //this.passwordEncoder = passwordEncoder;
         }
 
@@ -78,7 +81,7 @@ namespace ISEPay.BLL.Services.Scoped
             };
 
             // Hash the password before saving it
-            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("User");
@@ -110,7 +113,7 @@ namespace ISEPay.BLL.Services.Scoped
             };
 
             // Hash the password before saving it
-            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("Admin");
@@ -139,7 +142,7 @@ namespace ISEPay.BLL.Services.Scoped
             };
 
             // Hash the password before saving it
-            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("AGENT");
@@ -193,13 +196,16 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new KeyNotFoundException("No users found.");
             }
-
             var userDTOs = users.Select(user => new UserResponse(
-                 user.Id,                  // userID
-                 user.FullName,            // name
-                 user.Email,               // email
-                 user.PhoneNumber          // phoneNumber
-             )).ToList();
+                user.Id,                 // userID
+                user.FullName,           // name
+                user.Email,              // email
+                user.PhoneNumber,        // phoneNumber
+                user.CardID,             // cardId
+                "random"                 // picture (Base64 string or some image data)
+            )).ToList();
+
+
 
 
             return userDTOs;
@@ -257,6 +263,16 @@ namespace ISEPay.BLL.Services.Scoped
                 accountService.CreateDefaultAccount(userId);
 
             }
+
+        /*    var accounts = accountRepository.FindAccountsByUserId(userId);
+            if (accounts != null)
+            {
+                foreach (var accountItem in accounts)
+                {
+                    accountItem.Status = AccountStatus.ACTIVE;
+                }
+                accountRepository.UpdateAccounts(accounts); // Method to update all accounts in the repository
+            }*/
             user.Status = UserStatus.APPROVED;
             userRepository.SaveChanges();
         }
@@ -281,6 +297,16 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new KeyNotFoundException("User does not exist");
             }
+            var accounts = accountRepository.FindAccountsByUserId(userId);
+            if (accounts !=null)
+            {
+                foreach(var accountItem in accounts)
+                {
+                    accountItem.Status = AccountStatus.INACTIVE;
+                }
+                accountRepository.UpdateAccounts(accounts); // Method to update all accounts in the repository
+            }
+
             user.Status = UserStatus.Frozen;
             userRepository.SaveChanges();
         }

@@ -10,55 +10,52 @@ namespace ISEPay.DAL.Persistence.Repositories
     {
         Account? FindAccountById(Guid accountId);
         IEnumerable<Account> FindAccountsByUserId(Guid userId);
+        void UpdateAccounts(IEnumerable<Account> accounts); // Add this method signature
+    }
 
+    internal class AccountsRepository : _BaseRepository<Account, Guid>, IAccountRepository
+    {
+        private readonly ISEPayDBContext _context;
 
-        internal class AccountsRepository : _BaseRepository<Account, Guid>, IAccountRepository
+        public AccountsRepository(ISEPayDBContext dbContext) : base(dbContext)
         {
-            private readonly ISEPayDBContext _context;
-
-            public AccountsRepository(ISEPayDBContext dbContext) : base(dbContext)
-            {
-                _context = dbContext;
-            }
-
-            // Add a new account
-            public new void Add(Account entity)
-            {
-                _context.Accounts.Add(entity);
-                _context.SaveChanges();
-            }
-
-            // Retrieve all accounts with user information
-
-
-            // Retrieve an account by ID with user information
-
-
-
-
-
-
-
-
-            // Retrieve an account by ID
-            public Account? FindAccountById(Guid accountId)
-            {
-                return _context.Accounts
-                    .Include(a => a.User)
-                    .FirstOrDefault(a => a.Id == accountId);
-            }
-
-            // Retrieve accounts by user ID
-            public IEnumerable<Account> FindAccountsByUserId(Guid userId)
-            {
-                return _context.Accounts
-                    .Include(a => a.User)
-                    .Where(a => a.User.Id == userId)
-                    .ToList();
-            }
-
-            // Retrieve a single account by city (via user's address)
-
+            _context = dbContext;
         }
+
+        // Add a new account
+        public new void Add(Account entity)
+        {
+            _context.Accounts.Add(entity);
+            _context.SaveChanges();
+        }
+
+        // Retrieve an account by ID
+        public Account? FindAccountById(Guid accountId)
+        {
+            return _context.Accounts
+                .Include(a => a.User)
+                .FirstOrDefault(a => a.Id == accountId);
+        }
+
+        // Retrieve accounts by user ID
+        public IEnumerable<Account> FindAccountsByUserId(Guid userId)
+        {
+            return _context.Accounts
+                .Include(a => a.User)
+                .Where(a => a.User.Id == userId)
+                .ToList();
+        }
+
+        // Update multiple accounts
+        public void UpdateAccounts(IEnumerable<Account> accounts)
+        {
+            foreach (var account in accounts)
+            {
+                _context.Entry(account).State = EntityState.Modified;
+            }
+            _context.SaveChanges();
+        }
+
+        // Retrieve a single account by city (via user's address)
     }
 }

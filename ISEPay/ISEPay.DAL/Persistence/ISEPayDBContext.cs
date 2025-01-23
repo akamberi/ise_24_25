@@ -15,6 +15,8 @@ namespace ISEPay.DAL.Persistence
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Image> Images { get; set; } // Added DbSet for Images
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,6 +77,18 @@ namespace ISEPay.DAL.Persistence
 
             modelBuilder.Entity<Transaction>()
                 .HasIndex(t => t.AccountOutId);
+
+            // Image entity configuration
+            modelBuilder.Entity<Image>()
+                .Property(i => i.Id)
+                .HasColumnType("uniqueidentifier")
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Image>()
+                .HasOne(i => i.User)
+                .WithMany(u => u.Images)
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -44,5 +44,7 @@ namespace ISEPay.DAL.Persistence.Entities
 
         // New collection for Accounts
        public ICollection<Account> Accounts { get; set; }// A user can have many accounts
+        public ICollection<Image> Images { get; set; }  // A user can have many images (profile, documents, etc.)
+
     }
 }

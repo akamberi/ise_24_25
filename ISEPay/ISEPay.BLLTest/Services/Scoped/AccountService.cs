@@ -31,8 +31,9 @@ namespace ISEPay.BLL.Services.Scoped
 
         public List<AccountResponse> GetUserAccounts(Guid userId)
         {
-            // Retrieve accounts for the given userId
-            var allAccounts = accountRepository.FindAccountsByUserId(userId);
+            var allAccounts = accountRepository.FindAccountsByUserId(userId)
+                                         .Where(account => account.Status == AccountStatus.ACTIVE) // Filtering active accounts
+                                         .ToList();
 
             if (allAccounts == null || !allAccounts.Any())
             {
@@ -44,7 +45,9 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 AccountNumber = account.AccountNumber,
                 Balance = account.Balance,
-                Currency = account.Currency
+                Currency = account.Currency,
+                AccountType=account.Type.ToString()
+             
             }).ToList();
 
             return accountResponses;
