@@ -3,6 +3,7 @@ using ISEPay.Common.Enums;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
 using ISEPay.Domain.Models;
+using System.Globalization;
 
 
 namespace ISEPay.BLL.Services.Scoped
@@ -46,9 +47,9 @@ namespace ISEPay.BLL.Services.Scoped
                 AccountNumber = account.AccountNumber,
                 Balance = account.Balance,
                 Currency = account.Currency,
-                AccountType=account.Type.ToString()
-             
-            }).ToList();
+                AccountType= CultureInfo.CurrentCulture.TextInfo.ToTitleCase(account.Type.ToString().ToLower())
+
+        }).ToList();
 
             return accountResponses;
         }

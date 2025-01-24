@@ -29,7 +29,7 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Card ID is required")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Card ID must be exactly 10 digits")]
+        [RegularExpression(@"^[A-Z]\d{8}[A-Z]$", ErrorMessage = "Card ID must start with a letter, have 8 digits, and end with a letter")]
         public string CardId { get; set; }
 
         [Required(ErrorMessage = "Gender is required")]
