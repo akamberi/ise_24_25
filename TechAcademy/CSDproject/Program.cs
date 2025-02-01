@@ -6,9 +6,23 @@ using DAL.Persistence.Seeding;
 using BLL.Services; // Add reference to BLL project
 using Microsoft.Extensions.Configuration;
 using DALApplicationDbContext = DAL.Data.ApplicationDbContext;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+});
+
+builder.Services.AddAuthentication().AddMicrosoftAccount(options =>
+{
+options.ClientId = configuration["Authentication:Microsoft:ClientId"];
+options.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"];
+});
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
