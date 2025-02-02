@@ -17,6 +17,7 @@ namespace ISEPay.DAL.Persistence
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<Fee> Fees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,6 +92,23 @@ namespace ISEPay.DAL.Persistence
             // Apply Currency and ExchangeRate configurations
             modelBuilder.ApplyConfiguration(new CurrencyConfig());
             modelBuilder.ApplyConfiguration(new ExchangeRateConfig());
+            
+            
+
+            modelBuilder.Entity<Fee>()
+                .Property(f => f.Id)
+                .HasColumnType("uniqueidentifier")
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Fee>()
+                .Property(f => f.TransactionType)
+                .HasConversion<string>() 
+                .IsRequired();
+
+            modelBuilder.Entity<Fee>()
+                .Property(f => f.FeeValue)
+                .HasColumnType("decimal(18, 2)") 
+                .IsRequired();
         }
     }
 }

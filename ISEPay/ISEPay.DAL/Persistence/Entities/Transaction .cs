@@ -32,5 +32,9 @@ namespace ISEPay.DAL.Persistence.Entities
         //public AtmLocation AtmLocation { get; set; } // Navigation property for ATM location
 
         public string Description { get; set; } // Additional transaction details
+        
+
+  
+  
     }
 }

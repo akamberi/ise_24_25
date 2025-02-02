@@ -29,6 +29,7 @@ public static class Startup
        // services.AddScoped<IAddressService, AddressService>(); 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        services.AddScoped<FeeService>(); 
 
     }
 }

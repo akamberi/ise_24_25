@@ -4,23 +4,51 @@ using ISEPay.Common.Enums;
 
 
 
+
+
 namespace ISEPay.BLL.Services.Scoped
 {
 
     public interface ITransferService
     {
         void TransferMoney(TransferRequest transferRequest);
+        Fee GetFeeByCurrencyPair(TransactionType transactionType,bool isInternational,Guid fromCurrency,Guid toCurrency);
     }
 
     internal class TransferService : ITransferService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ITransactionsRepository _transactionsRepository;
+         private readonly IExchangeRateRepository _exchangeRateRepository;
+         private readonly IFeeRepository _feeRepository;
+         private readonly FeeService _feeService;
 
-        public TransferService(IAccountRepository accountRepository,ITransactionsRepository transactionsRepository)
+
+
+        public TransferService(IAccountRepository accountRepository,ITransactionsRepository transactionsRepository,
+            IExchangeRateRepository exchangeRateRepository,FeeService feeService,IFeeRepository feeRepository)
         {
             _accountRepository = accountRepository;
             _transactionsRepository=transactionsRepository;
+            _exchangeRateRepository=exchangeRateRepository;
+            _feeRepository=feeRepository;
+            _feeService=feeService;
+        }
+
+        
+        public Fee GetFeeByCurrencyPair(TransactionType transactionType, bool isInternational,
+            Guid fromCurrency, Guid toCurrency)
+        {
+           
+
+            if (isInternational)
+            {
+                return _feeRepository.GetFeeByCurrencyPair(fromCurrency, toCurrency, transactionType);
+            }
+            else
+            {
+                return _feeRepository.GetFeeByCurrencyPair(fromCurrency, toCurrency, transactionType);
+            }
         }
 
         public void TransferMoney(TransferRequest transferRequest)
@@ -34,11 +62,19 @@ namespace ISEPay.BLL.Services.Scoped
             }
             
             bool sameUser = fromAccount.UserId == toAccount.UserId;
+            bool isInternational = transferRequest.FromCountry != transferRequest.ToCountry; 
             
             decimal fee = 0;
+            
             if (!sameUser)
             {
-                fee = transferRequest.Amount * 0.02m; 
+                var feeObj = _feeService.GetFeeByTransactionType(
+                    TransactionType.TRANSFER,
+                    isInternational,
+                    transferRequest.FromCurrency,  
+                    transferRequest.ToCurrency     
+                );
+                fee = feeObj?.FeeValue ?? 0m;
             }
             
             decimal totalAmount = transferRequest.Amount + fee; 
@@ -50,8 +86,22 @@ namespace ISEPay.BLL.Services.Scoped
                 throw new Exception("The balance of the sending account is insufficient");
             }
 
-          
-            fromAccount.Balance -= totalAmount;
+                   decimal exchangeRate = 1m;
+                    if (transferRequest.FromCurrency !=
+                        transferRequest.ToCurrency) 
+                    {
+                        var rate = _exchangeRateRepository.GetExchangeRate(transferRequest.FromCurrency,
+                            transferRequest.ToCurrency); 
+                        if (rate == null)
+                        {
+                            throw new Exception("Exchange rate not found");
+                        }
+
+                        exchangeRate = rate.Rate;
+                        totalAmount *= exchangeRate; 
+                    }
+
+                    fromAccount.Balance -= totalAmount;
             toAccount.Balance += transferRequest.Amount;
 
           

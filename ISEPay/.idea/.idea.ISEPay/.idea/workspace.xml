@@ -15,6 +15,17 @@
   <component name="ChangeListManager">
     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/TransferRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/TransferRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.Common/Enums/UserStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.Common/Enums/UserStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Transaction .cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Transaction .cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/ISEPayDBContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/ISEPayDBContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/TransactionsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/TransactionsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +38,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="main" />
+        <entry key="$PROJECT_DIR$/.." value="anxhelo-branch" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -45,11 +56,16 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AddressService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Entities/Adress.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/AddressController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/ISEPay/Domain/Models/CurrencyDto.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Migrations/20250113103741_UpdateExchangeRatesDeleteBehaviorr.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/CurrencyController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/ExchangeController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Controllers/RolesController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Properties/launchSettings.json" root0="FORCE_HIGHLIGHTING" />
@@ -210,6 +226,12 @@
       <workItem from="1736608696136" duration="1780000" />
       <workItem from="1736624774468" duration="11022000" />
       <workItem from="1736982095299" duration="1834000" />
+      <workItem from="1737402274343" duration="793000" />
+      <workItem from="1737652087180" duration="2637000" />
+      <workItem from="1737654967488" duration="11924000" />
+      <workItem from="1738419061550" duration="570000" />
+      <workItem from="1738419663759" duration="5126000" />
+      <workItem from="1738424882602" duration="13707000" />
     </task>
     <task id="LOCAL-00001" summary="AddAddress and EditAddress">
       <option name="closed" value="true" />
@@ -232,7 +254,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="anxhelo-branch" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

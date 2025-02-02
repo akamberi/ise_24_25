@@ -10,10 +10,12 @@ namespace ISEPay.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
+        private readonly ITransferService transferService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService,ITransferService transferService)
         {
             this.accountService = accountService;
+            this.transferService = transferService;
         }
 
         [HttpPost("add")]
@@ -47,5 +49,25 @@ namespace ISEPay.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        
+        [HttpPost("transfer")]
+        [Authorize(Policy = "Authenticated")]
+        public IActionResult TransferMoney([FromBody] TransferRequest transferRequest)
+        {
+            try
+            {
+                transferService.TransferMoney(transferRequest);
+                return Ok(new { Message = "Successful transfer!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+          
+            }
+        }
+        
+        
+        
+        
     }
 }

@@ -28,7 +28,7 @@ namespace ISEPay.Controllers
                 addressService.AddAddress(addressDto);
 
                 
-                return Ok(new { Message = "Adresa u shtua me sukses!" });
+                return Ok(new { Message = "Address successfully added!" });
             }
             catch (ArgumentNullException ex)
             {
@@ -38,7 +38,7 @@ namespace ISEPay.Controllers
             catch (Exception ex)
             {
                 
-                return StatusCode(500, new { Message = "Gabim gjatë shtimit të adresës", Error = ex.Message });
+                return StatusCode(500, new { Message = "Error while adding the address", Error = ex.Message });
             } }
         
         
@@ -51,7 +51,7 @@ namespace ISEPay.Controllers
                 addressService.EditAddress(id, updatedAddressDto);
 
                 
-                return Ok(new { Message = "Adresa u përditësua me sukses!" });
+                return Ok(new { Message = "Address successfully updated!" });
             }
             catch (ArgumentNullException ex)
             {
@@ -60,7 +60,7 @@ namespace ISEPay.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Gabim gjatë përditësimit të adresës", Error = ex.Message });
+                return StatusCode(500, new { Message = "Error while updating the address", Error = ex.Message });
             }}
 
     }

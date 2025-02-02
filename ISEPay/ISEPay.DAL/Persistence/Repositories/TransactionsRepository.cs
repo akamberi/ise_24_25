@@ -26,19 +26,19 @@ namespace ISEPay.DAL.Persistence.Repositories
             _context = dbContext;
         }
         
-        // Krijo një transaksion të ri dhe ruaje atë në DB
+        
         public void AddTransaction(Transaction transaction)
         {
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
         }
         
-        // Merr transaksionet për një llogari të caktuar
+        
         public IEnumerable<Transaction> GetTransactionsByAccountId(Guid accountId)
         {
             return _context.Transactions
                 .Where(t => t.AccountInId == accountId || t.AccountOutId == accountId)
-                .Include(t => t.AccountIn)  // Përdorni për të përfshirë llogaritë në transaksion
+                .Include(t => t.AccountIn)  
                 .Include(t => t.AccountOut)
                 .ToList();
         }
