@@ -35,5 +35,6 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
         [Required(ErrorMessage = "Gender is required")]
         [RegularExpression(@"^(Male|Female)$", ErrorMessage = "Gender must be 'Male' or 'Female'")]
         public string Gender { get; set; }
+   
     }
 }
