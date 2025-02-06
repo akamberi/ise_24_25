@@ -15,7 +15,7 @@ namespace ISEPay.Controllers
         private readonly IAccountService accountService;
         private readonly ISEPayDBContext _context;
 
-        public AccountController(IAccountService accountService,ISEPayDBContext context)
+        public AccountController(IAccountService accountService, ISEPayDBContext context)
         {
             this.accountService = accountService;
             _context = context;
@@ -23,7 +23,6 @@ namespace ISEPay.Controllers
 
         [HttpPost("add")]
         [Authorize(Policy = "Authenticated")]
-
         public IActionResult AddAccount([FromBody] AccountDto account)
         {
             try
@@ -39,7 +38,6 @@ namespace ISEPay.Controllers
 
         [HttpGet("myAccounts/{userId}")]
         [Authorize(Policy = "Authenticated")]
-
         public IActionResult GetUserAccounts(Guid userId)
         {
             try
@@ -52,40 +50,36 @@ namespace ISEPay.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        
         [HttpPost("deposit")]
-        [Authorize] 
         public IActionResult Deposit([FromBody] DepositRequest depositRequest)
         {
-            
-            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);
-
-            if (account == null)
+            try
             {
-                return NotFound("Llogaria nuk u gjet.");
+                
+                accountService.Deposit(depositRequest);
+                return Ok(new { Message = "Deposit successful" });
             }
-
-            
-            account.Balance += depositRequest.Amount;
-
-            
-            var transaction = new ISEPay.DAL.Persistence.Entities.Transaction
+            catch (Exception ex)
             {
-                AccountInId = depositRequest.AccountId,
-                AccountIn = account,
-                Type = TransactionType.DEPOSIT,
-                Amount = depositRequest.Amount,
-                Description= "Deposit",
-                Status = TransactionStatus.COMPLETED,
-                Timestamp = DateTime.Now
-            };
-            _context.Transactions.Add(transaction);
-
-            
-            _context.SaveChanges();
-
-            return Ok(new { Message = "Depozita u realizua me sukses!", NewBalance = account.Balance });
+                return BadRequest(new { Message = ex.Message });
+            }
         }
+
         
-        
+        [HttpPost("withdraw")]
+        public IActionResult Withdraw([FromBody] WithdrawalRequest withdrawalRequest)
+        {
+            try
+            {
+                
+                accountService.Withdraw(withdrawalRequest);
+                return Ok(new { Message = "Withdrawal successful" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }
