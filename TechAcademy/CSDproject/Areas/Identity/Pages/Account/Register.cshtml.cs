@@ -83,12 +83,18 @@ namespace CSDproject.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            Roles = _roleManager.Roles.Select(r => r.Name).ToList(); // Fetch roles from the database
 
-            // Check if an admin already exists
-            var users = await _userManager.Users.ToListAsync(); // Fetch all users into memory
-            IsAdminExists = users.Any(u => _userManager.IsInRoleAsync(u, "Admin").Result); // Check for Admin role
+            // Fetch roles correctly
+            Roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+
+            // Debugging log
+            Console.WriteLine($"Roles loaded: {string.Join(", ", Roles)}");
+
+            // Ensure the Admin existence check works correctly
+            var users = await _userManager.Users.ToListAsync();
+            IsAdminExists = users.Any(u => _userManager.IsInRoleAsync(u, "Admin").Result);
         }
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

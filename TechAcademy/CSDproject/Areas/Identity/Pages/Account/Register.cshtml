@@ -30,10 +30,18 @@
             <div class="form-floating mb-3">
                 <select asp-for="Input.Role" class="form-control">
                     <option value="">Select Role</option>
-                    @foreach (var role in Model.Roles.Where(r => r != "Admin" || !Model.IsAdminExists)) // Exclude Admin if one exists
+                    @if (Model.Roles != null && Model.Roles.Any())
                     {
-                        <option value="@role">@role</option>
+                        @foreach (var role in Model.Roles.Where(r => r != "Admin" || !Model.IsAdminExists))
+                        {
+                            <option value="@role">@role</option>
+                        }
                     }
+                    else
+                    {
+                        <option disabled>No roles available</option>
+                    }
+
                 </select>
                 <label asp-for="Input.Role">Role</label>
                 <span asp-validation-for="Input.Role" class="text-danger"></span>

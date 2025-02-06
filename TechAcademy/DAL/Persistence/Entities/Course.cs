@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 
+
 namespace DAL.Persistence.Entities
 {
     public class Course

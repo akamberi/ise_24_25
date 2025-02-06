@@ -1,0 +1,37 @@
+﻿@model IEnumerable<DAL.Persistence.Entities.Course>
+
+<h2>Courses</h2>
+
+<table id="coursesTable" class="table">
+    <thead>
+        <tr>
+ 
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="/Courses/Details/@item.Id" class="btn btn-primary btn-sm">Details</a>
+                    <a href="/Courses/Edit/@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/Courses/Delete/@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                     
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/Courses/Create" class="btn btn-primary">Create New</a>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

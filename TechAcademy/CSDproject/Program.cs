@@ -7,6 +7,8 @@ using BLL.Services; // Add reference to BLL project
 using Microsoft.Extensions.Configuration;
 using DALApplicationDbContext = DAL.Data.ApplicationDbContext;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using System.Configuration;
+using BLL.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +56,10 @@ builder.Services.AddTransient<IEmailSender, EmailSender>(serviceProvider =>
     var emailSender = new EmailSender(email, password); // Pass credentials to EmailSender constructor
     return emailSender;
 });
+
+
+builder.Services.AddScoped<ICourseService, CourseService>();
+
 
 var app = builder.Build();
 
