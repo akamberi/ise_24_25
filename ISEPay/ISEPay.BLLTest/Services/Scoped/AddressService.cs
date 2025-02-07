@@ -10,6 +10,9 @@ namespace ISEPay.BLL.Services.Scoped
          
         void AddAddress(AddressDto addressDto); 
         void EditAddress(Guid id, AddressDto updatedAddressDto);
+        Address GetAddressByUserId(Guid userId);
+        
+        
 
     }
     
@@ -59,6 +62,18 @@ namespace ISEPay.BLL.Services.Scoped
             _addressRepository.SaveChanges();
             _usersRepository.SaveChanges();
         }
+        
+        
+        public Address GetAddressByUserId(Guid userId)
+        {
+            var address = _addressRepository.GetByUserId(userId);  
+            if (address == null)
+            {
+                throw new Exception("Address for user not found.");
+            }
+            return address;
+        }
+
         
         public void EditAddress(Guid id, AddressDto updatedAddressDto)
         {

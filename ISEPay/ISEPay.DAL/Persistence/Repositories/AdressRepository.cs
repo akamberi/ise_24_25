@@ -11,6 +11,8 @@ namespace ISEPay.DAL.Persistence.Repositories
     {
         Address? GetById(Guid userId); 
         IEnumerable<Address> FilterByCity(string city); 
+        
+        Address? GetByUserId(Guid userId);
     }
 
     internal class AddressRepository : _BaseRepository<Address, Guid>, IAddressRepository
@@ -45,5 +47,10 @@ namespace ISEPay.DAL.Persistence.Repositories
 
             return _dbSet.FirstOrDefault(x => x.City == city);
         }
+        public Address? GetByUserId(Guid userId)
+        {
+            return _dbSet.AsQueryable().FirstOrDefault(x => x.UserId == userId); 
+        }
+        
     }
 }

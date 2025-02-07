@@ -14,9 +14,7 @@ public class TransferRequest
     public string FromAccountNumber { get; set; }  
     public string ToAccountNumber { get; set; }    
     public decimal Amount { get; set; }  
-    public Guid FromCurrency { get; set; }
-    public Guid ToCurrency { get; set; }
+
     
-    public string FromCountry { get; set; } 
-    public string ToCountry { get; set; } 
+
 }

@@ -1,4 +1,4 @@
-using ISEPay.Common.Enums; // Nevojitet për TransactionType
+using ISEPay.Common.Enums; 
 
 namespace ISEPay.BLL.ISEPay.Domain.Models
 {
