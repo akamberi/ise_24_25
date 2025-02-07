@@ -1,5 +1,7 @@
 using ISEPay.BLL.Services;
+using ISEPay.BLL.Services.Scoped;
 using ISEPay.Config;
+using ISEPay.DAL.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -25,7 +27,9 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+   
     var jwtSettings = builder.Configuration.GetSection("Jwt");
+    var jwtKey = jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key configuration is missing");
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -34,7 +38,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 

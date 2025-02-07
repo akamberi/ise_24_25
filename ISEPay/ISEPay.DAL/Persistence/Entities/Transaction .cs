@@ -7,10 +7,10 @@ namespace ISEPay.DAL.Persistence.Entities
     public class Transaction : BaseEntity<Guid>
     {
         public Guid? AccountInId { get; set; }
-        public Account AccountIn { get; set; } 
+        public Account? AccountIn { get; set; } 
 
         public Guid? AccountOutId { get; set; }
-        public Account AccountOut { get; set; } 
+        public Account? AccountOut { get; set; } 
 
         public TransactionType Type { get; set; } // Enum for transaction type
 
@@ -31,6 +31,6 @@ namespace ISEPay.DAL.Persistence.Entities
         //public Guid? AtmLocationId { get; set; }
         //public AtmLocation AtmLocation { get; set; } // Navigation property for ATM location
 
-        public string Description { get; set; } // Additional transaction details
+        public string? Description { get; set; } // Additional transaction details
     }
 }
