@@ -1,9 +1,41 @@
-﻿<!-- Details.cshtml -->
-@model Common.DTOs.CourseModuleDto
-
+﻿@model CSDproject.Models.ViewModels.CourseModuleDetailsViewModel
 <h2>Course Module Details</h2>
-<p><strong>Name:</strong> @Model.Name</p>
-<p><strong>Course:</strong> @Model.CourseName</p>  <!-- Display the Course Name here -->
-<p><strong>Content:</strong> @Model.Content</p>
-<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<p><strong>Name:</strong> @Model.CourseModule.Name</p>
+<p><strong>Course:</strong> @Model.CourseModule.CourseName</p>  <!-- Display the Course Name here -->
+<p><strong>Content:</strong> @Model.CourseModule.Content</p>
+
+<h3>Lesson Files</h3>
+@if (Model.LessonFiles != null && Model.LessonFiles.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>File Type</th>
+                <th>File Size</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in Model.LessonFiles)
+            {
+                <tr>
+                    <td>@file.FileName</td>
+                    <td>@file.FileType</td>
+                    <td>@(file.FileSize / 1024) KB</td> <!-- Show file size in KB -->
+                    <td>
+                        <a href="@Url.Action("Download", "LessonFile", new { id = file.Id })" class="btn btn-primary">Download</a>
+                        <a href="@Url.Action("Details", "LessonFile", new { id = file.Id })" class="btn btn-info">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No lesson files available for this module.</p>
+}
+
+<a asp-action="Edit" asp-route-id="@Model.CourseModule.Id" class="btn btn-warning">Edit</a>
 <a asp-action="Index" class="btn btn-secondary">Back to List</a>

@@ -13,5 +13,7 @@ namespace BLL.Interfaces
         Task<LessonFileDTO> GetByIdAsync(int id);
         Task<LessonFileDTO> UploadAsync(CreateLessonFileDTO dto);
         Task<bool> DeleteAsync(int id);
+        Task<byte[]> GetFileContentAsync(int id);
+        Task<byte[]> ConvertPptxToPdfAsync(int id);
     }
 }

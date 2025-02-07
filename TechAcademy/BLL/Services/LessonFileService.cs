@@ -1,4 +1,5 @@
-﻿using BLL.Interfaces;
+﻿using Aspose.Slides;
+using BLL.Interfaces;
 using Common.DTOs;
 using DAL.Data;
 using DAL.Persistence.Entities;
@@ -147,7 +148,40 @@ namespace BLL.Services
             return await _lessonFileRepository.DeleteAsync(id);
         }
 
-      
+        public async Task<byte[]> GetFileContentAsync(int id)
+        {
+            var file = await _lessonFileRepository.GetByIdAsync(id);
+            if (file == null) return null;
+
+            if (!File.Exists(file.FilePath))
+            {
+                throw new FileNotFoundException("File not found on server.");
+            }
+
+            return await File.ReadAllBytesAsync(file.FilePath);
+        }
+
+        public async Task<byte[]> ConvertPptxToPdfAsync(int id)
+        {
+            var file = await _lessonFileRepository.GetByIdAsync(id);
+            if (file == null ||
+               !(file.FileType == "application/vnd.ms-powerpoint" ||
+                 file.FileType == "application/vnd.openxmlformats-officedocument.presentationml.presentation"))
+            {
+                return null; // Not a PowerPoint file
+            }
+
+            var pdfPath = Path.Combine(Path.GetDirectoryName(file.FilePath),
+                                        Path.GetFileNameWithoutExtension(file.FileName) + ".pdf");
+
+            using (Presentation pres = new Presentation(file.FilePath))
+            {
+                pres.Save(pdfPath, Aspose.Slides.Export.SaveFormat.Pdf);
+            }
+
+            return await File.ReadAllBytesAsync(pdfPath); // Return converted PDF file
+        }
+
 
 
     }

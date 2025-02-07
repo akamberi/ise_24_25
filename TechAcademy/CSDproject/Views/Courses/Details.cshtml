@@ -1,27 +1,44 @@
-﻿@model DAL.Persistence.Entities.Course
+﻿@using CSDproject.Models.ViewModels
+@model CourseDetailsViewModel
 
 @{
     ViewData["Title"] = "Course Details";
 }
 
-<h2>Course Details</h2>
+<h2>@Model.Course.Title</h2>
 
 <div>
     <hr />
     <dl class="dl-horizontal">
         <dt>Name</dt>
-        <dd>@Model.Title</dd>
+        <dd>@Model.Course.Title</dd>
         <dt>Description</dt>
-        <dd>@Model.Description</dd>
+        <dd>@Model.Course.Description</dd>
     </dl>
 </div>
+
+<h3>Course Modules</h3>
+@if (Model.CourseModules.Any())
+{
+    <ul>
+        @foreach (var module in Model.CourseModules)
+        {
+            <li>
+                <strong>@module.Name</strong>
+                <p>@module.Content</p>
+                <a href="/CourseModule/Details/@module.Id" class="btn btn-info">View Module</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No modules available for this course.</p>
+}
+
 <p>
-    <a href="/Courses/Edit/@Model.Id" class="btn btn-warning">Edit</a> |
+    <a href="/Courses/Edit/@Model.Course.Id" class="btn btn-warning">Edit</a> |
     <a href="/Courses" class="btn btn-primary">Back to List</a>
 </p>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+

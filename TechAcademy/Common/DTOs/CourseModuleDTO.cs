@@ -13,6 +13,8 @@ namespace Common.DTOs
         public int CourseId { get; set; }
         public string Content { get; set; }  // Content to be displayed
         public string CourseName { get; set; } // Add this property
+        public IEnumerable<LessonFileDTO> LessonFiles { get; set; } // Add this property
+
 
     }
 

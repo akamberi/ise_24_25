@@ -27,6 +27,12 @@
                 <td>
                     <a href="#" data-id="@file.Id" class="btn btn-danger btn-sm delete-file">Delete</a>
                 </td>
+            
+                <td>
+                    <a href="@Url.Action("ViewFile", "LessonFile", new { id = file.Id })" target="_blank" class="btn btn-primary">View</a>
+                    <a href="@Url.Action("DownloadFile", "LessonFile", new { id = file.Id })" class="btn btn-success">Download</a>
+                </td>
+           
             </tr>
         }
     </tbody>

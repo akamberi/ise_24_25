@@ -73,7 +73,44 @@ namespace CSDproject.Controllers.Normal
             return RedirectToAction(nameof(Index));
         }
 
-       
+        public async Task<IActionResult> Details(int id)
+        {
+            var file = await _lessonFileService.GetByIdAsync(id);
+            if (file == null) return NotFound();
+
+            return View(file);
+        }
+
+        public async Task<IActionResult> Download(int id)
+        {
+            var file = await _lessonFileService.GetByIdAsync(id);
+            if (file == null) return NotFound();
+
+            var fileContent = await _lessonFileService.GetFileContentAsync(id);
+            return File(fileContent, file.FileType, file.FileName);
+        }
+
+        [HttpGet("view/{id}")]
+        public async Task<IActionResult> ViewFile(int id)
+        {
+            var file = await _lessonFileService.GetByIdAsync(id);
+            if (file == null) return NotFound();
+
+            if (file.FileType == "application/vnd.ms-powerpoint" ||
+                file.FileType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+            {
+                var pdfContent = await _lessonFileService.ConvertPptxToPdfAsync(id);
+                if (pdfContent == null) return NotFound("Error converting PowerPoint to PDF");
+
+                return File(pdfContent, "application/pdf"); // Serve the converted PDF
+            }
+
+            var fileContent = await _lessonFileService.GetFileContentAsync(id);
+            return File(fileContent, file.FileType);
+        }
+
+
+
 
 
 

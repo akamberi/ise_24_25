@@ -1,0 +1,36 @@
+﻿@using Common.DTOs
+@model LessonFileDTO
+
+<h2>File Details</h2>
+
+<table class="table">
+    <tr>
+        <th>File Name:</th>
+        <td>@Model.FileName</td>
+    </tr>
+    <tr>
+        <th>File Type:</th>
+        <td>@Model.FileType</td>
+    </tr>
+    <tr>
+        <th>File Size:</th>
+        <td>@(Model.FileSize / 1024) KB</td>
+    </tr>
+</table>
+
+@if (Model.FileType.StartsWith("image/"))
+{
+    <img src="@Url.Action("Download", new { id = Model.Id })" alt="File Image" style="max-width: 100%; height: auto;" />
+}
+else if (Model.FileType == "application/pdf")
+{
+    <embed src="@Url.Action("Download", new { id = Model.Id })" width="100%" height="600px" type="application/pdf" />
+}
+else
+{
+    <p>File preview is not available.</p>
+}
+
+<a href="@Url.Action("Download", new { id = Model.Id })" class="btn btn-primary">Download File</a>
+<a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+

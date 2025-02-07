@@ -5,6 +5,8 @@ using Common.DTOs;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using BLL.Services;
+using CSDproject.Models.ViewModels;
 
 namespace CSDproject.Controllers.Normal
 {
@@ -12,13 +14,15 @@ namespace CSDproject.Controllers.Normal
     public class CoursesController : Controller
     {
         private readonly ICourseService _courseService;
+        private readonly ICourseModuleService _courseModuleService;
         private readonly UserManager<IdentityUser> _userManager;
 
 
-        public CoursesController(ICourseService courseService, UserManager<IdentityUser> userManager)
+        public CoursesController(ICourseService courseService, UserManager<IdentityUser> userManager,ICourseModuleService courseModuleService)
         {
             _courseService = courseService;
             _userManager = userManager;
+            _courseModuleService = courseModuleService;
         }
 
         // GET: Courses/Create
@@ -67,7 +71,18 @@ namespace CSDproject.Controllers.Normal
                 return NotFound();
             }
 
-            return View(course);
+            // Fetch course modules for the specific course
+            var modules = await _courseModuleService.GetAllAsync();
+            var courseModules = modules.Where(m => m.CourseId == id).ToList();
+
+            // Create a ViewModel or pass the data directly to the view
+            var viewModel = new CourseDetailsViewModel
+            {
+                Course = course,
+                CourseModules = courseModules
+            };
+
+            return View(viewModel);
         }
 
         // GET: Courses

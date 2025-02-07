@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using Common.DTOs;
+using CSDproject.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSDproject.Controllers.Normal
@@ -8,12 +9,14 @@ namespace CSDproject.Controllers.Normal
     {
         private readonly ICourseModuleService _courseModuleService;
         private readonly ICourseService _courseService;
+        private readonly ILessonFileService _lessonFileService;
 
 
-        public CourseModuleController(ICourseModuleService courseModuleService, ICourseService courseService)
+        public CourseModuleController(ICourseModuleService courseModuleService, ICourseService courseService, ILessonFileService lessonFileService)
         {
             _courseModuleService = courseModuleService;
             _courseService = courseService;
+            _lessonFileService = lessonFileService;
         }
 
         public async Task<IActionResult> Index()
@@ -22,11 +25,25 @@ namespace CSDproject.Controllers.Normal
             return View(modules);
         }
 
+
         public async Task<IActionResult> Details(int id)
         {
-            var module = await _courseModuleService.GetByIdAsync(id);
-            if (module == null) return NotFound();
-            return View(module);
+            var courseModule = await _courseModuleService.GetByIdAsync(id);
+            if (courseModule == null) return NotFound();
+
+            // Fetch lesson files related to this course module
+            var lessonFiles = await _lessonFileService.GetAllAsync();
+
+            // Filter lesson files by CourseModuleId (You can optimize this logic based on your service logic)
+            var lessonFilesForModule = lessonFiles.Where(f => f.CourseModuleId == id).ToList();
+
+            var viewModel = new CourseModuleDetailsViewModel
+            {
+                CourseModule = courseModule,
+                LessonFiles = lessonFilesForModule
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Create()

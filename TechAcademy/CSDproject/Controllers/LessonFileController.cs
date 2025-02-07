@@ -59,7 +59,16 @@ namespace CSDproject.Controllers
 
             return Ok(new { message = "File deleted successfully." });
         }
-    
+
+        [HttpGet("download/{id}")]
+        public async Task<IActionResult> Download(int id)
+        {
+            var file = await _lessonFileService.GetByIdAsync(id);
+            if (file == null) return NotFound();
+
+            var fileContent = await _lessonFileService.GetFileContentAsync(id);
+            return File(fileContent, file.FileType, file.FileName);
+        }
 
     }
 }
