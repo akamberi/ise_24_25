@@ -9,6 +9,7 @@ using DALApplicationDbContext = DAL.Data.ApplicationDbContext;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using System.Configuration;
 using BLL.Interfaces;
+using DAL.Persistence.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,8 +58,15 @@ builder.Services.AddTransient<IEmailSender, EmailSender>(serviceProvider =>
     return emailSender;
 });
 
+builder.Services.AddScoped<ICourseModuleService, CourseModuleService>();
+
 
 builder.Services.AddScoped<ICourseService, CourseService>();
+
+builder.Services.AddScoped<ILessonFileService, LessonFileService>();
+
+builder.Services.AddScoped<ILessonFileRepository, LessonFileRepository>();
+
 
 
 var app = builder.Build();

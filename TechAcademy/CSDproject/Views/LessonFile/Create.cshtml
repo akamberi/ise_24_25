@@ -1,0 +1,22 @@
+﻿@model Common.DTOs.CreateLessonFileDTO
+
+@{
+    ViewData["Title"] = "Upload Lesson File";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="CourseModuleId">Course Module</label>
+        <select asp-for="CourseModuleId" class="form-control" asp-items="ViewBag.CourseModules"></select>
+    </div>
+    <div class="form-group">
+        <label for="File">Upload File</label>
+        <input asp-for="File" type="file" class="form-control" />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+<a href="@Url.Action("Index", "LessonFile")" class="btn btn-secondary">Back to List</a>

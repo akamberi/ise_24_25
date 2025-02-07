@@ -1,0 +1,39 @@
+﻿<!-- Index.cshtml -->
+@model IEnumerable<Common.DTOs.CourseModuleDto>
+
+<h2>Course Modules</h2>
+<a href="/CourseModule/Create" class="btn btn-primary">Create New</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Course Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var module in Model)
+        {
+            <tr>
+                <td>@module.Name</td>
+                <td>@module.CourseName</td> <!-- Display Course Name -->
+                <td>
+                    <!-- Hidden field for CourseId -->
+                    <input type="hidden" name="CourseId" value="@module.CourseId" />
+
+                    <a asp-action="Edit" asp-route-id="@module.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@module.Id" class="btn btn-info btn-sm">Details</a>
+                    <a href="/CourseModule/Delete/@module.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

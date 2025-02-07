@@ -1,0 +1,66 @@
+﻿@model Common.DTOs.CreateCourseModuleDto
+
+<h2>Create Course Module</h2>
+
+<form id="createModuleForm">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <!-- Display Course Name and use hidden input for CourseId -->
+    <div class="form-group">
+        <label for="courseName">Course Name</label>
+        <select id="courseName" class="form-control" required>
+            @foreach (var course in ViewBag.Courses)
+            {
+                <option value="@course.Id">@course.Title</option>
+            }
+        </select>
+        <input type="hidden" id="courseId" name="CourseId" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<a asp-action="Index">Back to List</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // When a Course Name is selected, update the hidden CourseId field
+        $("#courseName").change(function() {
+            var selectedCourseId = $(this).val();
+            $("#courseId").val(selectedCourseId);  // Set the hidden CourseId input
+        });
+
+        $("#createModuleForm").submit(function(event) {
+            event.preventDefault(); // Prevent normal form submission
+
+            var moduleData = {
+                name: $("input[name='Name']").val(),
+                courseId: $("#courseId").val(),  // Get the hidden CourseId
+                content: $("textarea[name='Content']").val()
+            };
+
+            $.ajax({
+                url: "/api/CourseModule", // API route
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(moduleData),
+                success: function(response) {
+                    alert("Course Module Created!");
+                    window.location.href = "/CourseModule/Index"; // Redirect to list
+                },
+                error: function(xhr) {
+                    alert("Error: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

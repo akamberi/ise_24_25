@@ -1,0 +1,9 @@
+﻿<!-- Details.cshtml -->
+@model Common.DTOs.CourseModuleDto
+
+<h2>Course Module Details</h2>
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>Course:</strong> @Model.CourseName</p>  <!-- Display the Course Name here -->
+<p><strong>Content:</strong> @Model.Content</p>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

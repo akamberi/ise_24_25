@@ -1,0 +1,14 @@
+﻿@model Common.DTOs.LessonFileDTO
+
+@{
+    ViewData["Title"] = "Delete Lesson File";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Are you sure you want to delete the file: @Model.FileName?</h3>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="@Url.Action("Index", "LessonFile")" class="btn btn-secondary">Cancel</a>
+</form>

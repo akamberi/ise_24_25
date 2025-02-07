@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Common.DTOs.LessonFileDTO>
+
+@{
+    ViewData["Title"] = "Lesson Files";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>Course Module</th>
+            <th>File Type</th>
+            <th>File Size</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model)
+        {
+            <tr>
+                <td>@file.FileName</td>
+                <td>@file.CourseModuleName</td> <!-- Display CourseModuleName instead of CourseModuleId -->
+                <td>@file.FileType</td>
+                <td>@file.FileSize</td>
+                <td>
+                    <a href="#" data-id="@file.Id" class="btn btn-danger btn-sm delete-file">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create", "LessonFile")" class="btn btn-primary">Create New File</a>
+<script>
+    $(document).on('click', '.delete-file', function (e) {
+        e.preventDefault();
+        var fileId = $(this).data('id');
+        if (confirm("Are you sure you want to delete this file?")) {
+            $.ajax({
+                url: '/LessonFile/Delete/' + fileId,
+                type: 'DELETE',
+                success: function (response) {
+                    alert(response.message); // Optionally show a success message
+                    location.reload(); // Reload page after deletion
+                },
+                error: function (xhr, status, error) {
+                    alert("Error deleting file: " + xhr.responseText);
+                }
+            });
+        }
+    });
+
+
+</script>
