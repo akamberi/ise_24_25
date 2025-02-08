@@ -12,6 +12,8 @@ using BLL.Interfaces;
 using DAL.Persistence.Repositories;
 
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
@@ -63,9 +65,20 @@ builder.Services.AddScoped<ICourseModuleService, CourseModuleService>();
 
 builder.Services.AddScoped<ICourseService, CourseService>();
 
+builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
+
 builder.Services.AddScoped<ILessonFileService, LessonFileService>();
 
 builder.Services.AddScoped<ILessonFileRepository, LessonFileRepository>();
+
+
+
+// Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
+
 
 
 

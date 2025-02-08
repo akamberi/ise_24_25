@@ -1,0 +1,29 @@
+﻿@model CSDproject.Models.ViewModels.EnrollViewModel
+
+@{
+    ViewData["Title"] = "Enroll in a Course";
+}
+
+<h2>Enroll in a Course</h2>
+
+<form asp-action="Enroll" method="post">
+    <div class="form-group">
+        <label asp-for="CourseId" class="control-label">Select Course</label>
+        <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses">
+            <option value="">-- Select a Course --</option>
+        </select>
+        <span asp-validation-for="CourseId" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="UserId" value="@User.Identity.Name" /> <!-- Automatically populate UserId -->
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Enroll</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

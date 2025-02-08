@@ -49,10 +49,11 @@ namespace DAL.Data
                 .HasForeignKey(c => c.InstructorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+        
             builder.Entity<CourseEnrollment>()
-                .HasOne(ce => ce.User)
-                .WithMany()
-                .HasForeignKey(ce => ce.UserId)
+                .HasOne(ce => ce.Course)
+                .WithMany(c => c.CourseEnrollments)
+                .HasForeignKey(ce => ce.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<AssignmentSubmission>()
