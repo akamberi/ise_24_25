@@ -10,21 +10,24 @@ using CSDproject.Models.ViewModels;
 
 namespace CSDproject.Controllers.Normal
 {
-    [Authorize(Roles = "Lecturer")]
+    
     public class CoursesController : Controller
     {
         private readonly ICourseService _courseService;
         private readonly ICourseModuleService _courseModuleService;
+        private readonly ICourseEnrollmentService _courseEnrollmentService;
         private readonly UserManager<IdentityUser> _userManager;
 
 
-        public CoursesController(ICourseService courseService, UserManager<IdentityUser> userManager,ICourseModuleService courseModuleService)
+        public CoursesController(ICourseService courseService, UserManager<IdentityUser> userManager, ICourseModuleService courseModuleService, ICourseEnrollmentService courseEnrollmentService)
         {
             _courseService = courseService;
             _userManager = userManager;
             _courseModuleService = courseModuleService;
+            _courseEnrollmentService = courseEnrollmentService;
         }
 
+        [Authorize(Roles = "Lecturer")]
         // GET: Courses/Create
         public async Task<IActionResult> Create()
         {
@@ -36,7 +39,7 @@ namespace CSDproject.Controllers.Normal
 
             var createCourseDto = new CreateCourseDto
             {
-                InstructorUsername = user.UserName 
+                InstructorUsername = user.UserName
             };
 
             return View(createCourseDto);
@@ -50,6 +53,8 @@ namespace CSDproject.Controllers.Normal
             {
                 return View(courseDto);
             }
+            // Debugging
+            Console.WriteLine($"Title: {courseDto.Title}, Description: {courseDto.Description}, Price: {courseDto.Price}");
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -92,6 +97,8 @@ namespace CSDproject.Controllers.Normal
             return View(courses);
         }
 
+
+        [Authorize(Roles = "Lecturer")]
         // GET: Courses/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -108,6 +115,7 @@ namespace CSDproject.Controllers.Normal
                 Id = course.Id,
                 Title = course.Title,
                 Description = course.Description,
+                Price = course.Price,
                 InstructorUsername = username
             };
 
@@ -139,7 +147,7 @@ namespace CSDproject.Controllers.Normal
             return RedirectToAction(nameof(Index));
         }
 
-
+        [Authorize(Roles = "Lecturer")]
         // GET: Courses/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -160,5 +168,7 @@ namespace CSDproject.Controllers.Normal
             await _courseService.DeleteCourseAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        
     }
 }

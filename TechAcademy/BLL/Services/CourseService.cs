@@ -23,6 +23,7 @@ namespace BLL.Services
             {
                 Title = courseDto.Title,
                 Description = courseDto.Description,
+                Price = courseDto.Price,
                 InstructorId = courseDto.InstructorUsername
             };
 
@@ -55,6 +56,7 @@ namespace BLL.Services
 
             course.Title = courseDto.Title;
             course.Description = courseDto.Description;
+            course.Price = courseDto.Price;
             course.InstructorId = courseDto.InstructorUsername;
 
             _context.Courses.Update(course);

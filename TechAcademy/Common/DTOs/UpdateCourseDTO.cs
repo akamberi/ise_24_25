@@ -11,6 +11,8 @@ namespace Common.DTOs
 
         [Required]
         public string Description { get; set; }
+         [Required]
+        public decimal Price { get; set; } 
         public string InstructorUsername { get; set; }
     }
 }

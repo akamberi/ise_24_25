@@ -1,5 +1,9 @@
 ﻿@using CSDproject.Models.ViewModels
+@using Microsoft.AspNetCore.Identity
 @model CourseDetailsViewModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 
 @{
     ViewData["Title"] = "Course Details";
@@ -14,6 +18,8 @@
         <dd>@Model.Course.Title</dd>
         <dt>Description</dt>
         <dd>@Model.Course.Description</dd>
+        <dt>Price</dt>
+        <dd>@Model.Course.Price.ToString("C")</dd>
     </dl>
 </div>
 
@@ -36,9 +42,25 @@ else
     <p>No modules available for this course.</p>
 }
 
+
+
+<!-- Enrollment Button -->
+@if (SignInManager.IsSignedIn(User))
+{
+    <form method="post" action="/CourseEnrollment/PaymentCreate">
+        <input type="hidden" name="courseId" value="@Model.Course.Id" />
+        <input type="hidden" name="amount" value="@Model.Course.Price" />
+        <button type="submit" class="btn btn-success">Enroll Now</button>
+    </form>
+}
+else
+{
+    <p><a href="/Identity/Account/Login">Login</a> to enroll in this course.</p>
+}
+
+
 <p>
     <a href="/Courses/Edit/@Model.Course.Id" class="btn btn-warning">Edit</a> |
     <a href="/Courses" class="btn btn-primary">Back to List</a>
 </p>
-
 

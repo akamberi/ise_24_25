@@ -9,6 +9,9 @@ namespace Common.DTOs
 
         [Required]
         public string Description { get; set; }
+        [Required]
+        public decimal Price { get; set; }  // Added Price field
         public string InstructorUsername { get; set; }
+
     }
 }

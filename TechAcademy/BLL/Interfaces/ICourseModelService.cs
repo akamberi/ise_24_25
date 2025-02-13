@@ -15,5 +15,8 @@ namespace BLL.Interfaces
         Task<CourseModuleDto> CreateAsync(CreateCourseModuleDto dto);  // Create new course module
         Task<CourseModuleDto?> UpdateAsync(int id, UpdateCourseModuleDto dto);  // Update existing course module
         Task<bool> DeleteAsync(int id);  // Delete a course module
+        Task<IEnumerable<CourseModule>> GetModulesByCourseIdAsync(int courseId);
+        
+
     }
 }

@@ -8,6 +8,7 @@
  
             <th>Name</th>
             <th>Description</th>
+            <th>Price</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -17,6 +18,7 @@
             <tr>
                 <td>@item.Title</td>
                 <td>@item.Description</td>
+                <td>@item.Price.ToString("C")</td>
                 <td>
                     <a href="/Courses/Details/@item.Id" class="btn btn-primary btn-sm">Details</a>
                     <a href="/Courses/Edit/@item.Id" class="btn btn-warning btn-sm">Edit</a>

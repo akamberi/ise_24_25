@@ -1,0 +1,7 @@
+﻿@{
+    ViewBag.Title = "Payment Failed";
+}
+
+<h2>Payment Failed</h2>
+<p>Unfortunately, your payment did not go through.</p>
+<a asp-action="PaymentCreate" asp-route-courseId="@ViewBag.CourseId" class="btn btn-danger">Try Again</a>

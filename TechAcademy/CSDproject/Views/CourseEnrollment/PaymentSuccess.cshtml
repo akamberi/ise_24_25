@@ -1,0 +1,7 @@
+﻿@{
+    ViewBag.Title = "Payment Successful";
+}
+
+<h2>Payment Successful</h2>
+<p>You have been successfully enrolled in @ViewBag.CourseName!</p>
+<a asp-action="Index" asp-controller="CourseModule" asp-route-id="@ViewBag.CourseId" class="btn btn-primary">Go to Course Modules</a>

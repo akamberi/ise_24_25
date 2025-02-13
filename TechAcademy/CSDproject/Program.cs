@@ -10,12 +10,17 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using System.Configuration;
 using BLL.Interfaces;
 using DAL.Persistence.Repositories;
-
+using Microsoft.Extensions.Options;
+using BLL.Services.BLL.Services;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+// Configure PayPal settings
+builder.Services.Configure<PayPalSettings>(configuration.GetSection("PayPal"));
+
 
 builder.Services.AddAuthentication().AddGoogle(options =>
 {
@@ -60,16 +65,27 @@ builder.Services.AddTransient<IEmailSender, EmailSender>(serviceProvider =>
     return emailSender;
 });
 
+// Register PayPalService
+builder.Services.AddScoped<PayPalService>();
+
+
 builder.Services.AddScoped<ICourseModuleService, CourseModuleService>();
 
 
 builder.Services.AddScoped<ICourseService, CourseService>();
 
-builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
 
 builder.Services.AddScoped<ILessonFileService, LessonFileService>();
 
 builder.Services.AddScoped<ILessonFileRepository, LessonFileRepository>();
+
+builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
+
+builder.Services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
 
 
 
@@ -77,7 +93,6 @@ builder.Services.AddScoped<ILessonFileRepository, LessonFileRepository>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
 
 
 

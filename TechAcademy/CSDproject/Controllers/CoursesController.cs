@@ -1,7 +1,8 @@
 ﻿using BLL.Interfaces;
 using DAL.Persistence.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Common.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using CSDproject.Models;
 
@@ -12,10 +13,12 @@ namespace CSDproject.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly ICourseService _courseService;
+        private readonly ICourseEnrollmentService _courseEnrollmentService;
 
-        public CoursesController(ICourseService courseService)
+        public CoursesController(ICourseService courseService, ICourseEnrollmentService courseEnrollmentService)
         {
             _courseService = courseService;
+            _courseEnrollmentService = courseEnrollmentService;
         }
 
         [HttpPost]
@@ -68,5 +71,7 @@ namespace CSDproject.Controllers
             await _courseService.DeleteCourseAsync(id);
             return NoContent();
         }
+
+       
     }
 }

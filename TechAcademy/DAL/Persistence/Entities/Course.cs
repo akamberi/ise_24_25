@@ -16,6 +16,7 @@ namespace DAL.Persistence.Entities
         public string Description { get; set; }
         public string InstructorId { get; set; }  // Foreign key to IdentityUser (Lecturer)
         public IdentityUser Instructor { get; set; }  // Reference to IdentityUser (Lecturer)
+        public decimal Price { get; set; }  // 🔹 Add this property for payments
         public ICollection<CourseModule> CourseModules { get; set; }
         public ICollection<CourseEnrollment> CourseEnrollments { get; set; }
         public ICollection<Assignment> Assignments { get; set; }  // Link to assignments

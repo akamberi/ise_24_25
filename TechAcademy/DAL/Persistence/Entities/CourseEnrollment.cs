@@ -17,6 +17,6 @@ namespace DAL.Persistence.Entities
         public DateTime EnrollmentDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public bool IsCompleted { get; set; }
-        public Course Course1 { get; set; }  // Navigation Property
+        
     }
 }
