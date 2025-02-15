@@ -16,8 +16,7 @@ namespace ISEPay.Controllers
         private readonly ITransferService transferService;
         private readonly ISEPayDBContext _context;
 
-        public AccountController(IAccountService accountService,ITransferService transferService)
-        public AccountController(IAccountService accountService, ISEPayDBContext context)
+        public AccountController(IAccountService accountService, ISEPayDBContext context, ITransferService transferService)
         {
             this.accountService = accountService;
             this.transferService = transferService;
