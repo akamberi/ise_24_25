@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 public interface IAuthenticationService
 {
     AuthenticationResponse Authenticate(AuthenticationRequest authenticationRequest);
+    AuthenticationResponse AuthenticateAdmin(AuthenticationRequest authenticationRequest);
+    AuthenticationResponse AuthenticateAgent(AuthenticationRequest authenticationRequest);
 }
 
 internal class AuthenticationService : IAuthenticationService
@@ -65,6 +67,109 @@ internal class AuthenticationService : IAuthenticationService
         if (role == null)
         {
             throw new Exception("Role not found.");
+        }
+
+        // Generate a JWT token
+        var token = GenerateToken(user.FullName, role.Name);
+
+        // Return the AuthenticationResponse with user details and token
+        return new AuthenticationResponse
+        {
+            UserID = user.Id,
+            Name = user.FullName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            AccessToken = token
+        };
+    }
+
+    public AuthenticationResponse AuthenticateAdmin(AuthenticationRequest authenticationRequest)
+    {
+        // Validate inputs
+        if (string.IsNullOrWhiteSpace(authenticationRequest.Email) ||
+            string.IsNullOrWhiteSpace(authenticationRequest.Password))
+        {
+            throw new ArgumentException("Email and password are required.");
+        }
+
+        // Fetch user from repository based on email
+        var user = _userRepository.GetAll().FirstOrDefault(u => u.Email == authenticationRequest.Email);
+
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        // Verify password
+        var result = _passwordHasher.VerifyHashedPassword(user, user.Password, authenticationRequest.Password);
+        if (result != PasswordVerificationResult.Success)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        // Retrieve role name based on RoleId
+        var role = _roleRepository.FindById(user.RoleID);
+        if (role == null)
+        {
+            throw new Exception("Role not found.");
+        }
+
+        // Ensure user is an Admin
+        if (!role.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new UnauthorizedAccessException("Access denied. Only admins can log in.");
+        }
+
+        // Generate a JWT token
+        var token = GenerateToken(user.FullName, role.Name);
+
+        // Return the AuthenticationResponse with user details and token
+        return new AuthenticationResponse
+        {
+            UserID = user.Id,
+            Name = user.FullName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            AccessToken = token
+        };
+    }
+
+
+    public AuthenticationResponse AuthenticateAgent(AuthenticationRequest authenticationRequest)
+    {
+        // Validate inputs
+        if (string.IsNullOrWhiteSpace(authenticationRequest.Email) ||
+            string.IsNullOrWhiteSpace(authenticationRequest.Password))
+        {
+            throw new ArgumentException("Email and password are required.");
+        }
+
+        // Fetch user from repository based on email
+        var user = _userRepository.GetAll().FirstOrDefault(u => u.Email == authenticationRequest.Email);
+
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        // Verify password
+        var result = _passwordHasher.VerifyHashedPassword(user, user.Password, authenticationRequest.Password);
+        if (result != PasswordVerificationResult.Success)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+
+        // Retrieve role name based on RoleId
+        var role = _roleRepository.FindById(user.RoleID);
+        if (role == null)
+        {
+            throw new Exception("Role not found.");
+        }
+
+        // Ensure user is an Agent
+        if (!role.Name.Equals("Agent", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new UnauthorizedAccessException("Access denied. Only agents can log in.");
         }
 
         // Generate a JWT token

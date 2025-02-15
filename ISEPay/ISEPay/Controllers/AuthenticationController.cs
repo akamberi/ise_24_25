@@ -51,5 +51,72 @@ namespace ISEPay.Controllers
                 return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
             }
         }
+
+
+
+        [HttpPost("authenticate/admin")]
+        [Authorize(Policy = "Public")]
+        public IActionResult AuthenticateAdmin([FromBody] AuthenticationRequest request)
+        {
+            try
+            {
+                // Validate the input model
+                if (request == null)
+                    return BadRequest("Request body cannot be null.");
+
+                // Perform authentication
+                var response = _authenticationService.AuthenticateAdmin(request);
+
+                // Return the response
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
+        }
+
+
+        [HttpPost("authenticate/agent")]
+        [Authorize(Policy = "Public")]
+        public IActionResult AuthenticateAgent([FromBody] AuthenticationRequest request)
+        {
+            try
+            {
+                // Validate the input model
+                if (request == null)
+                    return BadRequest("Request body cannot be null.");
+
+                // Perform authentication
+                var response = _authenticationService.AuthenticateAgent(request);
+
+                // Return the response
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
+        }
+
+
     }
 }
