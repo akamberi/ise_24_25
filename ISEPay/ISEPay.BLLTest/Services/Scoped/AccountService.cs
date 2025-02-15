@@ -3,6 +3,7 @@ using ISEPay.Common.Enums;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
 using ISEPay.Domain.Models;
+using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 
 
@@ -12,6 +13,7 @@ namespace ISEPay.BLL.Services.Scoped
     public interface IAccountService
     {
         void CreateDefaultAccount(Guid userId);
+        void DeactivateAccount(DeactivateAccountDto accountDto);
         void AddAccount(AccountDto account);
         List<AccountResponse> GetUserAccounts(Guid userId);
 
@@ -67,7 +69,13 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new Exception("User is  not approved yet");
             }
+            var accounts = accountRepository.FindAccountsByUserId(account.UserId);
+            var activeAccounts = accounts.Where(account => account.Status.Equals(AccountStatus.ACTIVE)).ToList();
+            if (activeAccounts.Count.Equals(5))
+            {
+                throw new Exception("You cannnot have more tha 5 active accounts");
 
+            }
             var accountToAdd = new Account
             {
                 AccountNumber = GenerateAccountNumber(),
@@ -85,6 +93,34 @@ namespace ISEPay.BLL.Services.Scoped
             accountRepository.SaveChanges();
 
         }
+
+        public void DeactivateAccount(DeactivateAccountDto accountDTO)
+        {
+            // Retrieve all accounts for the provided UserId
+            var userAccounts = accountRepository.FindAccountsByUserId(accountDTO.UserId).ToList();
+
+            // Check if the user has any accounts
+            if (!userAccounts.Any())
+            {
+                throw new Exception("No accounts found for this UserId.");
+            }
+
+            // Try to find the account directly by AccountNumber
+            var account = userAccounts.FirstOrDefault(a => a.AccountNumber == accountDTO.AccountNumber);
+
+            // If no account found with the provided AccountNumber
+            if (account == null)
+            {
+                throw new Exception("The provided account number does not belong to the provided UserId.");
+            }
+
+            // Set the account's status to INACTIVE (or another status for deactivation)
+            account.Status = AccountStatus.INACTIVE;  
+            account.UpdatedAt = DateTime.UtcNow;
+
+            accountRepository.UpdateAccount(account);  // This method handles saving as well
+        }
+
 
         public void CreateDefaultAccount(Guid userId)
         {

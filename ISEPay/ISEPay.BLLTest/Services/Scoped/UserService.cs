@@ -209,7 +209,7 @@ namespace ISEPay.BLL.Services.Scoped
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
-                Status = Common.Enums.UserStatus.PENDING,
+                Status = Common.Enums.UserStatus.APPROVED,
                 CreatedAt = DateTime.Now
             };
 
