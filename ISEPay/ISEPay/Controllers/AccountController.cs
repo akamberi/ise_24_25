@@ -39,6 +39,25 @@ namespace ISEPay.Controllers
             }
         }
 
+        [HttpPost("deactivate")]
+        [Authorize(Policy = "Authenticated")]
+        public IActionResult DeactivateAccount([FromBody] DeactivateAccountDto accountDto)
+        {
+            try
+            {
+                // Call the service layer to deactivate the account
+                accountService.DeactivateAccount(accountDto);
+
+                // Return success response
+                return Ok(new { Message = "Account deactivated successfully" });
+            }
+            catch (Exception ex)
+            {
+                // Return error response
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+
         [HttpGet("myAccounts/{userId}")]
         [Authorize(Policy = "Authenticated")]
 

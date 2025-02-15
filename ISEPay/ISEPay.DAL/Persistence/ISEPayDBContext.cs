@@ -16,6 +16,8 @@ namespace ISEPay.DAL.Persistence
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Image> Images { get; set; } // Added DbSet for Images
+
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<Fee> Fees { get; set; }
 
@@ -109,6 +111,18 @@ namespace ISEPay.DAL.Persistence
                 .Property(f => f.FeeValue)
                 .HasColumnType("decimal(18, 2)") 
                 .IsRequired();
+
+            // Image entity configuration
+            modelBuilder.Entity<Image>()
+                .Property(i => i.Id)
+                .HasColumnType("uniqueidentifier")
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Image>()
+                .HasOne(i => i.User)
+                .WithMany(u => u.Images)
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

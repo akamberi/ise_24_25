@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
+using Microsoft.AspNetCore.Http;
 public interface IAuthenticationService
 {
     AuthenticationResponse Authenticate(AuthenticationRequest authenticationRequest);
@@ -18,17 +19,21 @@ internal class AuthenticationService : IAuthenticationService
     private readonly IUsersRepository _userRepository; // Replace with your actual repository interface
     private readonly IRolesRepository _roleRepository; // Replace with your actual role repository interface
     private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
 
     public AuthenticationService(
         IConfiguration configuration,
         IUsersRepository userRepository,
         IRolesRepository roleRepository,
-        IPasswordHasher<User> passwordHasher)
+        IPasswordHasher<User> passwordHasher,
+        IHttpContextAccessor httpContextAccessor)
     {
         _configuration = configuration;
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _passwordHasher = passwordHasher;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public AuthenticationResponse Authenticate(AuthenticationRequest authenticationRequest)
@@ -98,5 +103,25 @@ internal class AuthenticationService : IAuthenticationService
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public User GetCurrentUser()
+    {
+        var userPrincipal = _httpContextAccessor.HttpContext?.User;
+
+        if (userPrincipal == null || !userPrincipal.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("User not authenticated");
+        }
+
+        var email = userPrincipal.FindFirstValue(ClaimTypes.Email); // Extract email claim
+
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnauthorizedAccessException("User email not found in token");
+        }
+
+        return _userRepository.GetAll().FirstOrDefault(u => u.Email == email)
+               ?? throw new UnauthorizedAccessException("User not found in the system");
     }
 }

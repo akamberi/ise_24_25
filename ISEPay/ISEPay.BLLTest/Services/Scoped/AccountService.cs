@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ISEPay.DAL.Persistence;
 using ISEPay.Domain.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
+
 using Transaction = ISEPay.DAL.Persistence.Entities.Transaction;
 
 namespace ISEPay.BLL.Services.Scoped
@@ -16,6 +19,7 @@ namespace ISEPay.BLL.Services.Scoped
     public interface IAccountService
     {
         void CreateDefaultAccount(Guid userId);
+        void DeactivateAccount(DeactivateAccountDto accountDto);
         void AddAccount(AccountDto account);
         List<AccountResponse> GetUserAccounts(Guid userId);
         void Deposit(DepositRequest depositRequest); 
@@ -38,8 +42,9 @@ namespace ISEPay.BLL.Services.Scoped
 
         public List<AccountResponse> GetUserAccounts(Guid userId)
         {
-            // Retrieve accounts for the given userId
-            var allAccounts = accountRepository.FindAccountsByUserId(userId);
+            var allAccounts = accountRepository.FindAccountsByUserId(userId)
+                                         .Where(account => account.Status == AccountStatus.ACTIVE) // Filtering active accounts
+                                         .ToList();
 
             if (allAccounts == null || !allAccounts.Any())
             {
@@ -51,8 +56,10 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 AccountNumber = account.AccountNumber,
                 Balance = account.Balance,
-                Currency = account.Currency
-            }).ToList();
+                Currency = account.Currency,
+                AccountType= CultureInfo.CurrentCulture.TextInfo.ToTitleCase(account.Type.ToString().ToLower())
+
+        }).ToList();
 
             return accountResponses;
         }
@@ -73,10 +80,15 @@ namespace ISEPay.BLL.Services.Scoped
             
             var existingAccount = accountRepository.FindAccountsByUserId(account.UserId)
                 .FirstOrDefault(a => a.Currency == account.Currency && a.Type == account.AccountType);
-
             if (existingAccount != null)
             {
                 throw new Exception("Account already exists for this user with the same currency and type");
+            }
+            var accounts = accountRepository.FindAccountsByUserId(account.UserId);
+            var activeAccounts = accounts.Where(account => account.Status.Equals(AccountStatus.ACTIVE)).ToList();
+            if (activeAccounts.Count.Equals(5))
+            {
+                throw new Exception("You cannnot have more tha 5 active accounts");
             }
             
             var accountToAdd = new Account
@@ -96,6 +108,34 @@ namespace ISEPay.BLL.Services.Scoped
             accountRepository.SaveChanges();
 
         }
+
+        public void DeactivateAccount(DeactivateAccountDto accountDTO)
+        {
+            // Retrieve all accounts for the provided UserId
+            var userAccounts = accountRepository.FindAccountsByUserId(accountDTO.UserId).ToList();
+
+            // Check if the user has any accounts
+            if (!userAccounts.Any())
+            {
+                throw new Exception("No accounts found for this UserId.");
+            }
+
+            // Try to find the account directly by AccountNumber
+            var account = userAccounts.FirstOrDefault(a => a.AccountNumber == accountDTO.AccountNumber);
+
+            // If no account found with the provided AccountNumber
+            if (account == null)
+            {
+                throw new Exception("The provided account number does not belong to the provided UserId.");
+            }
+
+            // Set the account's status to INACTIVE (or another status for deactivation)
+            account.Status = AccountStatus.INACTIVE;  
+            account.UpdatedAt = DateTime.UtcNow;
+
+            accountRepository.UpdateAccount(account);  // This method handles saving as well
+        }
+
 
         public void CreateDefaultAccount(Guid userId)
         {
