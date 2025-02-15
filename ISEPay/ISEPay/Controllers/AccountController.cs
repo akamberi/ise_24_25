@@ -2,6 +2,9 @@
 using ISEPay.BLL.Services.Scoped;
 using ISEPay.BLL.ISEPay.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using ISEPay.DAL.Persistence;
+using ISEPay.Common.Enums;
+
 
 namespace ISEPay.Controllers
 {
@@ -10,15 +13,16 @@ namespace ISEPay.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
+        private readonly ISEPayDBContext _context;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, ISEPayDBContext context)
         {
             this.accountService = accountService;
+            _context = context;
         }
 
         [HttpPost("add")]
         [Authorize(Policy = "Authenticated")]
-
         public IActionResult AddAccount([FromBody] AccountDto account)
         {
             try
@@ -53,7 +57,6 @@ namespace ISEPay.Controllers
 
         [HttpGet("myAccounts/{userId}")]
         [Authorize(Policy = "Authenticated")]
-
         public IActionResult GetUserAccounts(Guid userId)
         {
             try
@@ -64,6 +67,37 @@ namespace ISEPay.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+        
+        [HttpPost("deposit")]
+        public IActionResult Deposit([FromBody] DepositRequest depositRequest)
+        {
+            try
+            {
+                
+                accountService.Deposit(depositRequest);
+                return Ok(new { Message = "Deposit successful" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        
+        [HttpPost("withdraw")]
+        public IActionResult Withdraw([FromBody] WithdrawalRequest withdrawalRequest)
+        {
+            try
+            {
+                
+                accountService.Withdraw(withdrawalRequest);
+                return Ok(new { Message = "Withdrawal successful" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
             }
         }
     }

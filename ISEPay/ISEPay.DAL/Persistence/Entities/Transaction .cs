@@ -23,6 +23,8 @@ namespace ISEPay.DAL.Persistence.Entities
         public TransactionStatus Status { get; set; } // Enum for transaction status
 
         public decimal FeeValue { get; set; } = 0; // Transaction fee (default 0)
+        
+        public Guid AgentId { get; set; }
 
         // pritet qe te behen kto 
         //public Guid? ExchangeHistoryId { get; set; }
