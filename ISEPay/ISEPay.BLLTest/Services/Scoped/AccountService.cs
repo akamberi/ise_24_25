@@ -2,8 +2,13 @@
 using ISEPay.Common.Enums;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ISEPay.DAL.Persistence;
 using ISEPay.Domain.Models;
-
+using Transaction = ISEPay.DAL.Persistence.Entities.Transaction;
 
 namespace ISEPay.BLL.Services.Scoped
 {
@@ -13,22 +18,23 @@ namespace ISEPay.BLL.Services.Scoped
         void CreateDefaultAccount(Guid userId);
         void AddAccount(AccountDto account);
         List<AccountResponse> GetUserAccounts(Guid userId);
-
-
+        void Deposit(DepositRequest depositRequest); 
+        void Withdraw(WithdrawalRequest withdrawalRequest); 
     }
+
     internal class AccountService : IAccountService
     {
-
         private readonly IAccountRepository accountRepository;
         private readonly IUsersRepository usersRepository;
+        private readonly ISEPayDBContext _context;  
         
 
-        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository)
+        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository, ISEPayDBContext context)
         {
             this.accountRepository = accountRepository;
             this.usersRepository = usersRepository;
+            _context = context;  
         }
-
 
         public List<AccountResponse> GetUserAccounts(Guid userId)
         {
@@ -60,9 +66,9 @@ namespace ISEPay.BLL.Services.Scoped
                 throw new Exception("User does not exist");
             }
 
-            if(user.Status != UserStatus.APPROVED)
+            if (user.Status != UserStatus.APPROVED)
             {
-                throw new Exception("User is  not approved yet");
+                throw new Exception("User is not approved yet");
             }
             
             var existingAccount = accountRepository.FindAccountsByUserId(account.UserId)
@@ -103,11 +109,11 @@ namespace ISEPay.BLL.Services.Scoped
            
             var accountToAdd = new Account
             {
-                AccountNumber = GenerateAccountNumber(), 
+                AccountNumber = GenerateAccountNumber(),
                 Balance = 0.0m,
-                Currency = "ALL", 
-                Status = AccountStatus.ACTIVE, 
-                Type = AccountType.STANDARD, 
+                Currency = "ALL",
+                Status = AccountStatus.ACTIVE,
+                Type = AccountType.STANDARD,
                 UserId = userId,
                 User = user,
                 CreatedAt = DateTime.UtcNow,
@@ -115,7 +121,7 @@ namespace ISEPay.BLL.Services.Scoped
             };
 
             accountRepository.Add(accountToAdd);
-            accountRepository.SaveChanges(); 
+            accountRepository.SaveChanges();
         }
 
         private string GenerateAccountNumber()
@@ -123,5 +129,72 @@ namespace ISEPay.BLL.Services.Scoped
             return Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(); 
         }
 
+        
+        public void Deposit(DepositRequest depositRequest)
+        {
+            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);
+
+            if (account == null)
+            {
+                throw new Exception("The account was not found.");
+            }
+
+            
+            account.Balance += depositRequest.Amount;
+
+            
+            var transaction = new Transaction
+            {
+                AccountInId = depositRequest.AccountId,
+                AccountIn = account,
+                Type = TransactionType.DEPOSIT,
+                Amount = depositRequest.Amount,
+                Description = "Deposit by agent",
+                Status = TransactionStatus.COMPLETED,
+                Timestamp = DateTime.Now,
+                AgentId = depositRequest.AgentId  
+            };
+
+            
+            _context.Transactions.Add(transaction);
+            _context.SaveChanges();
+        }
+
+        
+        public void Withdraw(WithdrawalRequest withdrawalRequest)
+        {
+            
+            var account = _context.Accounts.FirstOrDefault(a => a.Id == withdrawalRequest.AccountId);
+
+            if (account == null)
+            {
+                throw new Exception("The account was not found.");
+            }
+
+            if (account.Balance < withdrawalRequest.Amount)
+            {
+                throw new Exception("The account balance is insufficient.");
+            }
+
+            
+            account.Balance -= withdrawalRequest.Amount;
+
+            
+            var transaction = new Transaction
+            {
+                AccountOutId = withdrawalRequest.AccountId,
+                AccountOut = account,
+                Type = TransactionType.WITHDRAWAL,
+                Amount = withdrawalRequest.Amount,
+                Description = "Withdrawal by agent",
+                Status = TransactionStatus.COMPLETED,
+                Timestamp = DateTime.Now,
+                AgentId = withdrawalRequest.AgentId  
+            };
+
+            
+            _context.Transactions.Add(transaction);
+            _context.SaveChanges();
+        }
     }
 }

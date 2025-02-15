@@ -1,0 +1,373 @@
+Index: ISEPay/Controllers/AccountController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using Microsoft.AspNetCore.Mvc;\r\nusing ISEPay.BLL.Services.Scoped;\r\nusing ISEPay.BLL.ISEPay.Domain.Models;\r\nusing Microsoft.AspNetCore.Authorization;\r\nusing ISEPay.DAL.Persistence;\r\nusing ISEPay.Common.Enums;\r\n\r\n\r\nnamespace ISEPay.Controllers\r\n{\r\n    [ApiController]\r\n    [Route(\"accounts/\")]\r\n    public class AccountController : ControllerBase\r\n    {\r\n        private readonly IAccountService accountService;\r\n        private readonly ISEPayDBContext _context;\r\n\r\n        public AccountController(IAccountService accountService,ISEPayDBContext context)\r\n        {\r\n            this.accountService = accountService;\r\n            _context = context;\r\n        }\r\n\r\n        [HttpPost(\"add\")]\r\n        [Authorize(Policy = \"Authenticated\")]\r\n\r\n        public IActionResult AddAccount([FromBody] AccountDto account)\r\n        {\r\n            try\r\n            {\r\n                accountService.AddAccount(account);\r\n                return Ok(new { Message = \"Account created successfully\" });\r\n            }\r\n            catch (Exception ex)\r\n            {\r\n                return StatusCode(500, new { Message = ex.Message });\r\n            }\r\n        }\r\n\r\n        [HttpGet(\"myAccounts/{userId}\")]\r\n        [Authorize(Policy = \"Authenticated\")]\r\n\r\n        public IActionResult GetUserAccounts(Guid userId)\r\n        {\r\n            try\r\n            {\r\n                var accounts = accountService.GetUserAccounts(userId);\r\n                return Ok(accounts);\r\n            }\r\n            catch (Exception ex)\r\n            {\r\n                return BadRequest(new { message = ex.Message });\r\n            }\r\n        }\r\n        [HttpPost(\"deposit\")]\r\n        [Authorize] \r\n        public IActionResult Deposit([FromBody] DepositRequest depositRequest)\r\n        {\r\n            \r\n            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);\r\n\r\n            if (account == null)\r\n            {\r\n                return NotFound(\"Llogaria nuk u gjet.\");\r\n            }\r\n\r\n            \r\n            account.Balance += depositRequest.Amount;\r\n\r\n            \r\n            var transaction = new ISEPay.DAL.Persistence.Entities.Transaction\r\n            {\r\n                AccountInId = depositRequest.AccountId,\r\n                AccountIn = account,\r\n                Type = TransactionType.DEPOSIT,\r\n                Amount = depositRequest.Amount,\r\n                Description= \"Deposit\",\r\n                Status = TransactionStatus.COMPLETED,\r\n                Timestamp = DateTime.Now\r\n            };\r\n            _context.Transactions.Add(transaction);\r\n\r\n            \r\n            _context.SaveChanges();\r\n\r\n            return Ok(new { Message = \"Depozita u realizua me sukses!\", NewBalance = account.Balance });\r\n        }\r\n        \r\n        \r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ISEPay/Controllers/AccountController.cs b/ISEPay/Controllers/AccountController.cs
+--- a/ISEPay/Controllers/AccountController.cs	(revision 603ced9e806af8ef4ac0c9eee9c8c97f31e12d47)
++++ b/ISEPay/Controllers/AccountController.cs	(date 1738860506555)
+@@ -54,37 +54,34 @@
+         }
+         [HttpPost("deposit")]
+         [Authorize] 
+-        public IActionResult Deposit([FromBody] DepositRequest depositRequest)
++        public async Task<IActionResult> Deposit([FromBody] DepositRequest depositRequest)
+         {
+-            
+-            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);
+-
+-            if (account == null)
++            try
+             {
+-                return NotFound("Llogaria nuk u gjet.");
++                var newBalance = await accountService.DepositAsync(depositRequest.AccountId, depositRequest.Amount);
++                return Ok(new { Message = "The deposit was successfully completed", NewBalance = newBalance });
+             }
+-
+-            
+-            account.Balance += depositRequest.Amount;
+-
+-            
+-            var transaction = new ISEPay.DAL.Persistence.Entities.Transaction
++            catch (Exception ex)
+             {
+-                AccountInId = depositRequest.AccountId,
+-                AccountIn = account,
+-                Type = TransactionType.DEPOSIT,
+-                Amount = depositRequest.Amount,
+-                Description= "Deposit",
+-                Status = TransactionStatus.COMPLETED,
+-                Timestamp = DateTime.Now
+-            };
+-            _context.Transactions.Add(transaction);
+-
+-            
+-            _context.SaveChanges();
++                return StatusCode(500, new { Message = ex.Message });
++            }
++        }
+ 
+-            return Ok(new { Message = "Depozita u realizua me sukses!", NewBalance = account.Balance });
++        [HttpPost("withdraw")]
++        [Authorize] 
++        public async Task<IActionResult> Withdraw([FromBody] WithdrawalRequest withdrawalRequest)
++        {
++            try
++            {
++                var newBalance = await accountService.WithdrawAsync(withdrawalRequest.AccountId, withdrawalRequest.Amount);
++                return Ok(new { Message = "The withdrawal was successfully completed!", NewBalance = newBalance });
++            }
++            catch (Exception ex)
++            {
++                return StatusCode(500, new { Message = ex.Message });
++            }
+         }
++
+         
+         
+     }
+Index: ISEPay.BLLTest/Services/Scoped/AccountService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using ISEPay.BLL.ISEPay.Domain.Models;\r\nusing ISEPay.Common.Enums;\r\nusing ISEPay.DAL.Persistence.Entities;\r\nusing ISEPay.DAL.Persistence.Repositories;\r\nusing ISEPay.Domain.Models;\r\n\r\n\r\nnamespace ISEPay.BLL.Services.Scoped\r\n{\r\n\r\n    public interface IAccountService\r\n    {\r\n        void CreateDefaultAccount(Guid userId);\r\n        void AddAccount(AccountDto account);\r\n        List<AccountResponse> GetUserAccounts(Guid userId);\r\n\r\n\r\n    }\r\n    internal class AccountService : IAccountService\r\n    {\r\n\r\n        private readonly IAccountRepository accountRepository;\r\n        private readonly IUsersRepository usersRepository;\r\n\r\n        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository)\r\n        {\r\n            this.accountRepository = accountRepository;\r\n            this.usersRepository = usersRepository;\r\n        }\r\n\r\n\r\n        public List<AccountResponse> GetUserAccounts(Guid userId)\r\n        {\r\n            // Retrieve accounts for the given userId\r\n            var allAccounts = accountRepository.FindAccountsByUserId(userId);\r\n\r\n            if (allAccounts == null || !allAccounts.Any())\r\n            {\r\n                throw new Exception(\"No accounts found for the given user.\");\r\n            }\r\n\r\n            // Transform the Account entities to AccountResponse objects\r\n            var accountResponses = allAccounts.Select(account => new AccountResponse\r\n            {\r\n                AccountNumber = account.AccountNumber,\r\n                Balance = account.Balance,\r\n                Currency = account.Currency\r\n            }).ToList();\r\n\r\n            return accountResponses;\r\n        }\r\n\r\n\r\n        public void AddAccount(AccountDto account)\r\n        {\r\n            var user = usersRepository.FindById(account.UserId);\r\n            if (user == null)\r\n            {\r\n                throw new Exception(\"User does not exist\");\r\n            }\r\n\r\n            if(user.Status != UserStatus.APPROVED)\r\n            {\r\n                throw new Exception(\"User is  not approved yet\");\r\n            }\r\n\r\n            var accountToAdd = new Account\r\n            {\r\n                AccountNumber = GenerateAccountNumber(),\r\n                Balance = 0.0m,\r\n                Currency = account.Currency,\r\n                Status = AccountStatus.ACTIVE,\r\n                Type = account.AccountType,\r\n                UserId = account.UserId,\r\n                User = user,\r\n                CreatedAt = DateTime.UtcNow,\r\n                UpdatedAt = DateTime.UtcNow\r\n            };\r\n\r\n            accountRepository.Add(accountToAdd);\r\n            accountRepository.SaveChanges();\r\n\r\n        }\r\n\r\n        public void CreateDefaultAccount(Guid userId)\r\n        {\r\n           \r\n            var user = usersRepository.FindById(userId);\r\n            if (user == null)\r\n            {\r\n                throw new Exception(\"User does not exist\");\r\n            }\r\n\r\n           \r\n            var accountToAdd = new Account\r\n            {\r\n                AccountNumber = GenerateAccountNumber(), \r\n                Balance = 0.0m,\r\n                Currency = \"ALL\", \r\n                Status = AccountStatus.ACTIVE, \r\n                Type = AccountType.STANDARD, \r\n                UserId = userId,\r\n                User = user,\r\n                CreatedAt = DateTime.UtcNow,\r\n                UpdatedAt = DateTime.UtcNow\r\n            };\r\n\r\n            accountRepository.Add(accountToAdd);\r\n            accountRepository.SaveChanges(); \r\n        }\r\n\r\n        private string GenerateAccountNumber()\r\n        {\r\n            return Guid.NewGuid().ToString(\"N\").Substring(0, 12).ToUpper(); \r\n        }\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ISEPay.BLLTest/Services/Scoped/AccountService.cs b/ISEPay.BLLTest/Services/Scoped/AccountService.cs
+--- a/ISEPay.BLLTest/Services/Scoped/AccountService.cs	(revision 603ced9e806af8ef4ac0c9eee9c8c97f31e12d47)
++++ b/ISEPay.BLLTest/Services/Scoped/AccountService.cs	(date 1738861333165)
+@@ -2,36 +2,42 @@
+ using ISEPay.Common.Enums;
+ using ISEPay.DAL.Persistence.Entities;
+ using ISEPay.DAL.Persistence.Repositories;
++using Microsoft.EntityFrameworkCore;
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Threading.Tasks;
++using ISEPay.DAL.Persistence;
+ using ISEPay.Domain.Models;
+-
++using Transaction = ISEPay.DAL.Persistence.Entities.Transaction;
+ 
+ namespace ISEPay.BLL.Services.Scoped
+ {
+-
+     public interface IAccountService
+     {
+         void CreateDefaultAccount(Guid userId);
+         void AddAccount(AccountDto account);
+         List<AccountResponse> GetUserAccounts(Guid userId);
+-
++        Task<decimal> DepositAsync(Guid accountId, decimal amount);
++        Task<decimal> WithdrawAsync(Guid accountId, decimal amount);
++    }
+ 
+-    }
+     internal class AccountService : IAccountService
+     {
+-
+         private readonly IAccountRepository accountRepository;
+         private readonly IUsersRepository usersRepository;
++        private readonly ISEPayDBContext _context;  
+ 
+-        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository)
++       
++        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository, ISEPayDBContext context)
+         {
+             this.accountRepository = accountRepository;
+             this.usersRepository = usersRepository;
++            _context = context;  
+         }
+-
+ 
+         public List<AccountResponse> GetUserAccounts(Guid userId)
+         {
+-            // Retrieve accounts for the given userId
+             var allAccounts = accountRepository.FindAccountsByUserId(userId);
+ 
+             if (allAccounts == null || !allAccounts.Any())
+@@ -39,7 +45,6 @@
+                 throw new Exception("No accounts found for the given user.");
+             }
+ 
+-            // Transform the Account entities to AccountResponse objects
+             var accountResponses = allAccounts.Select(account => new AccountResponse
+             {
+                 AccountNumber = account.AccountNumber,
+@@ -50,7 +55,6 @@
+             return accountResponses;
+         }
+ 
+-
+         public void AddAccount(AccountDto account)
+         {
+             var user = usersRepository.FindById(account.UserId);
+@@ -59,9 +63,9 @@
+                 throw new Exception("User does not exist");
+             }
+ 
+-            if(user.Status != UserStatus.APPROVED)
++            if (user.Status != UserStatus.APPROVED)
+             {
+-                throw new Exception("User is  not approved yet");
++                throw new Exception("User is not approved yet");
+             }
+ 
+             var accountToAdd = new Account
+@@ -79,26 +83,23 @@
+ 
+             accountRepository.Add(accountToAdd);
+             accountRepository.SaveChanges();
+-
+         }
+ 
+         public void CreateDefaultAccount(Guid userId)
+         {
+-           
+             var user = usersRepository.FindById(userId);
+             if (user == null)
+             {
+                 throw new Exception("User does not exist");
+             }
+ 
+-           
+             var accountToAdd = new Account
+             {
+-                AccountNumber = GenerateAccountNumber(), 
++                AccountNumber = GenerateAccountNumber(),
+                 Balance = 0.0m,
+-                Currency = "ALL", 
+-                Status = AccountStatus.ACTIVE, 
+-                Type = AccountType.STANDARD, 
++                Currency = "ALL",
++                Status = AccountStatus.ACTIVE,
++                Type = AccountType.STANDARD,
+                 UserId = userId,
+                 User = user,
+                 CreatedAt = DateTime.UtcNow,
+@@ -106,7 +107,7 @@
+             };
+ 
+             accountRepository.Add(accountToAdd);
+-            accountRepository.SaveChanges(); 
++            accountRepository.SaveChanges();
+         }
+ 
+         private string GenerateAccountNumber()
+@@ -114,5 +115,72 @@
+             return Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(); 
+         }
+ 
++        public async Task<decimal> DepositAsync(Guid accountId, decimal amount)
++        {
++       
++            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
++
++            if (account == null)
++            {
++                throw new Exception("The account was not found.");
++            }
++
++          
++            account.Balance += amount;
++
++            
++            var transaction = new Transaction
++            {
++                AccountInId = accountId,
++                AccountIn = account,
++                Type = TransactionType.DEPOSIT,
++                Amount = amount,
++                Description = "Deposit",
++                Status = TransactionStatus.COMPLETED,
++                Timestamp = DateTime.Now
++            };
++
++            _context.Transactions.Add(transaction);
++            await _context.SaveChangesAsync();
++
++            return account.Balance;
++        }
++        
++        public async Task<decimal> WithdrawAsync(Guid accountId, decimal amount)
++        {
++           
++            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
++
++            if (account == null)
++            {
++                throw new Exception("The account was not found.");
++            }
++
++            if (account.Balance < amount)
++            {
++                throw new Exception("The account balance is insufficient.");
++            }
++            var agentId = await GetDefaultAgentId();
++            
++            account.Balance -= amount;
++
++            var transaction = new Transaction
++            {
++                AccountOutId = accountId,
++                AccountOut = account,
++                Type = TransactionType.WITHDRAWAL,
++                Amount = amount,
++                Description = "Withdrawal by agent",
++                Status = TransactionStatus.COMPLETED,
++                Timestamp = DateTime.Now,
++                AgentId = agentId 
++                
++            };
++
++            _context.Transactions.Add(transaction);
++            await _context.SaveChangesAsync();
++
++            return account.Balance;
++        }
+     }
+ }
+Index: .idea/.idea.ISEPay/.idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoGeneratedRunConfigurationManager\">\r\n    <projectFile>ISEPay.BLLTest/ISEPay.BLL.csproj</projectFile>\r\n    <projectFile>ISEPay.Common/ISEPay.Common.csproj</projectFile>\r\n    <projectFile>ISEPay.DAL/ISEPay.DAL.csproj</projectFile>\r\n    <projectFile>ISEPay.Domain/ISEPay.Domain.csproj</projectFile>\r\n    <projectFile profileName=\"IIS Express\">ISEPay/ISEPay.csproj</projectFile>\r\n    <projectFile profileName=\"http\">ISEPay/ISEPay.csproj</projectFile>\r\n    <projectFile profileName=\"https\">ISEPay/ISEPay.csproj</projectFile>\r\n  </component>\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"cf5c6b13-1bb6-4d93-b026-f2132f1a88ed\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/projectSettingsUpdater.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/projectSettingsUpdater.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Transaction .cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Transaction .cs\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"DpaMonitoringSettings\">\r\n    <option name=\"firstShow\" value=\"false\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$/..\" value=\"main\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;antonetagjana&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/akamberi/ise_24_25.git&quot;,\r\n    &quot;accountId&quot;: &quot;75b65ed6-8aee-4a4f-9091-6a65eb848852&quot;\r\n  }\r\n}</component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"MetaFilesCheckinStateConfiguration\" checkMetaFiles=\"true\" />\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 7\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2qnnjd6djUsvbKUc78d9Z3RQlQN\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \".NET Launch Settings Profile.ISEPay: http.executor\": \"Run\",\r\n    \".NET Project.ISEPay.BLL.executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"git-widget-placeholder\": \"suada-branch\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\" selected=\".NET Launch Settings Profile.ISEPay: http\">\r\n    <configuration name=\"ISEPay.BLL\" type=\"DotNetProject\" factoryName=\".NET Project\">\r\n      <option name=\"EXE_PATH\" value=\"\" />\r\n      <option name=\"PROGRAM_PARAMETERS\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"PASS_PARENT_ENVS\" value=\"1\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"PROJECT_PATH\" value=\"$PROJECT_DIR$/ISEPay.BLLTest/ISEPay.BLL.csproj\" />\r\n      <option name=\"PROJECT_EXE_PATH_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_ARGUMENTS_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_WORKING_DIRECTORY_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_KIND\" value=\"DotNetCore\" />\r\n      <option name=\"PROJECT_TFM\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ISEPay.Common\" type=\"DotNetProject\" factoryName=\".NET Project\">\r\n      <option name=\"EXE_PATH\" value=\"\" />\r\n      <option name=\"PROGRAM_PARAMETERS\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"PASS_PARENT_ENVS\" value=\"1\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"PROJECT_PATH\" value=\"$PROJECT_DIR$/ISEPay.Common/ISEPay.Common.csproj\" />\r\n      <option name=\"PROJECT_EXE_PATH_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_ARGUMENTS_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_WORKING_DIRECTORY_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_KIND\" value=\"DotNetCore\" />\r\n      <option name=\"PROJECT_TFM\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ISEPay.DAL\" type=\"DotNetProject\" factoryName=\".NET Project\">\r\n      <option name=\"EXE_PATH\" value=\"\" />\r\n      <option name=\"PROGRAM_PARAMETERS\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"PASS_PARENT_ENVS\" value=\"1\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"PROJECT_PATH\" value=\"$PROJECT_DIR$/ISEPay.DAL/ISEPay.DAL.csproj\" />\r\n      <option name=\"PROJECT_EXE_PATH_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_ARGUMENTS_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_WORKING_DIRECTORY_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_KIND\" value=\"DotNetCore\" />\r\n      <option name=\"PROJECT_TFM\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ISEPay.Domain\" type=\"DotNetProject\" factoryName=\".NET Project\">\r\n      <option name=\"EXE_PATH\" value=\"\" />\r\n      <option name=\"PROGRAM_PARAMETERS\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"PASS_PARENT_ENVS\" value=\"1\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"PROJECT_PATH\" value=\"$PROJECT_DIR$/ISEPay.Domain/ISEPay.Domain.csproj\" />\r\n      <option name=\"PROJECT_EXE_PATH_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_ARGUMENTS_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_WORKING_DIRECTORY_TRACKING\" value=\"1\" />\r\n      <option name=\"PROJECT_KIND\" value=\"DotNetCore\" />\r\n      <option name=\"PROJECT_TFM\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ISEPay: IIS Express\" type=\"LaunchSettings\" factoryName=\".NET Launch Settings Profile\">\r\n      <option name=\"LAUNCH_PROFILE_PROJECT_FILE_PATH\" value=\"$PROJECT_DIR$/ISEPay/ISEPay.csproj\" />\r\n      <option name=\"LAUNCH_PROFILE_TFM\" value=\"net8.0\" />\r\n      <option name=\"LAUNCH_PROFILE_NAME\" value=\"IIS Express\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"GENERATE_APPLICATIONHOST_CONFIG\" value=\"1\" />\r\n      <option name=\"SHOW_IIS_EXPRESS_OUTPUT\" value=\"0\" />\r\n      <option name=\"SEND_DEBUG_REQUEST\" value=\"1\" />\r\n      <option name=\"ADDITIONAL_IIS_EXPRESS_ARGUMENTS\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ISEPay: http\" type=\"LaunchSettings\" factoryName=\".NET Launch Settings Profile\">\r\n      <option name=\"LAUNCH_PROFILE_PROJECT_FILE_PATH\" value=\"$PROJECT_DIR$/ISEPay/ISEPay.csproj\" />\r\n      <option name=\"LAUNCH_PROFILE_TFM\" value=\"net8.0\" />\r\n      <option name=\"LAUNCH_PROFILE_NAME\" value=\"http\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"GENERATE_APPLICATIONHOST_CONFIG\" value=\"1\" />\r\n      <option name=\"SHOW_IIS_EXPRESS_OUTPUT\" value=\"0\" />\r\n      <option name=\"SEND_DEBUG_REQUEST\" value=\"1\" />\r\n      <option name=\"ADDITIONAL_IIS_EXPRESS_ARGUMENTS\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ISEPay: https\" type=\"LaunchSettings\" factoryName=\".NET Launch Settings Profile\">\r\n      <option name=\"LAUNCH_PROFILE_PROJECT_FILE_PATH\" value=\"$PROJECT_DIR$/ISEPay/ISEPay.csproj\" />\r\n      <option name=\"LAUNCH_PROFILE_TFM\" value=\"net8.0\" />\r\n      <option name=\"LAUNCH_PROFILE_NAME\" value=\"https\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"GENERATE_APPLICATIONHOST_CONFIG\" value=\"1\" />\r\n      <option name=\"SHOW_IIS_EXPRESS_OUTPUT\" value=\"0\" />\r\n      <option name=\"SEND_DEBUG_REQUEST\" value=\"1\" />\r\n      <option name=\"ADDITIONAL_IIS_EXPRESS_ARGUMENTS\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"cf5c6b13-1bb6-4d93-b026-f2132f1a88ed\" name=\"Changes\" comment=\"\" />\r\n      <created>1735307349162</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1735307349162</updated>\r\n      <workItem from=\"1735307350389\" duration=\"6635000\" />\r\n      <workItem from=\"1736368982829\" duration=\"829000\" />\r\n      <workItem from=\"1736608696136\" duration=\"1780000\" />\r\n      <workItem from=\"1736626947333\" duration=\"11750000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnityCheckinConfiguration\" checkUnsavedScenes=\"true\" />\r\n  <component name=\"UnityProjectConfiguration\" hasMinimizedUI=\"false\" />\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"CLEAR_INITIAL_COMMIT_MESSAGE\" value=\"true\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.ISEPay/.idea/workspace.xml b/.idea/.idea.ISEPay/.idea/workspace.xml
+--- a/.idea/.idea.ISEPay/.idea/workspace.xml	(revision 603ced9e806af8ef4ac0c9eee9c8c97f31e12d47)
++++ b/.idea/.idea.ISEPay/.idea/workspace.xml	(date 1738861215533)
+@@ -14,9 +14,8 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/projectSettingsUpdater.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Transaction .cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Transaction .cs" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AccountService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AccountService.cs" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -44,10 +43,11 @@
+   <component name="GithubPullRequestsUISettings">{
+   &quot;selectedUrlAndAccountId&quot;: {
+     &quot;url&quot;: &quot;https://github.com/akamberi/ise_24_25.git&quot;,
+-    &quot;accountId&quot;: &quot;75b65ed6-8aee-4a4f-9091-6a65eb848852&quot;
++    &quot;accountId&quot;: &quot;e89fa2ef-0561-46b9-900d-fa0f41289b13&quot;
+   }
+ }</component>
+   <component name="HighlightingSettingsPerFile">
++    <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Entities/Transaction .cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
+   </component>
+   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+@@ -60,21 +60,21 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    ".NET Launch Settings Profile.ISEPay: http.executor": "Run",
+-    ".NET Project.ISEPay.BLL.executor": "Run",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "git-widget-placeholder": "suada-branch",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;.NET Launch Settings Profile.ISEPay: http.executor&quot;: &quot;Run&quot;,
++    &quot;.NET Project.ISEPay.BLL.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;suada-branch&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager" selected=".NET Launch Settings Profile.ISEPay: http">
+     <configuration name="ISEPay.BLL" type="DotNetProject" factoryName=".NET Project">
+       <option name="EXE_PATH" value="" />
+@@ -205,8 +205,20 @@
+       <workItem from="1735307350389" duration="6635000" />
+       <workItem from="1736368982829" duration="829000" />
+       <workItem from="1736608696136" duration="1780000" />
+-      <workItem from="1736626947333" duration="11750000" />
++      <workItem from="1736626947333" duration="18066000" />
++      <workItem from="1737668341656" duration="842000" />
++      <workItem from="1737669249416" duration="3404000" />
++      <workItem from="1738857090375" duration="4061000" />
+     </task>
++    <task id="LOCAL-00001" summary="Create deposit and transaction">
++      <option name="closed" value="true" />
++      <created>1736692639094</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1736692639094</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -216,5 +228,7 @@
+   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+   <component name="VcsManagerConfiguration">
+     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
++    <MESSAGE value="Create deposit and transaction" />
++    <option name="LAST_COMMIT_MESSAGE" value="Create deposit and transaction" />
+   </component>
+ </project>
+\ No newline at end of file

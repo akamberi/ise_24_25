@@ -2,6 +2,9 @@
 using ISEPay.BLL.Services.Scoped;
 using ISEPay.BLL.ISEPay.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using ISEPay.DAL.Persistence;
+using ISEPay.Common.Enums;
+
 
 namespace ISEPay.Controllers
 {
@@ -11,11 +14,14 @@ namespace ISEPay.Controllers
     {
         private readonly IAccountService accountService;
         private readonly ITransferService transferService;
+        private readonly ISEPayDBContext _context;
 
         public AccountController(IAccountService accountService,ITransferService transferService)
+        public AccountController(IAccountService accountService, ISEPayDBContext context)
         {
             this.accountService = accountService;
             this.transferService = transferService;
+            _context = context;
         }
 
         [HttpPost("add")]
@@ -47,6 +53,37 @@ namespace ISEPay.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+        
+        [HttpPost("deposit")]
+        public IActionResult Deposit([FromBody] DepositRequest depositRequest)
+        {
+            try
+            {
+                
+                accountService.Deposit(depositRequest);
+                return Ok(new { Message = "Deposit successful" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        
+        [HttpPost("withdraw")]
+        public IActionResult Withdraw([FromBody] WithdrawalRequest withdrawalRequest)
+        {
+            try
+            {
+                
+                accountService.Withdraw(withdrawalRequest);
+                return Ok(new { Message = "Withdrawal successful" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
             }
         }
         
