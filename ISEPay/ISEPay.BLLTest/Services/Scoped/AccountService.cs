@@ -9,6 +9,7 @@ using System.Linq;
 using ISEPay.DAL.Persistence;
 using ISEPay.Domain.Models;
 using Transaction = ISEPay.DAL.Persistence.Entities.Transaction;
+using System.Globalization;
 
 namespace ISEPay.BLL.Services.Scoped
 {
