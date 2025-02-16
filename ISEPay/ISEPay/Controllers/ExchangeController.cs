@@ -64,7 +64,7 @@ namespace ISEPay.Controllers
                 return Ok(new { convertedAmount });
             }
             catch (Exception ex)
-            {
+            {    
                 return BadRequest(new { message = ex.Message });
             }
         }

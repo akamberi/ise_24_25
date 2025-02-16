@@ -15,6 +15,7 @@ namespace ISEPay.BLL.Services.Scoped
     {
         void DeactivateCurrency(string CurrencyCode);
         List<CurrencyDto> GetAllCurrencies();
+        List<CurrencyAdminDto> GetALlCurrencyForAdmin();
         void AddCurrency(Currency currency);
 
     }
@@ -55,6 +56,27 @@ namespace ISEPay.BLL.Services.Scoped
             var currencyDtos = activeCurrencies.Select(currency => new CurrencyDto
             {
                 CurrencyCode = currency.Code,  // Assuming Currency entity has a 'Code' property
+                Symbol = currency.Symbol       // Assuming Currency entity has a 'Symbol' property
+            }).ToList();
+
+            return currencyDtos;
+        }
+
+
+        public List<CurrencyAdminDto> GetALlCurrencyForAdmin()
+        {
+            // Retrieve all currencies from the repository
+            var currencies = currencyRepository.GetAll();
+
+            // Filter only active currencies
+            var activeCurrencies = currencies.Where(currency => currency.IsActive).ToList();
+
+            // Map the filtered currencies to CurrencyDto
+            var currencyDtos = activeCurrencies.Select(currency => new CurrencyAdminDto
+            {
+                CurrencyCode = currency.Code,
+                Name=currency.Name  ,
+                Country=currency.Country,// Assuming Currency entity has a 'Code' property
                 Symbol = currency.Symbol       // Assuming Currency entity has a 'Symbol' property
             }).ToList();
 

@@ -36,6 +36,23 @@ namespace ISEPay.Controllers
             }
         }
 
+
+        [HttpGet("/currency/admin")]
+        [Authorize(Policy = "Admin")]
+
+        public IActionResult GetAllCurrenciesForAdmin()
+        {
+            try
+            {
+                var currencies = _currencyService.GetALlCurrencyForAdmin();
+                return Ok(currencies);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching currencies." });
+            }
+        }
+
         /// <summary>
         /// Deactivates a currency by its code.
         /// </summary>
