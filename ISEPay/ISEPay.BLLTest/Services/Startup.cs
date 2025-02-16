@@ -25,14 +25,16 @@ public static class Startup
         // Register IHttpContextAccessor correctly
         services.AddHttpContextAccessor();
         // services.AddScoped<IAddressService, AddressService>(); 
-        
-    
+        services.AddScoped<ITransferService,TransferService>(); 
+        services.AddScoped<IAccountService,AccountService>(); 
+       // services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<ICurrencyService,CurrencyService>(); 
         services.AddScoped<IExchangeRateService,ExchangeRateService>(); 
         //services.AddScoped<IExchangeRateService,ExchangeRateService>(); 
-       // services.AddScoped<IAddressService, AddressService>(); 
+        services.AddScoped<IAddressService, AddressService>(); 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        services.AddScoped<FeeService>(); 
 
     }
 }

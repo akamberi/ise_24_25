@@ -19,6 +19,7 @@ namespace ISEPay.DAL.Persistence
         public DbSet<Image> Images { get; set; } // Added DbSet for Images
 
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<Fee> Fees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -89,6 +90,27 @@ namespace ISEPay.DAL.Persistence
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Transaction>()
                 .HasIndex(t => t.AccountOutId);
+
+            // Apply Currency and ExchangeRate configurations
+            // modelBuilder.ApplyConfiguration(new CurrencyConfig());
+            // modelBuilder.ApplyConfiguration(new ExchangeRateConfig());
+            
+            
+
+            modelBuilder.Entity<Fee>()
+                .Property(f => f.Id)
+                .HasColumnType("uniqueidentifier")
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Fee>()
+                .Property(f => f.TransactionType)
+                .HasConversion<string>() 
+                .IsRequired();
+
+            modelBuilder.Entity<Fee>()
+                .Property(f => f.FeeValue)
+                .HasColumnType("decimal(18, 2)") 
+                .IsRequired();
 
             // Image entity configuration
             modelBuilder.Entity<Image>()

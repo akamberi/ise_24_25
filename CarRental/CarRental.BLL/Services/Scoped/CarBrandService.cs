@@ -35,6 +35,7 @@ internal class CarBrandService : ICarBrandService
         };
         carBrandsRepository.Add(carBrandToAdd);
         carBrandsRepository.SaveChanges();
+        ReservationsService.CreateReservation();
     }
 
     public IEnumerable<CarBrand> GetCarBrands()

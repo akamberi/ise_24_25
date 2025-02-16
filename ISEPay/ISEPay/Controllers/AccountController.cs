@@ -13,16 +13,19 @@ namespace ISEPay.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
+        private readonly ITransferService transferService;
         private readonly ISEPayDBContext _context;
 
-        public AccountController(IAccountService accountService, ISEPayDBContext context)
+        public AccountController(IAccountService accountService, ISEPayDBContext context, ITransferService transferService)
         {
             this.accountService = accountService;
+            this.transferService = transferService;
             _context = context;
         }
 
         [HttpPost("add")]
-        [Authorize(Policy = "Authenticated")]
+       // [Authorize(Policy = "Authenticated")]
+
         public IActionResult AddAccount([FromBody] AccountDto account)
         {
             try
@@ -57,6 +60,7 @@ namespace ISEPay.Controllers
 
         [HttpGet("myAccounts/{userId}")]
         [Authorize(Policy = "Authenticated")]
+
         public IActionResult GetUserAccounts(Guid userId)
         {
             try
@@ -116,5 +120,25 @@ namespace ISEPay.Controllers
             }
         }
 
+        
+        [HttpPost("transfer")]
+       // [Authorize(Policy = "Authenticated")]
+        public IActionResult TransferMoney([FromBody] TransferRequest transferRequest)
+        {
+            try
+            {
+                transferService.TransferMoney(transferRequest);
+                return Ok(new { Message = "Successful transfer!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+          
+            }
+        }
+        
+        
+        
+        
     }
 }

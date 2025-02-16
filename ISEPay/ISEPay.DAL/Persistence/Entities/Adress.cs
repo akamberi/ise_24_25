@@ -11,5 +11,13 @@ namespace ISEPay.DAL.Persistence.Entities
         public string Street { get; set; }
 
         public int? Zipcode { get; set; }
+        
+        public Guid UserId { get; set; }  
+        public User User { get; set; } 
+        
+        
+        
+        public DateTime CreatedAt { get; set; } 
+        public DateTime UpdatedAt { get; set; }
     }
 }

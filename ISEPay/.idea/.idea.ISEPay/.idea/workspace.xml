@@ -14,11 +14,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/shelf/Uncommitted_changes_before_Checkout_at_06-Feb-25_06_05_PM_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/DepositRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/DepositRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/WithdrawalRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/WithdrawalRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/AddressDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AccountService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AccountService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/UsersController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,12 +31,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DpaMonitoringSettings">
-    <option name="firstShow" value="false" />
+    <option name="autoShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="main" />
+        <entry key="$PROJECT_DIR$/.." value="antoneta-branch-2" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -49,8 +54,10 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://diff.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Entities/Transaction .cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/CRS/RiderProjects/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Entities/Transaction .cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -62,21 +69,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.ISEPay: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.ISEPay.BLL.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;suada-branch&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.ISEPay: http.executor": "Debug",
+    ".NET Project.ISEPay.BLL.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "suada-branch",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ISEPay: http">
     <configuration name="ISEPay.BLL" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -209,6 +216,7 @@
       <workItem from="1736608696136" duration="1780000" />
       <workItem from="1736626947333" duration="11750000" />
       <workItem from="1739703589984" duration="351000" />
+      <workItem from="1739705287149" duration="2067000" />
     </task>
     <task id="LOCAL-00001" summary="deposit and withdraw implementation">
       <option name="closed" value="true" />
@@ -230,5 +238,37 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="deposit and withdraw implementation" />
     <option name="LAST_COMMIT_MESSAGE" value="deposit and withdraw implementation" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs</url>
+          <line>30</line>
+          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay\Controllers\AddressController.cs" containingFunctionPresentation="Method 'AddAddress'">
+            <startOffsets>
+              <option value="987" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1042" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs</url>
+          <line>43</line>
+          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay.BLLTest\Services\Scoped\AddressService.cs" containingFunctionPresentation="Method 'AddAddress'">
+            <startOffsets>
+              <option value="1276" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1308" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
