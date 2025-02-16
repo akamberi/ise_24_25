@@ -66,5 +66,21 @@ namespace ISEPay.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("search")]
+/*        [Authorize(Policy = "Authenticated")]
+*/        public IActionResult SearchAccounts([FromQuery] string fullName, [FromQuery] string cardId)
+        {
+            try
+            {
+                var accounts = accountService.SearchAccounts(fullName, cardId);
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }

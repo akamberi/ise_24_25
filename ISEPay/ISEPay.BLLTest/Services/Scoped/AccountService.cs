@@ -4,6 +4,7 @@ using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Repositories;
 using ISEPay.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Immutable;
 using System.Globalization;
 
 
@@ -16,6 +17,8 @@ namespace ISEPay.BLL.Services.Scoped
         void DeactivateAccount(DeactivateAccountDto accountDto);
         void AddAccount(AccountDto account);
         List<AccountResponse> GetUserAccounts(Guid userId);
+
+        List<AccountResultsDto> SearchAccounts(String fullName, String cardId);
 
 
     }
@@ -30,6 +33,37 @@ namespace ISEPay.BLL.Services.Scoped
             this.accountRepository = accountRepository;
             this.usersRepository = usersRepository;
         }
+
+
+        public List<AccountResultsDto> SearchAccounts(string fullName, string cardId)
+        {
+            var users = usersRepository.FilterByName(fullName).ToList();
+
+            if (!users.Any())
+                return new List<AccountResultsDto>(); // No users found, return an empty list
+
+            var accounts = new List<Account>();
+
+            foreach (var user in users)
+            {
+                if (!string.IsNullOrEmpty(user.CardID) && user.CardID.Equals(cardId, StringComparison.OrdinalIgnoreCase))
+                {
+                    var userAccounts = accountRepository.FindAccountsByUserId(user.Id).ToList();
+                    accounts.AddRange(userAccounts);
+                }
+            }
+
+            return accounts.Select(a => new AccountResultsDto
+            {
+                Id = a.Id,
+                AccountNumber = a.AccountNumber,
+                balance = a.Balance
+            }).ToList();
+        }
+
+
+
+
 
 
         public List<AccountResponse> GetUserAccounts(Guid userId)

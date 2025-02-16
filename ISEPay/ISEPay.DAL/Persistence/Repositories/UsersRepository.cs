@@ -10,6 +10,8 @@ namespace ISEPay.DAL.Persistence.Repositories
         User? GetByPhoneNumber(string phoneNumber); // Added method for phone number
         User? FindByEmail(string email); // Added method for email
         User? FindById(Guid id); // Added method for id
+        User? FindByCardId(string cardId); // New method to find user by cardId
+
     }
 
     internal class UsersRepository : _BaseRepository<User, Guid>, IUsersRepository
@@ -63,5 +65,14 @@ namespace ISEPay.DAL.Persistence.Repositories
 
             return _dbSet.FirstOrDefault(u => u.Email == email);
         }
+
+        public User? FindByCardId(string cardId)
+        {
+            if (string.IsNullOrEmpty(cardId))
+                throw new ArgumentException("Card ID cannot be null or empty.", nameof(cardId));
+
+            return _dbSet.FirstOrDefault(u => u.CardID == cardId);
+        }
+
     }
 }
