@@ -15,12 +15,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/Fee.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/Fee.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/TransferRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/ISEPay/Domain/Models/TransferRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Adress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Adress.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AdressRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="anxhelo-branch" />
+        <entry key="$PROJECT_DIR$/.." value="antoneta-branch-2" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -51,16 +45,20 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/ISEPay/Domain/Models/CurrencyDto.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Migrations/20250113103741_UpdateExchangeRatesDeleteBehaviorr.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/CurrencyController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/ExchangeController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Migrations/ISEPayDBContextModelSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Migrations/ISEPayDBContextModelSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/ISEPayDBContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/ISEPayDBContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Controllers/RolesController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Properties/launchSettings.json" root0="FORCE_HIGHLIGHTING" />
@@ -75,20 +73,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.ISEPay: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.ISEPay.BLL.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;antoneta-branch-2&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.ISEPay: http.executor": "Run",
+    ".NET Project.ISEPay.BLL.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ISEPay: http">
     <configuration name="ISEPay.BLL" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -231,6 +228,7 @@
       <workItem from="1738752314704" duration="1616000" />
       <workItem from="1738763386138" duration="127000" />
       <workItem from="1738763576889" duration="5962000" />
+      <workItem from="1738937160552" duration="1023000" />
     </task>
     <task id="LOCAL-00001" summary="AddAddress and EditAddress">
       <option name="closed" value="true" />
@@ -248,7 +246,31 @@
       <option name="project" value="LOCAL" />
       <updated>1738512328538</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="changing parameters">
+      <option name="closed" value="true" />
+      <created>1738937460641</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1738937460641</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Resolved merge conflicts (Merged Suada's branch)">
+      <option name="closed" value="true" />
+      <created>1739641652821</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1739641652821</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Resolved merge conflicts (Merged Arjol's branch)">
+      <option name="closed" value="true" />
+      <created>1739642398017</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1739642398017</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -284,6 +306,9 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="AddAddress and EditAddress" />
     <MESSAGE value="Transfers and fee implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Transfers and fee implementation" />
+    <MESSAGE value="changing parameters" />
+    <MESSAGE value="Resolved merge conflicts (Merged Suada's branch)" />
+    <MESSAGE value="Resolved merge conflicts (Merged Arjol's branch)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Resolved merge conflicts (Merged Arjol's branch)" />
   </component>
 </project>

@@ -1,13 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ISEPay.DAL.Persistence.Entities;
 using ISEPay.DAL.Persistence.Config;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;  
+using System.IO;
 
 namespace ISEPay.DAL.Persistence
 {
     public class ISEPayDBContext : DbContext
     {
         public ISEPayDBContext(DbContextOptions<ISEPayDBContext> options) : base(options) { }
-
+        public ISEPayDBContext() { }
+        
         // Define DbSet for each entity
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -20,6 +24,8 @@ namespace ISEPay.DAL.Persistence
 
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<Fee> Fees { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,20 +83,21 @@ namespace ISEPay.DAL.Persistence
 
             modelBuilder.Entity<Transaction>()
                 .HasIndex(t => t.AccountInId);
-                    modelBuilder.Entity<ExchangeRate>()
-            .HasOne(x => x.FromCurrency)
-            .WithMany(c => c.FromExchangeRates)
-            .HasForeignKey(x => x.FromCurrencyId)
-            .OnDelete(DeleteBehavior.Restrict);  // Ensure the delete behavior is applied here
+            
 
             modelBuilder.Entity<ExchangeRate>()
-                .HasOne(x => x.ToCurrency)
-                .WithMany(c => c.ToExchangeRates)
-                .HasForeignKey(x => x.ToCurrencyId)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Transaction>()
-                .HasIndex(t => t.AccountOutId);
+                .HasOne(e => e.FromCurrency)
+                .WithMany(c => c.FromExchangeRates)
+                .HasForeignKey(e => e.FromCurrencyId)
+                .OnDelete(DeleteBehavior.Restrict); // Ensures no cascading delete
 
+            modelBuilder.Entity<ExchangeRate>()
+                .HasOne(e => e.ToCurrency)
+                .WithMany(c => c.ToExchangeRates)
+                .HasForeignKey(e => e.ToCurrencyId)
+                .OnDelete(DeleteBehavior.Restrict); // Ensures no cascading delete
+
+            
             // Apply Currency and ExchangeRate configurations
             modelBuilder.ApplyConfiguration(new CurrencyConfig());
             modelBuilder.ApplyConfiguration(new ExchangeRateConfig());
@@ -112,6 +119,7 @@ namespace ISEPay.DAL.Persistence
                 .HasColumnType("decimal(18, 2)") 
                 .IsRequired();
 
+            
             // Image entity configuration
             modelBuilder.Entity<Image>()
                 .Property(i => i.Id)

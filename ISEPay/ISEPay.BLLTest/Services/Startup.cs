@@ -15,6 +15,7 @@ public static class Startup
     {
         Console.WriteLine("Test project starting...");
     }
+    
     public static void RegisterBLLServices(this IServiceCollection services, IConfiguration config)
     {
         services.RegisterDALServices(config);
