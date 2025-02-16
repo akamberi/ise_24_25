@@ -6,12 +6,15 @@ using ISEPay.DAL.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using ISEPay.Domain.Models;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using ISEPay.BLL.Utils;
+using System.Text.Json;
 
 namespace ISEPay.BLL.Services.Scoped
 {
     public interface IUserService
     {
-        void CreateUser(UserDTO user);
+        void CreateUser(UserDTO user);  
 
       //  void CreateUserWithRole(UserDTO user, RoleDto role);
         void CreateAdminUser(UserDTO user);
@@ -24,7 +27,7 @@ namespace ISEPay.BLL.Services.Scoped
 
         List<UserResponse> GetUsersByStatus(UserStatus status);
 
-        bool CheckEmail(string email);
+       // bool CheckEmail(string email);
         //void AddAdress(Guid userId , AddressDto addressDto);
     }
 
@@ -36,10 +39,13 @@ namespace ISEPay.BLL.Services.Scoped
         private readonly IAddressRepository addressRepository;
         private readonly IOtpService otpService;
         private readonly IAccountService accountService;
+        private readonly IAccountRepository accountRepository;
+        private readonly _ImagesRepository imageRepository;
         public UserService(IUsersRepository userRepository,
             IRolesRepository roleRepository, IPasswordHasher<User> passwordHasher,
             IAddressRepository addressRepository, IOtpService otpService,
-            IAccountService accountService) //, IPasswordEncoder passwordEncoder)
+            _ImagesRepository _ImagesRepository,
+            IAccountService accountService, IAccountRepository accountRepository) //, IPasswordEncoder passwordEncoder)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
@@ -47,6 +53,8 @@ namespace ISEPay.BLL.Services.Scoped
             this.addressRepository = addressRepository;
             this.otpService = otpService;
             this.accountService = accountService;
+            this.accountRepository = accountRepository;
+            this.imageRepository = imageRepository;
                 //this.passwordEncoder = passwordEncoder;
         }
 
@@ -57,14 +65,19 @@ namespace ISEPay.BLL.Services.Scoped
             var existingUser = userRepository.GetByPhoneNumber(user.PhoneNumber);
             if (existingUser != null)
             {
-                throw new InvalidOperationException("User cannot register with the same number");
+                throw new InvalidOperationException("User with this phone number already exists");
             }
-           /* bool otpValidation = otpService.ValidateOTP(user.Otp);
-            if (!otpValidation)
+            if (!CheckEmail(user.Email)) // If email already exists, throw exception
             {
-                throw new InvalidOperationException("Otp excpired");
+                throw new InvalidOperationException("User with this email already exists");
+            }
 
-            }*/
+            /*            bool otpValidation = otpService.ValidateOTP(user.Otp);
+                 if (!otpValidation)
+                 {
+                     throw new InvalidOperationException("Otp excpired");
+
+                 }*/
             // Create user entity and hash the password
             var userToAdd = new User
             {
@@ -72,12 +85,13 @@ namespace ISEPay.BLL.Services.Scoped
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
                 Status = Common.Enums.UserStatus.PENDING,
-                Gender =user.Gender,
+                CardID = user.CardId,
+                Gender = user.Gender,
                 CreatedAt = DateTime.Now
             };
 
             // Hash the password before saving it
-            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("User");
@@ -86,6 +100,68 @@ namespace ISEPay.BLL.Services.Scoped
             userRepository.Add(userToAdd);
             userRepository.SaveChanges();
         }
+
+
+
+        /* public void CreateUser(UserDTO user)
+         {
+             var existingUser = userRepository.GetByPhoneNumber(user.PhoneNumber);
+             if (existingUser != null)
+             {
+                 throw new InvalidOperationException("User cannot register with the same number");
+             }
+
+
+
+
+             var userToAdd = new User
+             {
+                 FullName = user.FullName,
+                 PhoneNumber = user.PhoneNumber,
+                 Email = user.Email,
+                 Status = Common.Enums.UserStatus.PENDING,
+                 CardID = user.CardId,
+                 Gender = user.Gender,
+                 CreatedAt = DateTime.UtcNow
+             };
+
+             userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
+
+             var role = roleRepository.GetByName("User");
+             userToAdd.RoleID = role.Id;
+
+             userRepository.Add(userToAdd);
+             userRepository.SaveChanges(); // Ensure user ID is generated
+
+             // Save Image if provided
+             if (!string.IsNullOrEmpty(user.ImageBase64) && !string.IsNullOrEmpty(user.ImageType))
+             {
+                 string imagePath = ImageHelper.SaveImageToFile(user.ImageBase64, user.ImageType);
+                 if (string.IsNullOrEmpty(imagePath))
+                 {
+                     throw new InvalidOperationException("Image saving failed. Path is null.");
+                 }
+
+                 var userImage = new Image
+                 {
+                     ImageName = $"{userToAdd.FullName}_Profile",
+                     ImageUrl = imagePath,
+                     ImageType = user.ImageType,
+                     UserId = userToAdd.Id, // ID is now set
+                     CreatedAt = DateTime.UtcNow,
+                     UpdatedAt = DateTime.UtcNow
+                 };
+
+                 Console.WriteLine(JsonSerializer.Serialize(userImage, new JsonSerializerOptions { WriteIndented = true }));
+
+
+                 Console.WriteLine($"Saving Image for User ID: {userImage.UserId}");
+                 Console.WriteLine($" Image Path : {imagePath}");
+                 imageRepository.Add(userImage);
+                 userRepository.SaveChanges(); // Save image record
+             }
+         }*/
+
 
 
 
@@ -109,7 +185,7 @@ namespace ISEPay.BLL.Services.Scoped
             };
 
             // Hash the password before saving it
-            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("Admin");
@@ -133,12 +209,12 @@ namespace ISEPay.BLL.Services.Scoped
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
-                Status = Common.Enums.UserStatus.PENDING,
+                Status = Common.Enums.UserStatus.APPROVED,
                 CreatedAt = DateTime.Now
             };
 
             // Hash the password before saving it
-            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, user.Password);
 
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("AGENT");
@@ -149,7 +225,7 @@ namespace ISEPay.BLL.Services.Scoped
         }
 
 
-        public bool CheckEmail(string email)
+        private bool CheckEmail(string email)
         {
             var existingEmail = userRepository.FindByEmail(email);
             if (existingEmail != null)
@@ -192,13 +268,16 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new KeyNotFoundException("No users found.");
             }
-
             var userDTOs = users.Select(user => new UserResponse(
-                 user.Id,                  // userID
-                 user.FullName,            // name
-                 user.Email,               // email
-                 user.PhoneNumber          // phoneNumber
-             )).ToList();
+                user.Id,                 // userID
+                user.FullName,           // name
+                user.Email,              // email
+                user.PhoneNumber,        // phoneNumber
+                user.CardID,             // cardId
+                "random"                 // picture (Base64 string or some image data)
+            )).ToList();
+
+
 
 
             return userDTOs;
@@ -256,6 +335,16 @@ namespace ISEPay.BLL.Services.Scoped
                 accountService.CreateDefaultAccount(userId);
 
             }
+
+        /*    var accounts = accountRepository.FindAccountsByUserId(userId);
+            if (accounts != null)
+            {
+                foreach (var accountItem in accounts)
+                {
+                    accountItem.Status = AccountStatus.ACTIVE;
+                }
+                accountRepository.UpdateAccounts(accounts); // Method to update all accounts in the repository
+            }*/
             user.Status = UserStatus.APPROVED;
             userRepository.SaveChanges();
         }
@@ -280,6 +369,16 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new KeyNotFoundException("User does not exist");
             }
+            var accounts = accountRepository.FindAccountsByUserId(userId);
+            if (accounts !=null)
+            {
+                foreach(var accountItem in accounts)
+                {
+                    accountItem.Status = AccountStatus.INACTIVE;
+                }
+                accountRepository.UpdateAccounts(accounts); // Method to update all accounts in the repository
+            }
+
             user.Status = UserStatus.Frozen;
             userRepository.SaveChanges();
         }

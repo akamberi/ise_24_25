@@ -1,4 +1,4 @@
-﻿/*using ISEPay.BLL.ISEPay.Domain.Models;
+﻿using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.BLL.Services.Scoped;
 using ISEPay.DAL.Persistence.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -22,25 +22,46 @@ namespace ISEPay.Controllers
         [Authorize(Policy = "Authenticated")]
         public IActionResult AddAddress([FromBody] AddressDto addressDto)
         {
-            if (addressDto == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-
             try
             {
-                // Call the AddAddress method from your service
+                
                 addressService.AddAddress(addressDto);
 
-                // Return success response
-                return Ok("Address added successfully.");
+                
+                return Ok(new { Message = "Address successfully added!" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                
+                return BadRequest(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
-                // Handle exceptions and return error message
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                
+                return StatusCode(500, new { Message = "Error while adding the address", Error = ex.Message });
+            } }
+        
+        
+        
+        [HttpPut("edit-address/{id}")]
+        public async Task<IActionResult> EditAddress(Guid id, [FromBody] AddressDto updatedAddressDto)
+        { try
+            {
+                
+                addressService.EditAddress(id, updatedAddressDto);
+
+                
+                return Ok(new { Message = "Address successfully updated!" });
             }
-        }
+            catch (ArgumentNullException ex)
+            {
+                
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Error while updating the address", Error = ex.Message });
+            }}
+
     }
 }
-*/

@@ -22,6 +22,7 @@ namespace ISEPay.Controllers
 
        
         // POST api/users/register
+        
         [HttpPost("register")]
         [Authorize(Policy = "Public")]
 
@@ -70,6 +71,34 @@ namespace ISEPay.Controllers
                 return StatusCode(500, new { Message = "An error occurred while processing the request.", Error = ex.Message });
             }
         }
+
+
+        [HttpPost("register/agent")]
+        [Authorize(Policy = "Admin")]
+
+        public IActionResult RegisterAgent([FromBody] UserDTO user)
+        {
+            try
+            {
+                // Call the CreateUser service method
+                _userService.CreateAgentUser(user);
+                // Return a success response
+                return Ok(new { Message = "User created successfully." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Return a BadRequest if the user already exists
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Return a general error if something unexpected happens
+                return StatusCode(500, new { Message = "An error occurred while processing the request.", Error = ex.Message });
+            }
+        }
+
+
+
 
 
         [HttpPost("approve/{userId}")]

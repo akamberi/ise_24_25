@@ -93,6 +93,117 @@ namespace ISEPay.DAL.Migrations
                     b.ToTable("Addresses", (string)null);
                 });
 
+            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Currency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Currencies", (string)null);
+                });
+
+            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.ExchangeRate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FromCurrencyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(18, 6)");
+
+                    b.Property<Guid>("ToCurrencyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EffectiveDate");
+
+                    b.HasIndex("FromCurrencyId");
+
+                    b.HasIndex("ToCurrencyId");
+
+                    b.ToTable("ExchangeRates", (string)null);
+                });
+
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Permission", b =>
                 {
                     b.Property<Guid>("Id")
@@ -291,6 +402,36 @@ namespace ISEPay.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Image", b =>
+                {
+                    b.HasOne("ISEPay.DAL.Persistence.Entities.User", "User")
+                        .WithMany("Images")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.ExchangeRate", b =>
+                {
+                    b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "FromCurrency")
+                        .WithMany("FromExchangeRates")
+                        .HasForeignKey("FromCurrencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "ToCurrency")
+                        .WithMany("ToExchangeRates")
+                        .HasForeignKey("ToCurrencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FromCurrency");
+
+                    b.Navigation("ToCurrency");
+                });
+
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Transaction", b =>
                 {
                     b.HasOne("ISEPay.DAL.Persistence.Entities.Account", "AccountIn")
@@ -330,9 +471,18 @@ namespace ISEPay.DAL.Migrations
                     b.Navigation("OutgoingTransactions");
                 });
 
+            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Currency", b =>
+                {
+                    b.Navigation("FromExchangeRates");
+
+                    b.Navigation("ToExchangeRates");
+                });
+
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.User", b =>
                 {
                     b.Navigation("Accounts");
+
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

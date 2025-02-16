@@ -19,6 +19,7 @@ namespace ISEPay.Controllers
         }
 
         //Users pass: 12345678
+        //Users pass: Isepay2025.
         //Admin pass: admin123
         [HttpPost("authenticate")]
         [Authorize(Policy = "Public")]

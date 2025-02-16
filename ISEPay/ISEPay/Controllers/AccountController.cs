@@ -13,16 +13,19 @@ namespace ISEPay.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
+        private readonly ITransferService transferService;
         private readonly ISEPayDBContext _context;
 
-        public AccountController(IAccountService accountService, ISEPayDBContext context)
+        public AccountController(IAccountService accountService, ISEPayDBContext context, ITransferService transferService)
         {
             this.accountService = accountService;
+            this.transferService = transferService;
             _context = context;
         }
 
         [HttpPost("add")]
         [Authorize(Policy = "Authenticated")]
+
         public IActionResult AddAccount([FromBody] AccountDto account)
         {
             try
@@ -36,8 +39,28 @@ namespace ISEPay.Controllers
             }
         }
 
+        [HttpPost("deactivate")]
+        [Authorize(Policy = "Authenticated")]
+        public IActionResult DeactivateAccount([FromBody] DeactivateAccountDto accountDto)
+        {
+            try
+            {
+                // Call the service layer to deactivate the account
+                accountService.DeactivateAccount(accountDto);
+
+                // Return success response
+                return Ok(new { Message = "Account deactivated successfully" });
+            }
+            catch (Exception ex)
+            {
+                // Return error response
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+
         [HttpGet("myAccounts/{userId}")]
         [Authorize(Policy = "Authenticated")]
+
         public IActionResult GetUserAccounts(Guid userId)
         {
             try
@@ -81,5 +104,25 @@ namespace ISEPay.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+        
+        [HttpPost("transfer")]
+        [Authorize(Policy = "Authenticated")]
+        public IActionResult TransferMoney([FromBody] TransferRequest transferRequest)
+        {
+            try
+            {
+                transferService.TransferMoney(transferRequest);
+                return Ok(new { Message = "Successful transfer!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+          
+            }
+        }
+        
+        
+        
+        
     }
 }

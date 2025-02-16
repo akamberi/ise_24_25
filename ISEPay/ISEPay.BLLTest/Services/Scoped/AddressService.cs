@@ -1,65 +1,103 @@
-﻿/*using System;
+﻿using System;
 using ISEPay.BLL.ISEPay.Domain.Models;
 using ISEPay.DAL.Persistence.Repositories;
 using ISEPay.DAL.Persistence.Entities;
 
 namespace ISEPay.BLL.Services.Scoped
 {
-    // Rename interface to AddressService for consistency
     public interface IAddressService
     {
-        void AddAddress(AddressDto addressDto);
-    }
+         
+        void AddAddress(AddressDto addressDto); 
+        void EditAddress(Guid id, AddressDto updatedAddressDto);
+        Address GetAddressByUserId(Guid userId);
+        
+        
 
-    // Make AddressService public to be used outside the assembly if needed
+    }
+    
     public class AddressService : IAddressService
     {
-        private readonly IAddressRepository addressRepository;
-        private readonly IUsersRepository usersRepository;
+        private readonly IAddressRepository _addressRepository;
+        private readonly IUsersRepository _usersRepository;
 
-        // Constructor to inject repositories
         public AddressService(IAddressRepository addressRepository, IUsersRepository usersRepository)
         {
-            this.addressRepository = addressRepository;
-            this.usersRepository = usersRepository;
+            _addressRepository = addressRepository;
+            _usersRepository = usersRepository;
         }
 
         public void AddAddress(AddressDto addressDto)
         {
-            // Check if the addressDto is null
             if (addressDto == null)
             {
                 throw new ArgumentNullException(nameof(addressDto), "AddressDto cannot be null");
             }
 
-            // Retrieve the user from the repository
-            var user = usersRepository.FindById(addressDto.userId);
-
+            
+            var user = _usersRepository.FindById(addressDto.UserId);
             if (user == null)
             {
                 throw new Exception("User does not exist");
             }
 
-            // Create the Address object to save
+            
             var addressToSave = new Address
             {
-                Country = addressDto.Country,
+                Street = addressDto.Street,
                 City = addressDto.City,
                 Zipcode = addressDto.Zipcode,
-                Street = addressDto.Street
+                Country = addressDto.Country,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
 
-            // Assign the address to the user
-            user.Address = addressToSave;
+            
+            _addressRepository.Add(addressToSave);
+            _usersRepository.Add(user);  
 
-            // Add the new user and address entities to their respective repositories
-            usersRepository.Add(user);
-            addressRepository.Add(addressToSave);
+           
 
-            // Save the changes in both repositories
-            usersRepository.SaveChanges();
-            addressRepository.SaveChanges();
+            
+            _addressRepository.SaveChanges();
+            _usersRepository.SaveChanges();
+        }
+        
+        
+        public Address GetAddressByUserId(Guid userId)
+        {
+            var address = _addressRepository.GetByUserId(userId);  
+            if (address == null)
+            {
+                throw new Exception("Address for user not found.");
+            }
+            return address;
+        }
+
+        
+        public void EditAddress(Guid id, AddressDto updatedAddressDto)
+        {
+            if (updatedAddressDto == null)
+            {
+                throw new ArgumentNullException(nameof(updatedAddressDto), "AddressDto cannot be null");
+            }
+
+            
+            var address = _addressRepository.GetById(id);
+            if (address == null)
+            {
+                throw new Exception("Address does not exist");
+            }
+
+            
+            address.Street = updatedAddressDto.Street;
+            address.City = updatedAddressDto.City;
+            address.Zipcode = updatedAddressDto.Zipcode;
+            address.Country = updatedAddressDto.Country;
+           // address.UpdatedAt = DateTime.Now;
+
+            
+            _addressRepository.SaveChanges();
         }
     }
 }
-*/

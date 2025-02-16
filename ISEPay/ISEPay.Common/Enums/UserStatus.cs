@@ -33,7 +33,8 @@ namespace ISEPay.Common.Enums
     {
         TRANSFER,
         DEPOSIT,
-        WITHDRAWAL
+        WITHDRAWAL,
+        ISACTIVE
     }
 
     public enum TransactionStatus
@@ -41,5 +42,12 @@ namespace ISEPay.Common.Enums
         PENDING,
         COMPLETED,
         FAILED
+    }
+    
+    public enum FeeType
+    {
+        PercentageFee = 1,
+        FlatFee = 2,
+        AddressFee = 3
     }
 }

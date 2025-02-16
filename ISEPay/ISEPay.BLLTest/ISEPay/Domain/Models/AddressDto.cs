@@ -8,7 +8,7 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
 {
     public class AddressDto
     {
-        public Guid userId { get; set; }
+        public Guid UserId { get; set; }
 
         public string Country { get; set; }
 
@@ -17,5 +17,9 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
         public string Street { get; set; }
 
         public int? Zipcode { get; set; }
+        
+        
+        public DateTime CreatedAt { get; set; } 
+        public DateTime UpdatedAt { get; set; }
     }
 }

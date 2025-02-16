@@ -14,13 +14,13 @@ internal class UserConfig : IEntityTypeConfiguration<User>
         // Properties
         builder.Property(x => x.FullName)
                .IsRequired()
-               .HasMaxLength(100);
+               .HasMaxLength(50);
 
         builder.Property(x => x.Gender)
                .HasMaxLength(10);
 
         builder.Property(x => x.CardID)
-               .HasMaxLength(50);
+               .HasMaxLength(10);
 
         builder.Property(x => x.Nationality)
                .HasMaxLength(50);
@@ -40,11 +40,16 @@ internal class UserConfig : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.Password)
                .IsRequired()
-               .HasMaxLength(255);
+               .HasMaxLength(20);
 
         builder.Property(x => x.CreatedAt)
                .IsRequired()
                .HasDefaultValueSql("GETUTCDATE()");
+
+        builder.HasMany(x => x.Images)
+            .WithOne()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.UpdatedAt)
                .IsRequired();
