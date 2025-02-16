@@ -20,7 +20,7 @@ namespace ISEPay.Controllers
         [HttpPost()]
         [Authorize(Policy = "Admin")]
 
-        public IActionResult SetExchangeRates([FromBody] ExchangeRateDto exchangeRateDto)
+        public IActionResult SetExchangeRates([FromBody] ExchangeRateRequestDto exchangeRateDto)
         {
             try
             {

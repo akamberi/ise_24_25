@@ -14,7 +14,7 @@ namespace ISEPay.BLL.Services.Scoped
 
     public interface IExchangeRateService
     {
-        void SetExchangeRates(ExchangeRateDto exchangeRateDto);
+        void SetExchangeRates(ExchangeRateRequestDto exchangeRateDto);
         List<ExchangeRateDto> GetExchangeRates();
 
         decimal Convert(ExchangeCovertDto exchangeCovertDto);
@@ -33,7 +33,7 @@ namespace ISEPay.BLL.Services.Scoped
             this.currencyRepository = currencyRepository;
         }
 
-        public void SetExchangeRates(ExchangeRateDto exchangeRateDto)
+        public void SetExchangeRates(ExchangeRateRequestDto exchangeRateDto)
         {
             // Retrieve currencies from the repository
             var fromCurrency = currencyRepository.GetByCode(exchangeRateDto.FromCurrency);
