@@ -53,6 +53,22 @@ namespace ISEPay.Controllers
             }
         }
 
+        [HttpGet("/currency/inActive/admin")]
+        [Authorize(Policy = "Admin")]
+
+        public IActionResult GetAllInActiveCurrenciesForAdmin()
+        {
+            try
+            {
+                var currencies = _currencyService.GetALlDeactivatedCurrencyForAdmin();
+                return Ok(currencies);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching currencies." });
+            }
+        }
+
         /// <summary>
         /// Deactivates a currency by its code.
         /// </summary>
@@ -63,6 +79,22 @@ namespace ISEPay.Controllers
             try
             {
                 _currencyService.DeactivateCurrency(currencyCode);
+                return Ok(new { message = $"Currency {currencyCode} deactivated successfully." });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = $"Failed to deactivate the currency with code {currencyCode}." });
+            }
+        }
+
+
+        [HttpPost("activate/{currencyCode}")]
+        [Authorize(Policy = "Admin")]
+        public IActionResult ActivateCurrency(string currencyCode)
+        {
+            try
+            {
+                _currencyService.ActivateCurrency(currencyCode);
                 return Ok(new { message = $"Currency {currencyCode} deactivated successfully." });
             }
             catch (Exception)

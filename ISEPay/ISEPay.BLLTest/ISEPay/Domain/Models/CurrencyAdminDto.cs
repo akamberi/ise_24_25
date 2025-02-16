@@ -20,6 +20,7 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
         public string Symbol { get; set; }
 
         public string Country { get; set; }
+        public bool isActive { get; set; }
 
     }
 }
