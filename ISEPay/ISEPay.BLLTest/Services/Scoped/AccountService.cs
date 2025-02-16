@@ -9,6 +9,8 @@ using System.Linq;
 using ISEPay.DAL.Persistence;
 using ISEPay.Domain.Models;
 using Transaction = ISEPay.DAL.Persistence.Entities.Transaction;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Immutable;
 using System.Globalization;
 
 namespace ISEPay.BLL.Services.Scoped
@@ -16,11 +18,15 @@ namespace ISEPay.BLL.Services.Scoped
     public interface IAccountService
     {
         void CreateDefaultAccount(Guid userId);
-        void DeactivateAccount(DeactivateAccountDto accountDto);
+        void ChangeAccountStatus(ChangeAccountStatusRequestDto accountDto);
         void AddAccount(AccountDto account);
         List<AccountResponse> GetUserAccounts(Guid userId);
         void Deposit(DepositRequest depositRequest); 
         void Withdraw(WithdrawalRequest withdrawalRequest); 
+
+        List<AccountResultsDto> SearchAccounts(String fullName, String cardId);
+
+
     }
 
     internal class AccountService : IAccountService
@@ -35,6 +41,39 @@ namespace ISEPay.BLL.Services.Scoped
             this.usersRepository = usersRepository;
             _context = context;  
         }
+
+
+        public List<AccountResultsDto> SearchAccounts(string fullName, string cardId)
+        {
+            var users = usersRepository.FilterByName(fullName).ToList();
+
+            if (!users.Any())
+                return new List<AccountResultsDto>(); // No users found, return an empty list
+
+            var accounts = new List<Account>();
+
+            foreach (var user in users)
+            {
+                if (!string.IsNullOrEmpty(user.CardID) && user.CardID.Equals(cardId, StringComparison.OrdinalIgnoreCase))
+                {
+                    var userAccounts = accountRepository.FindAccountsByUserId(user.Id).ToList();
+                    accounts.AddRange(userAccounts);
+                }
+            }
+
+            return accounts.Select(a => new AccountResultsDto
+            {
+                Id = a.Id,
+                AccountNumber = a.AccountNumber,
+                balance = a.Balance,
+                status= a.Status.ToString()
+            }).ToList();
+        }
+
+
+
+
+
 
         public List<AccountResponse> GetUserAccounts(Guid userId)
         {
@@ -95,28 +134,33 @@ namespace ISEPay.BLL.Services.Scoped
             accountRepository.SaveChanges();
         }
 
-        public void DeactivateAccount(DeactivateAccountDto accountDTO)
+        public void ChangeAccountStatus(ChangeAccountStatusRequestDto accountDTO)
         {
             // Retrieve all accounts for the provided UserId
-            var userAccounts = accountRepository.FindAccountsByUserId(accountDTO.UserId).ToList();
+            /* var userAccounts = accountRepository.FindAccountsByUserId(accountDTO.UserId).ToList();
 
-            // Check if the user has any accounts
-            if (!userAccounts.Any())
-            {
-                throw new Exception("No accounts found for this UserId.");
-            }
-
+             // Check if the user has any accounts
+             if (!userAccounts.Any())
+             {
+                 throw new Exception("No accounts found for this UserId.");
+             }
+ */
             // Try to find the account directly by AccountNumber
-            var account = userAccounts.FirstOrDefault(a => a.AccountNumber == accountDTO.AccountNumber);
+            // var account = userAccounts.FirstOrDefault(a => a.AccountNumber == accountDTO.AccountNumber);
 
+            var account = accountRepository.FindAccountByAccountNumber(accountDTO.AccountNumber);
             // If no account found with the provided AccountNumber
             if (account == null)
             {
-                throw new Exception("The provided account number does not belong to the provided UserId.");
+                throw new Exception("The provided account number does not exist.");
             }
 
-            // Set the account's status to INACTIVE (or another status for deactivation)
-            account.Status = AccountStatus.INACTIVE;  
+            if (account.Status.Equals(accountDTO.AccountStatus))
+            {
+                throw new Exception(" Account is already in this status");
+            }
+
+            account.Status = accountDTO.AccountStatus;  
             account.UpdatedAt = DateTime.UtcNow;
 
             accountRepository.UpdateAccount(account);  // This method handles saving as well

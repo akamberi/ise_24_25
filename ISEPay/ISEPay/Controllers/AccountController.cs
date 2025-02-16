@@ -36,17 +36,17 @@ namespace ISEPay.Controllers
             }
         }
 
-        [HttpPost("deactivate")]
-        [Authorize(Policy = "Authenticated")]
-        public IActionResult DeactivateAccount([FromBody] DeactivateAccountDto accountDto)
+        [HttpPut("status")]
+        [Authorize(Policy = "Agent")]
+        public IActionResult ChangeStatus([FromBody] ChangeAccountStatusRequestDto accountDto)
         {
             try
             {
                 // Call the service layer to deactivate the account
-                accountService.DeactivateAccount(accountDto);
+                accountService.ChangeAccountStatus(accountDto);
 
                 // Return success response
-                return Ok(new { Message = "Account deactivated successfully" });
+                return Ok(new { Message = "Account status changed successfully:  " + accountDto.AccountStatus.ToString() });
             }
             catch (Exception ex)
             {
@@ -100,5 +100,21 @@ namespace ISEPay.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+
+        [HttpGet("search")]
+        [Authorize(Policy = "Agent")]
+        public IActionResult SearchAccounts([FromQuery] string fullName, [FromQuery] string cardId)
+        {
+            try
+            {
+                var accounts = accountService.SearchAccounts(fullName, cardId);
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }

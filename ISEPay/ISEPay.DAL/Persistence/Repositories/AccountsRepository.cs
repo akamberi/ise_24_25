@@ -13,6 +13,7 @@ namespace ISEPay.DAL.Persistence.Repositories
         void UpdateAccounts(IEnumerable<Account> accounts); // Add this method signature
         void UpdateAccount(Account account); // New method signature
 
+
         Account? FindAccountByAccountNumber(string accountNumber); // New method signature
 
     }
