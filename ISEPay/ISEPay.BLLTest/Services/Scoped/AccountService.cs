@@ -184,7 +184,7 @@ namespace ISEPay.BLL.Services.Scoped
 
             var transaction = new Transaction
             {
-                AccountInId = Guid.Parse(depositRequest.AccountNumber),
+                AccountInId = account.Id,
                 AccountIn = account,
                 Type = TransactionType.DEPOSIT,
                 Amount = depositRequest.Amount,
@@ -216,7 +216,7 @@ namespace ISEPay.BLL.Services.Scoped
 
             var transaction = new Transaction
             {
-                AccountOutId = Guid.Parse(withdrawalRequest.AccountNumber),
+                AccountOutId = account.Id,
                 AccountOut = account,
                 Type = TransactionType.WITHDRAWAL,
                 Amount = withdrawalRequest.Amount,

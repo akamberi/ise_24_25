@@ -8,14 +8,14 @@ namespace ISEPay.BLL.Services.Scoped
     public interface IAddressService
     {
          
-        void AddAddress(AddressDto addressDto); 
+        void AddAddress(AddressDto addressDto, User user); 
         void EditAddress(Guid id, AddressDto updatedAddressDto);
         Address GetAddressByUserId(Guid userId);
         
         
 
     }
-    
+
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _addressRepository;
@@ -27,41 +27,32 @@ namespace ISEPay.BLL.Services.Scoped
             _usersRepository = usersRepository;
         }
 
-        public void AddAddress(AddressDto addressDto)
+        public void AddAddress(AddressDto addressDto, User user)
         {
-            if (addressDto == null)
-            {
-                throw new ArgumentNullException(nameof(addressDto), "AddressDto cannot be null");
-            }
 
-            
-            var user = _usersRepository.FindById(addressDto.UserId);
-            if (user == null)
+    
+            var address = new Address
             {
-                throw new Exception("User does not exist");
-            }
-
-            
-            var addressToSave = new Address
-            {
-                Street = addressDto.Street,
-                City = addressDto.City,
-                Zipcode = addressDto.Zipcode,
                 Country = addressDto.Country,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                City = addressDto.City,
+                Street = addressDto.Street,
+                Zipcode = addressDto.Zipcode,
+                UserId = user.Id
             };
 
-            
-            _addressRepository.Add(addressToSave);
-            _usersRepository.Add(user);  
-
-           
-
-            
+         
+            _addressRepository.Add(address);
             _addressRepository.SaveChanges();
+
+          
+            user.AdressID = address.Id;
+
+            
             _usersRepository.SaveChanges();
         }
+
+
+
         
         
         public Address GetAddressByUserId(Guid userId)

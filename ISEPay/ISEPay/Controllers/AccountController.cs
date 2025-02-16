@@ -24,7 +24,7 @@ namespace ISEPay.Controllers
         }
 
         [HttpPost("add")]
-        [Authorize(Policy = "Authenticated")]
+       // [Authorize(Policy = "Authenticated")]
 
         public IActionResult AddAccount([FromBody] AccountDto account)
         {
@@ -106,7 +106,7 @@ namespace ISEPay.Controllers
         }
         
         [HttpPost("transfer")]
-        [Authorize(Policy = "Authenticated")]
+       // [Authorize(Policy = "Authenticated")]
         public IActionResult TransferMoney([FromBody] TransferRequest transferRequest)
         {
             try
