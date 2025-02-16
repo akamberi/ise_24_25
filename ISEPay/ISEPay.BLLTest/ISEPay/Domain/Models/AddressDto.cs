@@ -18,8 +18,6 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
 
         public int? Zipcode { get; set; }
         
-        
-        public DateTime CreatedAt { get; set; } 
-        public DateTime UpdatedAt { get; set; }
+      
     }
 }

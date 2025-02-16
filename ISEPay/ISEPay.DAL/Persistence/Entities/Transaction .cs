@@ -7,7 +7,7 @@ namespace ISEPay.DAL.Persistence.Entities
     public class Transaction : BaseEntity<Guid>
     {
         public Guid? AccountInId { get; set; }
-        public Account AccountIn { get; set; } 
+        public Account? AccountIn { get; set; } 
 
         public Guid? AccountOutId { get; set; }
         public Account AccountOut { get; set; } 
@@ -38,5 +38,6 @@ namespace ISEPay.DAL.Persistence.Entities
 
   
   
+       
     }
 }

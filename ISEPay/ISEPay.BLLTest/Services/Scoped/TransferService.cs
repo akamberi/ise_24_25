@@ -43,14 +43,7 @@ namespace ISEPay.BLL.Services.Scoped
         {
            
 
-            if (isInternational)
-            {
-                return _feeRepository.GetFeeByCurrencyPair(fromCurrency, toCurrency, transactionType);
-            }
-            else
-            {
-                return _feeRepository.GetFeeByCurrencyPair(fromCurrency, toCurrency, transactionType);
-            }
+            return _feeRepository.GetFeeByCurrencyPair(fromCurrency, toCurrency, transactionType);
         }
 
         public void TransferMoney(TransferRequest transferRequest)

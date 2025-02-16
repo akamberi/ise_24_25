@@ -32,7 +32,7 @@ public static class Startup
         services.AddScoped<ICurrencyService,CurrencyService>(); 
         services.AddScoped<IExchangeRateService,ExchangeRateService>(); 
         //services.AddScoped<IExchangeRateService,ExchangeRateService>(); 
-       // services.AddScoped<IAddressService, AddressService>(); 
+        services.AddScoped<IAddressService, AddressService>(); 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<FeeService>(); 

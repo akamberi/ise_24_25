@@ -30,21 +30,22 @@ namespace ISEPay.BLL.Services.Scoped
     {
         private readonly IAccountRepository accountRepository;
         private readonly IUsersRepository usersRepository;
-        private readonly ISEPayDBContext _context;  
-        
+        private readonly ISEPayDBContext _context;
 
-        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository, ISEPayDBContext context)
+
+        public AccountService(IAccountRepository accountRepository, IUsersRepository usersRepository,
+            ISEPayDBContext context)
         {
             this.accountRepository = accountRepository;
             this.usersRepository = usersRepository;
-            _context = context;  
+            _context = context;
         }
 
         public List<AccountResponse> GetUserAccounts(Guid userId)
         {
             var allAccounts = accountRepository.FindAccountsByUserId(userId)
-                                         .Where(account => account.Status == AccountStatus.ACTIVE) // Filtering active accounts
-                                         .ToList();
+                .Where(account => account.Status == AccountStatus.ACTIVE) // Filtering active accounts
+                .ToList();
 
             if (allAccounts == null || !allAccounts.Any())
             {
@@ -57,9 +58,9 @@ namespace ISEPay.BLL.Services.Scoped
                 AccountNumber = account.AccountNumber,
                 Balance = account.Balance,
                 Currency = account.Currency,
-                AccountType= CultureInfo.CurrentCulture.TextInfo.ToTitleCase(account.Type.ToString().ToLower())
+                AccountType = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(account.Type.ToString().ToLower())
 
-        }).ToList();
+            }).ToList();
 
             return accountResponses;
         }
@@ -77,20 +78,21 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 throw new Exception("User is not approved yet");
             }
-            
+
             var existingAccount = accountRepository.FindAccountsByUserId(account.UserId)
                 .FirstOrDefault(a => a.Currency == account.Currency && a.Type == account.AccountType);
             if (existingAccount != null)
             {
                 throw new Exception("Account already exists for this user with the same currency and type");
             }
+
             var accounts = accountRepository.FindAccountsByUserId(account.UserId);
             var activeAccounts = accounts.Where(account => account.Status.Equals(AccountStatus.ACTIVE)).ToList();
             if (activeAccounts.Count.Equals(5))
             {
                 throw new Exception("You cannnot have more tha 5 active accounts");
             }
-            
+
             var accountToAdd = new Account
             {
                 AccountNumber = GenerateAccountNumber(),
@@ -130,23 +132,23 @@ namespace ISEPay.BLL.Services.Scoped
             }
 
             // Set the account's status to INACTIVE (or another status for deactivation)
-            account.Status = AccountStatus.INACTIVE;  
+            account.Status = AccountStatus.INACTIVE;
             account.UpdatedAt = DateTime.UtcNow;
 
-            accountRepository.UpdateAccount(account);  // This method handles saving as well
+            accountRepository.UpdateAccount(account); // This method handles saving as well
         }
 
 
         public void CreateDefaultAccount(Guid userId)
         {
-           
+
             var user = usersRepository.FindById(userId);
             if (user == null)
             {
                 throw new Exception("User does not exist");
             }
 
-           
+
             var accountToAdd = new Account
             {
                 AccountNumber = GenerateAccountNumber(),
@@ -166,45 +168,39 @@ namespace ISEPay.BLL.Services.Scoped
 
         private string GenerateAccountNumber()
         {
-            return Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper(); 
+            return Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper();
         }
 
-        
         public void Deposit(DepositRequest depositRequest)
         {
-            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);
+            var account = accountRepository.FindAccountByAccountNumber(depositRequest.AccountNumber);
 
             if (account == null)
             {
                 throw new Exception("The account was not found.");
             }
 
-            
             account.Balance += depositRequest.Amount;
 
-            
             var transaction = new Transaction
             {
-                AccountInId = depositRequest.AccountId,
+                AccountInId = account.Id,
                 AccountIn = account,
                 Type = TransactionType.DEPOSIT,
                 Amount = depositRequest.Amount,
                 Description = "Deposit by agent",
                 Status = TransactionStatus.COMPLETED,
-                Timestamp = DateTime.Now,
-                AgentId = depositRequest.AgentId  
+                Timestamp = DateTime.UtcNow,
+                AgentId = depositRequest.AgentId
             };
 
-            
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
         }
 
-        
         public void Withdraw(WithdrawalRequest withdrawalRequest)
         {
-            
-            var account = _context.Accounts.FirstOrDefault(a => a.Id == withdrawalRequest.AccountId);
+            var account = accountRepository.FindAccountByAccountNumber(withdrawalRequest.AccountNumber);
 
             if (account == null)
             {
@@ -216,23 +212,20 @@ namespace ISEPay.BLL.Services.Scoped
                 throw new Exception("The account balance is insufficient.");
             }
 
-            
             account.Balance -= withdrawalRequest.Amount;
 
-            
             var transaction = new Transaction
             {
-                AccountOutId = withdrawalRequest.AccountId,
+                AccountOutId = account.Id,
                 AccountOut = account,
                 Type = TransactionType.WITHDRAWAL,
                 Amount = withdrawalRequest.Amount,
                 Description = "Withdrawal by agent",
                 Status = TransactionStatus.COMPLETED,
-                Timestamp = DateTime.Now,
-                AgentId = withdrawalRequest.AgentId  
+                Timestamp = DateTime.UtcNow,
+                AgentId = withdrawalRequest.AgentId
             };
 
-            
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
         }

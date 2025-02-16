@@ -96,6 +96,7 @@ namespace ISEPay.BLL.Services.Scoped
             // Optionally, assign a role (if required)
             var role = roleRepository.GetByName("User");
             userToAdd.RoleID = role.Id;
+          
 
             userRepository.Add(userToAdd);
             userRepository.SaveChanges();

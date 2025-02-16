@@ -102,7 +102,7 @@ namespace ISEPay.Controllers
 
 
         [HttpPost("approve/{userId}")]
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
 
         public IActionResult ApproveUser(Guid userId)
         {

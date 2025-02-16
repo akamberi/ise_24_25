@@ -1,10 +1,12 @@
 ﻿using CarRental.DAL.Persistence.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace CarRental.DAL.Persistence;
 
-internal class CarRentalDbContext : DbContext
+internal class CarRentalDbContext : IdentityDbContext<User, IdentityRole, string>
 {
     public CarRentalDbContext(DbContextOptions<CarRentalDbContext> options) : base(options)
     {
