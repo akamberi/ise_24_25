@@ -116,7 +116,7 @@ namespace ISEPay.BLL.Services.Scoped
         
         public void Deposit(DepositRequest depositRequest)
         {
-            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountId);
+            var account = _context.Accounts.FirstOrDefault(a => a.Id == depositRequest.AccountNumber);
 
             if (account == null)
             {
@@ -129,7 +129,7 @@ namespace ISEPay.BLL.Services.Scoped
             
             var transaction = new Transaction
             {
-                AccountInId = depositRequest.AccountId,
+                AccountInId = depositRequest.AccountNumber,
                 AccountIn = account,
                 Type = TransactionType.DEPOSIT,
                 Amount = depositRequest.Amount,
@@ -148,7 +148,7 @@ namespace ISEPay.BLL.Services.Scoped
         public void Withdraw(WithdrawalRequest withdrawalRequest)
         {
             
-            var account = _context.Accounts.FirstOrDefault(a => a.Id == withdrawalRequest.AccountId);
+            var account = _context.Accounts.FirstOrDefault(a => a.Id == withdrawalRequest.AccountNumber);
 
             if (account == null)
             {
@@ -166,7 +166,7 @@ namespace ISEPay.BLL.Services.Scoped
             
             var transaction = new Transaction
             {
-                AccountOutId = withdrawalRequest.AccountId,
+                AccountOutId = withdrawalRequest.AccountNumber,
                 AccountOut = account,
                 Type = TransactionType.WITHDRAWAL,
                 Amount = withdrawalRequest.Amount,
