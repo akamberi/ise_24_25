@@ -1,0 +1,41 @@
+﻿@model DAL.Persistence.Entities.Assignment
+
+@{
+    ViewData["Title"] = "Assignment Details";
+}
+
+<h2>Assignment Details</h2>
+
+<div>
+    <h4>@Model.Title</h4>
+    <p>@Model.Description</p>
+    <p><strong>Due Date:</strong> @Model.DueDate.ToShortDateString()</p>
+    <p>
+        <strong>Google Form URL:</strong>
+        @if (!string.IsNullOrEmpty(Model.GoogleFormUrl))
+        {
+            <a href="@Model.GoogleFormUrl" target="_blank">@Model.GoogleFormUrl</a>
+        }
+        else
+        {
+            <span>No Google Form provided</span>
+        }
+    </p>
+    <p>
+        <strong>Course:</strong>
+        @if (Model.Course != null)
+        {
+            @Model.Course.Title
+        }
+        else
+        {
+            <span>Course not available</span>
+        }
+    </p>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

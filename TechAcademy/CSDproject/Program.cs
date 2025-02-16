@@ -85,9 +85,11 @@ builder.Services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentReposito
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+//  Register the Assignment Submission service
 
-
-
+builder.Services.AddScoped<IAssignmentSubmissionService, AssignmentSubmissionService>();
+// the assignment service
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -49,7 +49,15 @@ namespace DAL.Data
                 .HasForeignKey(c => c.InstructorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-        
+            builder.Entity<Course>()
+                .Property(c => c.Price)
+                .HasPrecision(18, 2);  // Ensures proper storage in SQL Server
+
+            builder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);  // Ensures proper storage in SQL Server
+
+
             builder.Entity<CourseEnrollment>()
                 .HasOne(ce => ce.Course)
                 .WithMany(c => c.CourseEnrollments)

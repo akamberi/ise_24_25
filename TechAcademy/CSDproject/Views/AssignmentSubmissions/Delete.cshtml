@@ -1,0 +1,23 @@
+﻿@model DAL.Persistence.Entities.AssignmentSubmission
+
+@{
+    ViewData["Title"] = "Delete Submission";
+}
+
+<h2>Delete Submission</h2>
+
+<h3>Are you sure you want to delete this submission?</h3>
+
+<div>
+    <p><strong>Submission ID:</strong> @Model.Id</p>
+    <p><strong>Assignment ID:</strong> @Model.AssignmentId</p>
+    <p><strong>User ID:</strong> @Model.UserId</p>
+    <p><strong>Submitted Date:</strong> @Model.SubmittedDate.ToString("g")</p>
+    <p><strong>Is Submitted:</strong> @(Model.IsSubmitted ? "Yes" : "No")</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,23 @@
+﻿@model DAL.Persistence.Entities.AssignmentSubmission
+
+@{
+    ViewData["Title"] = "Submission Details";
+}
+
+<h2>Submission Details</h2>
+
+<div>
+    <p><strong>Submission ID:</strong> @Model.Id</p>
+    <p><strong>Assignment ID:</strong> @Model.AssignmentId</p>
+    <p><strong>User ID:</strong> @Model.UserId</p>
+    <p><strong>Submitted Date:</strong> @Model.SubmittedDate.ToString("g")</p>
+    <p><strong>Is Submitted:</strong> @(Model.IsSubmitted ? "Yes" : "No")</p>
+    <p><strong>Score:</strong> @(Model.Score.HasValue ? Model.Score.ToString() : "Not graded")</p>
+    <p><strong>Pass/Fail Status:</strong> @(Model.PassFailStatus.HasValue ? (Model.PassFailStatus.Value ? "Passed" : "Failed") : "Not graded")</p>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

@@ -1,0 +1,44 @@
+﻿@model Common.DTOs.CreateAssignmentSubmissionDto
+
+@{
+    ViewData["Title"] = "Submit Assignment";
+}
+
+<h2>Submit Assignment</h2>
+
+<form asp-action="Create" method="post">
+    <!-- Typically, AssignmentId is passed via query string; you may want to keep it hidden -->
+    <input type="hidden" asp-for="AssignmentId" />
+
+    <div class="form-group">
+        <label asp-for="UserId"></label>
+        <!-- If you auto-populate UserId, consider making this read-only -->
+        <input asp-for="UserId" class="form-control"  />
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SubmittedDate"></label>
+        <!-- Use type="datetime-local" for date-time input -->
+        <input asp-for="SubmittedDate" class="form-control" type="datetime-local" />
+        <span asp-validation-for="SubmittedDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsSubmitted"></label>
+        <input asp-for="IsSubmitted" class="form-check-input" type="checkbox" />
+        <span asp-validation-for="IsSubmitted" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Score"></label>
+        <input asp-for="Score" class="form-control" type="number" step="any" />
+        <span asp-validation-for="Score" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Assignment</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,48 @@
+﻿@model Common.DTOs.CreateAssignmentSubmissionDto
+
+@{
+    ViewData["Title"] = "Edit Submission";
+    // Ensure the controller sets ViewBag.SubmissionId with the submission's ID.
+}
+
+<h2>Edit Submission</h2>
+
+<form asp-action="Edit" asp-route-id="@ViewBag.SubmissionId" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label asp-for="SubmittedDate"></label>
+        <input asp-for="SubmittedDate" class="form-control" type="datetime-local" />
+        <span asp-validation-for="SubmittedDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsSubmitted"></label>
+        <input asp-for="IsSubmitted" class="form-check-input" type="checkbox" />
+        <span asp-validation-for="IsSubmitted" class="text-danger"></span>
+    </div>
+
+    @* Conditionally render the Score field based on the user's role *@
+    @if (User.IsInRole("Lecturer"))
+    {
+        <!-- Lecturers can edit the score -->
+        <div class="form-group">
+            <label asp-for="Score"></label>
+            <input asp-for="Score" class="form-control" type="number" step="any" />
+            <span asp-validation-for="Score" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        <!-- Students see the score as read-only -->
+        <div class="form-group">
+            <label>Score</label>
+            <p>@(Model.Score.HasValue ? Model.Score.ToString() : "Not graded yet")</p>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

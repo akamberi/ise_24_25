@@ -1,0 +1,43 @@
+﻿@model IEnumerable<DAL.Persistence.Entities.AssignmentSubmission>
+
+@{
+    ViewData["Title"] = "Assignment Submissions";
+}
+
+<h2>Assignment Submissions</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Submission ID</th>
+            <th>Assignment ID</th>
+            <th>User ID</th>
+            <th>Submitted Date</th>
+            <th>Is Submitted</th>
+            <th>Score</th>
+            <th>Pass/Fail</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var submission in Model)
+        {
+            <tr>
+                <td>@submission.Id</td>
+                <td>@submission.AssignmentId</td>
+                <td>@submission.UserId</td>
+                <td>@submission.SubmittedDate.ToString("g")</td>
+                <td>@(submission.IsSubmitted ? "Yes" : "No")</td>
+                <td>@(submission.Score.HasValue ? submission.Score.ToString() : "Not graded")</td>
+                <td>@(submission.PassFailStatus.HasValue ? (submission.PassFailStatus.Value ? "Passed" : "Failed") : "Not graded")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@submission.Id" class="btn btn-primary">Details</a>
+                    <a asp-action="Edit" asp-route-id="@submission.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@submission.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Create New Submission</a>
