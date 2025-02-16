@@ -4,6 +4,7 @@ using ISEPay.DAL.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISEPay.DAL.Migrations
 {
     [DbContext(typeof(ISEPayDBContext))]
-    partial class ISEPayDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250112225107_AddExchangeRateToCurrencyRelationship")]
+    partial class AddExchangeRateToCurrencyRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,32 +96,6 @@ namespace ISEPay.DAL.Migrations
                     b.ToTable("Addresses", (string)null);
                 });
 
-            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Currency", b =>
                 {
                     b.Property<Guid>("Id")
@@ -393,15 +370,6 @@ namespace ISEPay.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.Image", b =>
-                {
-                    b.HasOne("ISEPay.DAL.Persistence.Entities.User", "User")
-                        .WithMany("Images")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.ExchangeRate", b =>
                 {
                     b.HasOne("ISEPay.DAL.Persistence.Entities.Currency", "FromCurrency")
@@ -470,8 +438,6 @@ namespace ISEPay.DAL.Migrations
             modelBuilder.Entity("ISEPay.DAL.Persistence.Entities.User", b =>
                 {
                     b.Navigation("Accounts");
-
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

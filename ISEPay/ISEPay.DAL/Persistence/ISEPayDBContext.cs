@@ -14,9 +14,11 @@ namespace ISEPay.DAL.Persistence
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Image> Images { get; set; } // Added DbSet for Images
 
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -74,7 +76,17 @@ namespace ISEPay.DAL.Persistence
 
             modelBuilder.Entity<Transaction>()
                 .HasIndex(t => t.AccountInId);
+                    modelBuilder.Entity<ExchangeRate>()
+            .HasOne(x => x.FromCurrency)
+            .WithMany(c => c.FromExchangeRates)
+            .HasForeignKey(x => x.FromCurrencyId)
+            .OnDelete(DeleteBehavior.Restrict);  // Ensure the delete behavior is applied here
 
+            modelBuilder.Entity<ExchangeRate>()
+                .HasOne(x => x.ToCurrency)
+                .WithMany(c => c.ToExchangeRates)
+                .HasForeignKey(x => x.ToCurrencyId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Transaction>()
                 .HasIndex(t => t.AccountOutId);
 
@@ -89,6 +101,9 @@ namespace ISEPay.DAL.Persistence
                 .WithMany(u => u.Images)
                 .HasForeignKey(i => i.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            // Apply Currency and ExchangeRate configurations
+            modelBuilder.ApplyConfiguration(new CurrencyConfig());
+            modelBuilder.ApplyConfiguration(new ExchangeRateConfig());
         }
     }
 }

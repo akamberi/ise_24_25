@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
+</head>
+<body>
+    
+    <div id="dashboard">
+        <aside class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#history">Transaction History</a></li>
+                <li><a href="#transfer">Transfer Funds</a></li>
+                <li><a href="#currencyConverter">Currency Converter</a></li>
+                <li><a href="#logout" id="logoutButton">Logout</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <section id="profile">
+                <h2>User Profile</h2>
+                <p>Manage your account details and settings here.</p>
+                <form id="profileForm">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <button type="submit">Update Profile</button>
+                </form>
+            </section>
+            <section id="history">
+                <h2>Transaction History</h2>
+                <p>View all your past transactions here.</p>
+                <table id="transactionTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Recipient</th>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Transaction rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </section>
+            <section id="transfer">
+                <h2>Transfer Funds</h2>
+                <form id="transferForm">
+                    <label for="recipient">Recipient:</label>
+                    <input type="text" id="recipient" name="recipient" required>
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" name="amount" required>
+                    <label for="currency">Currency:</label>
+                    <select id="currency" name="currency" required>
+                        <option value="ALL">ALL</option>
+                        <option value="EUR">EUR</option>
+                        <option value="USD">USD</option>
+                    </select>
+                    <button type="submit">Transfer</button>
+                </form>
+            </section>
+
+            <!-- Currency Converter Section -->
+            <section id="currencyConverter">
+                <h2>Currency Converter</h2>
+                <form id="currencyForm">
+                    <label for="fromCurrency">From Currency:</label>
+                    <select id="fromCurrency" name="fromCurrency" required>
+                        <option value="EUR">EUR</option>
+                        <option value="ALL">ALL</option>
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+
+                    <label for="toCurrency">To Currency:</label>
+                    <select id="toCurrency" name="toCurrency" required>
+                        <option value="EUR">EUR</option>
+                        <option value="ALL">ALL</option>
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+
+                    <label for="amountToConvert">Amount:</label>
+                    <input type="number" id="amountToConvert" name="amountToConvert" required>
+
+                    <button type="submit">Convert</button>
+                </form>
+
+                <div id="conversionResult"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            alert('Logged out successfully!');
+        });
+
+        const transferForm = document.getElementById('transferForm');
+        transferForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const recipient = document.getElementById('recipient').value;
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+
+            fetch('/accounts/transfer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ recipient, amount, currency }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert('Transfer successful!');
+                        loadTransactionHistory();
+                    } else {
+                        alert('Transfer failed: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while transferring funds.');
+                });
+        });
+
+        function loadTransactionHistory() {
+            fetch('/accounts/history')
+                .then((response) => response.json())
+                .then((data) => {
+                    const tableBody = document.querySelector('#transactionTable tbody');
+                    tableBody.innerHTML = '';
+
+                    data.transactions.forEach((transaction) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${transaction.date}</td>
+                            <td>${transaction.recipient}</td>
+                            <td>${transaction.amount}</td>
+                            <td>${transaction.currency}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while loading transaction history.');
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTransactionHistory();
+        });
+
+        const profileForm = document.getElementById('profileForm');
+        profileForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+
+            fetch('/accounts/profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert('Profile updated successfully!');
+                    } else {
+                        alert('Profile update failed: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating profile.');
+                });
+        });
+
+        // Currency Converter Functionality with Real-time API
+        const currencyForm = document.getElementById('currencyForm');
+        currencyForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            const amountToConvert = document.getElementById('amountToConvert').value;
+
+            // Define the API endpoint
+            const apiKey = '5810309df5002d0ee65710bf';
+            const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+
+            // Make a fetch request to the API
+            fetch(apiUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.result === 'success') {
+                        const rate = data.conversion_rates[toCurrency]; // Get the conversion rate from the API response
+                        if (rate) {
+                            const convertedAmount = (amountToConvert * rate).toFixed(2);
+                            document.getElementById('conversionResult').innerHTML = `
+                                <p>${amountToConvert} ${fromCurrency} = ${convertedAmount} ${toCurrency}</p>
+                            `;
+                        } else {
+                            alert('Conversion rate for the selected currencies is not available.');
+                        }
+                    } else {
+                        alert('Failed to fetch data from the API.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching exchange rates.');
+                });
+        });
+    </script>
+</body>
+</html>
