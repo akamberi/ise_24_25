@@ -21,7 +21,9 @@ namespace ISEPay.Config
                 // Only authenticated users (user-only endpoint)
                 options.AddPolicy("Authenticated", policy =>
                     policy.RequireAuthenticatedUser());
-
+                options.AddPolicy("Agent", policy =>
+                   policy.RequireRole("AGENT")
+                         .RequireAuthenticatedUser());
                 // Specific policies based on roles or other claims can be added similarly
             });
         }

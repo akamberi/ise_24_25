@@ -14,7 +14,7 @@ namespace ISEPay.BLL.Services.Scoped
     public interface IAccountService
     {
         void CreateDefaultAccount(Guid userId);
-        void DeactivateAccount(DeactivateAccountDto accountDto);
+        void ChangeAccountStatus(ChangeAccountStatusRequestDto accountDto);
         void AddAccount(AccountDto account);
         List<AccountResponse> GetUserAccounts(Guid userId);
 
@@ -57,7 +57,8 @@ namespace ISEPay.BLL.Services.Scoped
             {
                 Id = a.Id,
                 AccountNumber = a.AccountNumber,
-                balance = a.Balance
+                balance = a.Balance,
+                status= a.Status.ToString()
             }).ToList();
         }
 
@@ -128,28 +129,33 @@ namespace ISEPay.BLL.Services.Scoped
 
         }
 
-        public void DeactivateAccount(DeactivateAccountDto accountDTO)
+        public void ChangeAccountStatus(ChangeAccountStatusRequestDto accountDTO)
         {
             // Retrieve all accounts for the provided UserId
-            var userAccounts = accountRepository.FindAccountsByUserId(accountDTO.UserId).ToList();
+            /* var userAccounts = accountRepository.FindAccountsByUserId(accountDTO.UserId).ToList();
 
-            // Check if the user has any accounts
-            if (!userAccounts.Any())
-            {
-                throw new Exception("No accounts found for this UserId.");
-            }
-
+             // Check if the user has any accounts
+             if (!userAccounts.Any())
+             {
+                 throw new Exception("No accounts found for this UserId.");
+             }
+ */
             // Try to find the account directly by AccountNumber
-            var account = userAccounts.FirstOrDefault(a => a.AccountNumber == accountDTO.AccountNumber);
+            // var account = userAccounts.FirstOrDefault(a => a.AccountNumber == accountDTO.AccountNumber);
 
+            var account = accountRepository.FindAccountByAccountNumber(accountDTO.AccountNumber);
             // If no account found with the provided AccountNumber
             if (account == null)
             {
-                throw new Exception("The provided account number does not belong to the provided UserId.");
+                throw new Exception("The provided account number does not exist.");
             }
 
-            // Set the account's status to INACTIVE (or another status for deactivation)
-            account.Status = AccountStatus.INACTIVE;  
+            if (account.Status.Equals(accountDTO.AccountStatus))
+            {
+                throw new Exception(" Account is already in this status");
+            }
+
+            account.Status = accountDTO.AccountStatus;  
             account.UpdatedAt = DateTime.UtcNow;
 
             accountRepository.UpdateAccount(account);  // This method handles saving as well

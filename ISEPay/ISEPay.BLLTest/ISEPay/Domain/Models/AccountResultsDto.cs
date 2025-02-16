@@ -12,5 +12,7 @@ namespace ISEPay.BLL.ISEPay.Domain.Models
         public Guid Id { get; set; }
         public string AccountNumber { get; set; }
         public decimal balance { get; set; }
+
+        public string status { get; set; }
     }
 }
