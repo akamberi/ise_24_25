@@ -12,7 +12,7 @@ namespace CSDproject.Controllers.Normal
     {
         private readonly ILessonFileService _lessonFileService;
         private readonly ICourseModuleService _courseModuleService;
-        private readonly string _uploadPath = @"C:\Users\Perdorues\OneDrive - Turgut Ozal Education Sh.A\Desktop\Uploads\";
+        private readonly string _uploadPath = @"C:\Users\User\Desktop\Uploads";
 
         public LessonFileController(ILessonFileService lessonFileService, ICourseModuleService courseModuleService)
         {

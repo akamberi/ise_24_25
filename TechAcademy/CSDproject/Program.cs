@@ -95,9 +95,9 @@ builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
-
+builder.Services.AddScoped<IGoogleSheetsRepository, GoogleSheetsRepository>();
+builder.Services.AddScoped<GoogleSheetsService>();
+var googleCredentialsPath = builder.Configuration["GoogleApi:CredentialsPath"];
 
 var app = builder.Build();
 

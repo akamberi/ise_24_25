@@ -1,0 +1,66 @@
+﻿@model IList<IList<object>>
+
+@{
+    ViewBag.Title = "Google Sheets Data";
+}
+
+<h2>Assignment Submissions</h2>
+
+@if (Model != null && Model.Count > 1)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                @* Print existing column headers *@
+                @foreach (var header in Model[0])
+                {
+                    <th>@header</th>
+                }
+                <th>Result</th> @* Add a new column for Pass/Fail *@
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < Model.Count; i++) // Start from row 1 (skip header row)
+            {
+                bool passed = false; // Declare and initialize the variable here
+
+                <tr>
+                    @for (int j = 0; j < Model[i].Count; j++) // Loop through columns in the row
+                    {
+                        // Safely get the cell value
+                        var cellValue = Model[i][j]?.ToString() ?? "";
+
+                        // Check the Score column (second column, index 1)
+                        if (j == 1) // Assuming Score is in the second column
+                        {
+                            var parts = cellValue.Split('/');
+                            if (parts.Length > 0 && int.TryParse(parts[0], out int numericScore))
+                            {
+                                passed = numericScore > 6; // Update "passed" status
+                            }
+                        }
+
+                        // Render the cell
+                        <td>@cellValue</td>
+                    }
+
+                    @* Append the Pass/Fail column *@
+                    <td>
+                        @if (passed)
+                        {
+                            <span style="color: green;">Passed</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Failed</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No data found.</p>
+}
