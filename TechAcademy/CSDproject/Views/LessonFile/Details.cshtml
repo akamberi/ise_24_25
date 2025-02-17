@@ -18,19 +18,45 @@
     </tr>
 </table>
 
+<h3>Preview:</h3>
 @if (Model.FileType.StartsWith("image/"))
 {
-    <img src="@Url.Action("Download", new { id = Model.Id })" alt="File Image" style="max-width: 100%; height: auto;" />
+    <!-- Display image preview -->
+    <img src="@Url.Action("Download", "LessonFile", new { id = Model.Id })" alt="File Image" style="max-width: 100%; height: auto;" />
 }
 else if (Model.FileType == "application/pdf")
 {
-    <embed src="@Url.Action("Download", new { id = Model.Id })" width="100%" height="600px" type="application/pdf" />
+    <!-- Display PDF preview -->
+    <embed src="@Url.Action("Download", "LessonFile", new { id = Model.Id })" width="100%" height="600px" type="application/pdf" />
+}
+else if (Model.FileType.StartsWith("video/"))
+{
+    <!-- Display video preview -->
+    <video controls style="max-width: 100%; height: auto;">
+        <source src="@Url.Action("Download", "LessonFile", new { id = Model.Id })" type="@Model.FileType" />
+        Your browser does not support the video tag.
+    </video>
+}
+else if (Model.FileType.StartsWith("audio/"))
+{
+    <!-- Display audio preview -->
+    <audio controls style="width: 100%;">
+        <source src="@Url.Action("Download", "LessonFile", new { id = Model.Id })" type="@Model.FileType" />
+        Your browser does not support the audio element.
+    </audio>
 }
 else
 {
-    <p>File preview is not available.</p>
+    <!-- Unsupported file type -->
+    <p>Preview not available for this file type.</p>
 }
 
-<a href="@Url.Action("Download", new { id = Model.Id })" class="btn btn-primary">Download File</a>
-<a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+<!-- Provide download button -->
+<a href="@Url.Action("Download", "LessonFile", new { id = Model.Id })" class="btn btn-primary">Download File</a>
+
+<!-- View Button to Open in New Tab -->
+<a href="@Url.Action("ViewFile", "LessonFile", new { id = Model.Id })" target="_blank" class="btn btn-info">View File</a>
+
+<!-- Back to Module Details -->
+<a href="@Url.Action("Details", "CourseModule", new { id = Model.CourseModuleId })" class="btn btn-secondary">Back to Module Details</a>
 

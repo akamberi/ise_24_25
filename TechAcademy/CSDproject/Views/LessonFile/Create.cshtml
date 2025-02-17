@@ -2,21 +2,65 @@
 
 @{
     ViewData["Title"] = "Upload Lesson File";
+    int? selectedModuleId = null;
+    if (ViewBag.SelectedModuleId != null)
+    {
+        int temp;
+        if (int.TryParse(ViewBag.SelectedModuleId.ToString(), out temp))
+        {
+            selectedModuleId = temp;
+        }
+    }
+    var courseModules = (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.CourseModules;
+    string selectedModuleName = "";
+    if (selectedModuleId.HasValue)
+    {
+        var item = courseModules.FirstOrDefault(x => x.Value == selectedModuleId.Value.ToString());
+        if (item != null)
+        {
+            selectedModuleName = item.Text;
+        }
+    }
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <form method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="CourseModuleId">Course Module</label>
-        <select asp-for="CourseModuleId" class="form-control" asp-items="ViewBag.CourseModules"></select>
-    </div>
+    @if (selectedModuleId.HasValue)
+    {
+        <!-- Pre-selected module: display its name and set its ID in a hidden field -->
+        <input type="hidden" name="CourseModuleId" value="@selectedModuleId.Value" />
+        <div class="form-group">
+            <label>Course Module</label>
+            <p>@selectedModuleName</p>
+        </div>
+    }
+    else
+    {
+        <!-- Fallback: if no module is pre-selected, show a dropdown -->
+        <div class="form-group">
+            <label for="CourseModuleId">Course Module</label>
+            <select asp-for="CourseModuleId" class="form-control" asp-items="ViewBag.CourseModules">
+                <option value="">Select Module</option>
+            </select>
+        </div>
+    }
+
     <div class="form-group">
         <label for="File">Upload File</label>
         <input asp-for="File" type="file" class="form-control" />
         <span asp-validation-for="File" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
-<a href="@Url.Action("Index", "LessonFile")" class="btn btn-secondary">Back to List</a>
+@if (selectedModuleId.HasValue)
+{
+    <a href="@Url.Action("ListByModule", "LessonFile", new { moduleId = selectedModuleId.Value })" class="btn btn-secondary">Back to Module Files</a>
+}
+else
+{
+    <a href="@Url.Action("Index", "LessonFile")" class="btn btn-secondary">Back to Files</a>
+}
+

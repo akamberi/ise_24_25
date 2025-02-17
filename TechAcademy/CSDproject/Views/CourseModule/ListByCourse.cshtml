@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Common.DTOs.CourseModuleDto>
+
+@{
+    ViewData["Title"] = "Course Modules";
+    var courseId = ViewBag.CourseId;
+}
+
+<h2>Modules for Course @courseId</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Course Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var module in Model)
+        {
+            <tr>
+                <td>@module.Name</td>
+                <td>@module.CourseName</td>
+                <td>
+                    <a href="/CourseModule/Details/@module.Id" class="btn btn-info btn-sm">Details</a>
+                    <a href="/CourseModule/Edit/@module.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/CourseModule/Delete/@module.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/Courses/Details/@courseId" class="btn btn-primary">Back to Course Details</a>

@@ -1,12 +1,17 @@
 ﻿@model CSDproject.Models.ViewModels.CourseModuleDetailsViewModel
+
 <h2>Course Module Details</h2>
 <p><strong>Name:</strong> @Model.CourseModule.Name</p>
-<p><strong>Course:</strong> @Model.CourseModule.CourseName</p>  <!-- Display the Course Name here -->
+<p><strong>Course:</strong> @Model.CourseModule.CourseName</p>
 <p><strong>Content:</strong> @Model.CourseModule.Content</p>
+
+<a href="/CourseModule/ListByCourse?courseId=@Model.CourseModule.CourseId" class="btn btn-secondary">Back to List</a>
+<a href="/CourseModule/Edit/@Model.CourseModule.Id" class="btn btn-warning">Edit</a>
 
 <h3>Lesson Files</h3>
 @if (Model.LessonFiles != null && Model.LessonFiles.Any())
 {
+    <!-- Display list of files -->
     <table class="table">
         <thead>
             <tr>
@@ -22,20 +27,22 @@
                 <tr>
                     <td>@file.FileName</td>
                     <td>@file.FileType</td>
-                    <td>@(file.FileSize / 1024) KB</td> <!-- Show file size in KB -->
+                    <td>@(file.FileSize / 1024) KB</td>
                     <td>
-                        <a href="@Url.Action("Download", "LessonFile", new { id = file.Id })" class="btn btn-primary">Download</a>
-                        <a href="@Url.Action("Details", "LessonFile", new { id = file.Id })" class="btn btn-info">View</a>
+                        <a href="@Url.Action("ViewFile", "LessonFile", new { id = file.Id })" target="_blank" class="btn btn-info">View</a>
+                        <a href="@Url.Action("Download", "LessonFile", new { id = file.Id })" class="btn btn-success">Download</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <!-- Button to view files in a dedicated page if desired -->
+    <a href="@Url.Action("ListByModule", "LessonFile", new { moduleId = Model.CourseModule.Id })" class="btn btn-info">View Files</a>
 }
 else
 {
     <p>No lesson files available for this module.</p>
 }
 
-<a asp-action="Edit" asp-route-id="@Model.CourseModule.Id" class="btn btn-warning">Edit</a>
-<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<!-- Always provide an Add Files button -->
+<a href="/LessonFile/Create?CourseModuleId=@Model.CourseModule.Id" class="btn btn-success">Add Files</a>

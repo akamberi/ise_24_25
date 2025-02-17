@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Aspose.Slides.NET" Version="25.2.0" />
+    <PackageReference Include="Aspose.Words" Version="25.2.0" />
     <PackageReference Include="Google.Apis" Version="1.69.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.68.0.3658" />

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Common.DTOs.LessonFileDTO>
+
+@{
+    ViewData["Title"] = "Files for Module: " + ViewBag.ModuleName;
+}
+
+<h2>@ViewData["Title"]</h2>
+<!-- Use ViewBag.ModuleId to pass the module ID to the Create action -->
+<a href="@Url.Action("Create", "LessonFile", new { CourseModuleId = ViewBag.ModuleId })" class="btn btn-success">Add Files</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>File Type</th>
+            <th>File Size</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model)
+        {
+            <tr>
+                <td>@file.FileName</td>
+                <td>@file.FileType</td>
+                <td>@(file.FileSize / 1024) KB</td>
+                <td>
+                    <a href="@Url.Action("ViewFile", "LessonFile", new { id = file.Id })" target="_blank" class="btn btn-info">View</a>
+                    <a href="@Url.Action("Download", "LessonFile", new { id = file.Id })" class="btn btn-success">Download</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Back to Module Details -->
+<a href="@Url.Action("Details", "CourseModule", new { id = ViewBag.ModuleId })" class="btn btn-secondary">Back to Module Details</a>
+

@@ -10,14 +10,29 @@
 
     <!-- Display Course Name and use hidden input for CourseId -->
     <div class="form-group">
-        <label for="courseName">Course Name</label>
-        <select id="courseName" class="form-control" required>
+        @if (ViewBag.SelectedCourseId != null)
+        {
+            <input type="hidden" id="courseId" name="CourseId" value="@ViewBag.SelectedCourseId" />
+            <label>Course Name</label>
             @foreach (var course in ViewBag.Courses)
             {
-                <option value="@course.Id">@course.Title</option>
+                if (course.Id == ViewBag.SelectedCourseId)
+                {
+                    <p>@course.Title</p>
+                }
             }
-        </select>
-        <input type="hidden" id="courseId" name="CourseId" />
+        }
+        else
+        {
+            <label for="courseName">Course Name</label>
+            <select id="courseName" class="form-control" required>
+                @foreach (var course in ViewBag.Courses)
+                {
+                    <option value="@course.Id">@course.Title</option>
+                }
+            </select>
+            <input type="hidden" id="courseId" name="CourseId" />
+        }
     </div>
 
     <div class="form-group">
@@ -55,7 +70,8 @@
                 data: JSON.stringify(moduleData),
                 success: function(response) {
                     alert("Course Module Created!");
-                    window.location.href = "/CourseModule/Index"; // Redirect to list
+                    // Redirect to Course Details so that the module list for that course is shown.
+                    window.location.href = "/Courses/Details/" + $("#courseId").val();
                 },
                 error: function(xhr) {
                     alert("Error: " + xhr.responseText);
