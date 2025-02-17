@@ -15,12 +15,14 @@ namespace CSDproject.Controllers.Normal
         public async Task<IActionResult> Index()
         {
             // Example usage
-            string spreadsheetId = "1nqF8WoWHiDvGGoeeFfRy_0-bdV7m5to6qopzwkBm-rw";
+            string spreadsheetId = "1YhmxdBJ3apIPir4ETzTQenaa9bLgqCC8ar-BIVmOOQ0";
             string range = "'Form Responses 1'!A:E";
             var data = await _googleSheetsService.GetData(spreadsheetId, range);
 
             // Pass the data to the view or handle it as needed
             return View(data);
         }
+       
     }
 }
+    

@@ -30,13 +30,13 @@
                         // Safely get the cell value
                         var cellValue = Model[i][j]?.ToString() ?? "";
 
-                        // Check the Score column (second column, index 1)
-                        if (j == 1) // Assuming Score is in the second column
+                        // Check the Score column (third column, index 2)
+                        if (j == 2) // Assuming Score is in the third column
                         {
                             var parts = cellValue.Split('/');
                             if (parts.Length > 0 && int.TryParse(parts[0], out int numericScore))
                             {
-                                passed = numericScore > 6; // Update "passed" status
+                                passed = numericScore >= 6; // Student passes if score >= 6
                             }
                         }
 
@@ -48,11 +48,11 @@
                     <td>
                         @if (passed)
                         {
-                            <span style="color: green;">Passed</span>
+                            <span style="color: green;">✅ Passed</span>
                         }
                         else
                         {
-                            <span style="color: red;">Failed</span>
+                            <span style="color: red;">❌ Failed</span>
                         }
                     </td>
                 </tr>

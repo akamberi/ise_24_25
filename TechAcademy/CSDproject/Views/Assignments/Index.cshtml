@@ -24,6 +24,7 @@
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@assignment.Id" class="btn btn-primary">Details</a>
+                    <a asp-action="Results" asp-route-assignmentId="@assignment.Id" class="btn btn-info">View Results</a>
                 </td>
             </tr>
         }

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<dynamic>
+
+<h2>Your Assignment Results</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-warning">
+        @ViewBag.ErrorMessage
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Score</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>@result.Score</td>
+                    <td class="@(result.Status == "Pass" ? "text-success" : "text-danger")">
+                        @(result.Status == "Pass" ? "✅" : "❌") @result.Status
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
