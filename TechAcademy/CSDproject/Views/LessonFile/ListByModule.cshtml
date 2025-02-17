@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Common.DTOs.LessonFileDTO>
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model IEnumerable<Common.DTOs.LessonFileDTO>
 
 @{
     ViewData["Title"] = "Files for Module: " + ViewBag.ModuleName;
@@ -6,7 +8,10 @@
 
 <h2>@ViewData["Title"]</h2>
 <!-- Use ViewBag.ModuleId to pass the module ID to the Create action -->
-<a href="@Url.Action("Create", "LessonFile", new { CourseModuleId = ViewBag.ModuleId })" class="btn btn-success">Add Files</a>
+@if (User.IsInRole("Lecturer"))
+{
+    <a href="@Url.Action("Create", "LessonFile", new { CourseModuleId = ViewBag.ModuleId })" class="btn btn-success">Add Files</a>
+}
 
 <table class="table">
     <thead>
