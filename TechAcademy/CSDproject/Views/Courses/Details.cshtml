@@ -23,8 +23,10 @@
     </dl>
 </div>
 <p>
-
-    <a href="/Courses/Edit/@Model.Course.Id" class="btn btn-warning">Edit</a> |
+    @if (User.IsInRole("Lecturer"))
+    {
+        <a href="/Courses/Edit/@Model.Course.Id" class="btn btn-warning">Edit</a>
+    }
     <a href="/Courses" class="btn btn-dark">Back to List</a>
 </p>
 
@@ -37,7 +39,10 @@
             <li>
                 <strong>@module.Name</strong>
                 <p>@module.Content</p>
-                <a href="/CourseModule/Details/@module.Id" class="btn btn-info">View Module</a>
+                @if (User.IsInRole("Lecturer"))
+                {
+                    <a href="/CourseModule/Details/@module.Id" class="btn btn-info">View Module</a>
+                }
             </li>
         }
     </ul>
@@ -46,12 +51,16 @@ else
 {
     <p>No modules available for this course.</p>
 }
-<p><a href="/CourseModule/Create?courseId=@Model.Course.Id" class="btn btn-success">Add Modules</a></p>
+
+@if (User.IsInRole("Lecturer"))
+{
+    <p><a href="/CourseModule/Create?courseId=@Model.Course.Id" class="btn btn-success">Add Modules</a></p>
+}
 
 
 
 <!-- Enrollment Button -->
-@if (SignInManager.IsSignedIn(User))
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Student"))
 {
     <form method="post" action="/CourseEnrollment/PaymentCreate">
         <input type="hidden" name="courseId" value="@Model.Course.Id" />
@@ -59,9 +68,8 @@ else
         <button type="submit" class="btn btn-primary">Enroll Now</button>
     </form>
 }
-else
+else if (!SignInManager.IsSignedIn(User))
 {
     <p><a href="/Identity/Account/Login">Login</a> to enroll in this course.</p>
 }
-
 

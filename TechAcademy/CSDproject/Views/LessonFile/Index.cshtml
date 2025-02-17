@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Common.DTOs.LessonFileDTO>
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@model IEnumerable<Common.DTOs.LessonFileDTO>
 
 @{
     ViewData["Title"] = "Lesson Files";
@@ -25,7 +28,10 @@
                 <td>@file.FileType</td>
                 <td>@file.FileSize</td>
                 <td>
+                    @if (User.IsInRole("Lecturer"))
+                    {
                     <a href="#" data-id="@file.Id" class="btn btn-danger btn-sm delete-file">Delete</a>
+                    }
                 </td>
             
                 <td>

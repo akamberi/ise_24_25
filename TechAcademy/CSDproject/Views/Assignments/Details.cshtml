@@ -1,4 +1,7 @@
-﻿@model DAL.Persistence.Entities.Assignment
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@model DAL.Persistence.Entities.Assignment
 
 @{
     ViewData["Title"] = "Assignment Details";
@@ -35,7 +38,10 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    @if (User.IsInRole("Lecturer"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    }
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

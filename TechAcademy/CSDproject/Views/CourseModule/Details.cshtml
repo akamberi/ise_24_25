@@ -1,4 +1,6 @@
-﻿@model CSDproject.Models.ViewModels.CourseModuleDetailsViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model CSDproject.Models.ViewModels.CourseModuleDetailsViewModel
 
 <h2>Course Module Details</h2>
 <p><strong>Name:</strong> @Model.CourseModule.Name</p>
@@ -6,8 +8,10 @@
 <p><strong>Content:</strong> @Model.CourseModule.Content</p>
 
 <a href="/CourseModule/ListByCourse?courseId=@Model.CourseModule.CourseId" class="btn btn-secondary">Back to List</a>
+ @if (User.IsInRole("Lecturer"))
+                    {
 <a href="/CourseModule/Edit/@Model.CourseModule.Id" class="btn btn-warning">Edit</a>
-
+                    }
 <h3>Lesson Files</h3>
 @if (Model.LessonFiles != null && Model.LessonFiles.Any())
 {
@@ -44,5 +48,7 @@ else
     <p>No lesson files available for this module.</p>
 }
 
-<!-- Always provide an Add Files button -->
+ @if (User.IsInRole("Lecturer"))
+                    {
 <a href="/LessonFile/Create?CourseModuleId=@Model.CourseModule.Id" class="btn btn-success">Add Files</a>
+                    }

@@ -1,4 +1,7 @@
-﻿@model IEnumerable<DAL.Persistence.Entities.Assignment>
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@model IEnumerable<DAL.Persistence.Entities.Assignment>
 
 @{
     ViewData["Title"] = "Assignments";
@@ -31,4 +34,9 @@
     </tbody>
 </table>
 
+<div>
+    @if (User.IsInRole("Lecturer"))
+    {
 <a asp-action="Create" class="btn btn-success">Create New Assignment</a>
+    }
+</div>

@@ -10,7 +10,7 @@ using CSDproject.Models.ViewModels;
 
 namespace CSDproject.Controllers.Normal
 {
-    
+   
     public class CoursesController : Controller
     {
         private readonly ICourseService _courseService;
@@ -44,7 +44,7 @@ namespace CSDproject.Controllers.Normal
 
             return View(createCourseDto);
         }
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCourseDto courseDto)
