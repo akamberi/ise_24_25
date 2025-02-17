@@ -12,7 +12,7 @@ namespace ISEPay.BLL.Services.Scoped
     public interface ITransferService
     {
         void TransferMoney(TransferRequest transferRequest);
-        Fee GetFeeByCurrencyPair(TransactionType transactionType,bool isInternational,Guid fromCurrency,Guid toCurrency);
+        Fee GetFeeByCurrencyPair(TransactionType transactionType,bool isInternational,string fromCurrency,string toCurrency);
     }
 
     internal class TransferService : ITransferService
@@ -23,11 +23,13 @@ namespace ISEPay.BLL.Services.Scoped
          private readonly IFeeRepository _feeRepository;
          private readonly IAddressRepository _addressRepository;
          private readonly FeeService _feeService;
+         private readonly ICurrencyRepository _currencyRepository;
 
 
 
         public TransferService(IAccountRepository accountRepository,ITransactionsRepository transactionsRepository,
-            IExchangeRateRepository exchangeRateRepository,IAddressRepository addressRepository,FeeService feeService,IFeeRepository feeRepository)
+            IExchangeRateRepository exchangeRateRepository,IAddressRepository addressRepository,FeeService feeService,
+            IFeeRepository feeRepository,ICurrencyRepository currencyRepository)
         {
             _accountRepository = accountRepository;
             _transactionsRepository=transactionsRepository;
@@ -35,11 +37,12 @@ namespace ISEPay.BLL.Services.Scoped
             _feeRepository=feeRepository;
             _addressRepository = addressRepository;
             _feeService=feeService;
+            _currencyRepository=currencyRepository;
         }
 
         
         public Fee GetFeeByCurrencyPair(TransactionType transactionType, bool isInternational,
-            Guid fromCurrency, Guid toCurrency)
+            string fromCurrency, string toCurrency)
         {
            
 
@@ -48,7 +51,9 @@ namespace ISEPay.BLL.Services.Scoped
 
         public void TransferMoney(TransferRequest transferRequest)
         {
+            Console.WriteLine($"Searching for account: {transferRequest.FromAccountNumber}");
             var fromAccount = _accountRepository.FindAccountByAccountNumber(transferRequest.FromAccountNumber);
+           
             var toAccount = _accountRepository.FindAccountByAccountNumber(transferRequest.ToAccountNumber);
 
             if (fromAccount == null || toAccount == null)
@@ -75,8 +80,8 @@ namespace ISEPay.BLL.Services.Scoped
                 var feeObj = _feeService.GetFeeByTransactionType(
                     TransactionType.TRANSFER,
                     isInternational,
-                    Guid.Parse(fromAccount.Currency),  
-                    Guid.Parse(toAccount.Currency)     
+                    (fromAccount.Currency),  
+                    (toAccount.Currency)     
                 );
                 fee = feeObj?.FeeValue ?? 0m;
             }
@@ -88,22 +93,28 @@ namespace ISEPay.BLL.Services.Scoped
                 throw new Exception("The balance of the sending account is insufficient");
             }
 
-                   decimal exchangeRate = 1m;
+               
                    
-                   var fromCurrency = Guid.Parse(fromAccount.Currency);
-                   var toCurrency = Guid.Parse(toAccount.Currency);
+                   var fromCurrencyGuid = _currencyRepository.GetByCode(fromAccount.Currency)?.Id;
+                   var toCurrencyGuid = _currencyRepository.GetByCode(toAccount.Currency)?.Id;
+                
+                   if (fromCurrencyGuid == null || toCurrencyGuid == null)
+                   {
+                       throw new Exception("Invalid currency code");
+                   }
+                   
+                   decimal exchangeRate = 1m;
+                   if (fromCurrencyGuid != toCurrencyGuid)
+                   {
+                       var rate = _exchangeRateRepository.GetExchangeRate(fromCurrencyGuid.Value, toCurrencyGuid.Value);
+                       if (rate == null)
+                       {
+                           throw new Exception("Exchange rate not found");
+                       }
 
-                     if (fromCurrency != toCurrency) 
-                    {
-                        var rate = _exchangeRateRepository.GetExchangeRate(fromCurrency, toCurrency); 
-                        if (rate == null)
-                        {
-                            throw new Exception("Exchange rate not found");
-                        }
-
-                        exchangeRate = rate.Rate;
-                        totalAmount *= exchangeRate; 
-                    }
+                       exchangeRate = rate.Rate;
+                       totalAmount *= exchangeRate;
+                   }
 
             fromAccount.Balance -= totalAmount;
             toAccount.Balance += transferRequest.Amount;

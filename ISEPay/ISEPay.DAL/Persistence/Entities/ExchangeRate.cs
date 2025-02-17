@@ -10,11 +10,11 @@ namespace ISEPay.DAL.Persistence.Entities
     {
         // From Currency
         public Guid FromCurrencyId { get; set; }
-        public Currency FromCurrency { get; set; }
+        public Currency? FromCurrency { get; set; }
 
         // To Currency
         public Guid ToCurrencyId { get; set; }
-        public Currency ToCurrency { get; set; }
+        public Currency? ToCurrency { get; set; }
 
         // The exchange rate value
         public decimal Rate { get; set; }

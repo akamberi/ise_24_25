@@ -12,7 +12,7 @@ namespace ISEPay.DAL.Persistence.Repositories
     {
         IEnumerable<Transaction> GetTransactionsByAccountId(Guid accountId);
          void AddTransaction(Transaction transaction);
-        
+         IEnumerable<Transaction> GetTransactionsByUserId(Guid userId);
 
     }
 
@@ -42,6 +42,16 @@ namespace ISEPay.DAL.Persistence.Repositories
                 .Include(t => t.AccountOut)
                 .ToList();
         }
+        
+        public IEnumerable<Transaction> GetTransactionsByUserId(Guid userId)
+        {
+            return _context.Transactions
+                .Where(t => t.AccountIn.UserId == userId || t.AccountOut.UserId == userId)
+                .Include(t => t.AccountIn)  // Include the account in for additional user information
+                .Include(t => t.AccountOut) // Include the account out for additional user information
+                .ToList();
+        }
+        
         
     }
 }

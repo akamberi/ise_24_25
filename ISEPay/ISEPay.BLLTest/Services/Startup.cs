@@ -15,6 +15,7 @@ public static class Startup
     {
         Console.WriteLine("Test project starting...");
     }
+    
     public static void RegisterBLLServices(this IServiceCollection services, IConfiguration config)
     {
         services.RegisterDALServices(config);
@@ -34,7 +35,8 @@ public static class Startup
         services.AddScoped<IAddressService, AddressService>(); 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-        services.AddScoped<FeeService>(); 
+        services.AddScoped<FeeService>();
+        services.AddScoped<ITransactionService, TransactionService>();
 
     }
 }

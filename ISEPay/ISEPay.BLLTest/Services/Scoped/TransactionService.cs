@@ -13,6 +13,10 @@ namespace ISEPay.BLL.Services.Scoped
     {
         List<Transaction> GetLatestTransactions();
         List<Transaction> GetTransactionsByFilter(DateTime startDate, DateTime endDate, string type);
+       
+        Transaction GetTransactionById(Guid transactionId);
+        List<Transaction> GetTransactionsByUserId(Guid userId);
+
     }
     public class TransactionService : ITransactionService
     {
@@ -44,6 +48,26 @@ namespace ISEPay.BLL.Services.Scoped
             return _transactionsRepository.GetAll()
                 .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate && t.Type == transactionType)
                 .ToList();
+        }
+        
+        // Get a transaction by its ID
+        public Transaction GetTransactionById(Guid transactionId)
+        {
+            var transaction = _transactionsRepository.GetAll()
+                .FirstOrDefault(t => t.Id == transactionId);
+
+            if (transaction == null)
+            {
+                throw new ArgumentException("Transaction not found.");
+            }
+
+            return transaction;
+        }
+        
+        // New method to get transactions by userId
+        public List<Transaction> GetTransactionsByUserId(Guid userId)
+        {
+            return _transactionsRepository.GetTransactionsByUserId(userId).ToList();
         }
     }
 }

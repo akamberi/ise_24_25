@@ -39,20 +39,20 @@ namespace ISEPay.BLL.Services
 
       
         public Fee GetFeeByTransactionType(TransactionType transactionType, bool isInternational,
-            Guid fromCurrency , Guid toCurrency )
+            string fromCurrency , string toCurrency )
         {
             var fees = _feeRepository.GetFeesByTransactionType(transactionType).AsQueryable();
 
             if (isInternational)
             {
-                fees = fees.Where(f => f.Description.Contains("International"));
+                fees = fees.Where(f => f.Description.Contains("INTERNATIONAL"));
             }
             else
             {
                 fees = fees.Where(f => f.Description.Contains("National"));
             }
 
-            if (fromCurrency != Guid.Empty && toCurrency != Guid.Empty)
+            if (fromCurrency != null && toCurrency != null)
             {
                 return _feeRepository.GetFeeByCurrencyPair(fromCurrency, toCurrency, transactionType);
             }

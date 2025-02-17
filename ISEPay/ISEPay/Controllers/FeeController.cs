@@ -35,7 +35,7 @@ public class FeeController : ControllerBase
 
         // GET: api/Fee/transfer
         [HttpGet("{transactionType}")]
-        public ActionResult<Fee> GetFeesByTransactionType(TransactionType transactionType, [FromQuery] bool isInternational,Guid fromCurrency, Guid toCurrency)
+        public ActionResult<Fee> GetFeesByTransactionType(TransactionType transactionType, [FromQuery] bool isInternational,string fromCurrency, string toCurrency)
         {
             try
             {
@@ -55,7 +55,7 @@ public class FeeController : ControllerBase
         }
 
         // POST: api/Fee
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<Fee> CreateFee([FromBody] Fee fee)
         {
