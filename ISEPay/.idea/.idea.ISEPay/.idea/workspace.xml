@@ -14,18 +14,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/FeeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/FeeService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransactionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransactionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Fee.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Fee.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/FeeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/FeeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/TransactionsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/TransactionsRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/FeeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/FeeController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="suada-branch" />
+        <entry key="$PROJECT_DIR$/.." value="AntonetaMainBranch" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -50,12 +38,12 @@
     &quot;assignee&quot;: &quot;antonetagjana&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/akamberi/ise_24_25.git",
-    "accountId": "75b65ed6-8aee-4a4f-9091-6a65eb848852"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/akamberi/ise_24_25.git&quot;,
+    &quot;accountId&quot;: &quot;75b65ed6-8aee-4a4f-9091-6a65eb848852&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/294078ecfce6fdb942ecfee089f09717de7a6fcfe5efd9fdb6f4f93c0fb4813/ActionMethodExecutor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/487764c4dc815ef1e9090514895a23ed9e2d8eda1f7fd6958ac0fb25e8437/Guid.cs" root0="FORCE_HIGHLIGHTING" />
@@ -74,22 +62,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.ISEPay: http.executor": "Debug",
-    ".NET Project.ISEPay.BLL.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "XThreadsFramesViewSplitterKey": "0.41732284",
-    "git-widget-placeholder": "antoneta-branch-2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.ISEPay: http.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Project.ISEPay.BLL.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.41732284&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;antoneta-branch-2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ISEPay: http">
     <configuration name="ISEPay.BLL" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -283,19 +271,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs</url>
-          <line>54</line>
-          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay\Controllers\TransactionController.cs" containingFunctionPresentation="Method 'GetTransactionById'">
-            <startOffsets>
-              <option value="1803" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1875" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs</url>

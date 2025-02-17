@@ -14,8 +14,9 @@ namespace ISEPay.BLL.Services.Scoped
         List<Transaction> GetLatestTransactions();
         List<Transaction> GetTransactionsByFilter(DateTime startDate, DateTime endDate, string type);
        
-        Transaction GetTransactionById(Guid transactionId); 
-       
+        Transaction GetTransactionById(Guid transactionId);
+        List<Transaction> GetTransactionsByUserId(Guid userId);
+
     }
     public class TransactionService : ITransactionService
     {
@@ -61,6 +62,12 @@ namespace ISEPay.BLL.Services.Scoped
             }
 
             return transaction;
+        }
+        
+        // New method to get transactions by userId
+        public List<Transaction> GetTransactionsByUserId(Guid userId)
+        {
+            return _transactionsRepository.GetTransactionsByUserId(userId).ToList();
         }
     }
 }
