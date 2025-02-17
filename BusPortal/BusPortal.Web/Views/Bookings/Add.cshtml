@@ -1,0 +1,392 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model BusPortal.Web.Models.DTO.AddBookingViewModel
+
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<div class="container mt-5">
+    <h2>Create New Booking</h2>
+    <form class ="addForm" asp-action="Add" method="post">
+        <div class="form-group mb-3">
+            <label asp-for="StartCity">Start City</label>
+            <select asp-for="StartCity"
+                    class="form-control"
+                    asp-items="ViewBag.StartCities"
+                    id="startCitySelect">
+                <option value="">Select Start City</option>
+            </select>
+            <span asp-validation-for="StartCity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DestinationCity">Destination City</label>
+            <select asp-for="DestinationCity"
+                    class="form-control"
+                    id="destinationCitySelect">
+                <option value="">Select Destination City</option>
+            </select>
+            <span asp-validation-for="DestinationCity" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Price">Price</label>
+            <input asp-for="Price" class="form-control" id="priceInput" readonly />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DepartureTimes">Select Departure Time</label>
+           
+            <select asp-for="DepartureTimes"
+                    class="form-control"
+                    id="DepartureTimes">
+                    <option value="Select Departure and Destination Cities"></option>
+            </select>
+            <span asp-validation-for="DepartureTimes" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DateTime">Date</label>
+            <input type="date" id="DepartureDate" name="DepartureDate" />
+        </div>
+        <div class="form-group mt-3">
+            <label>Select Your Seat</label>
+            @using System.Linq
+
+
+            <div class="bus-layout">
+                <div class="seats-container">
+                    @for (int row = 1; row <= 10; row++)
+                    {
+
+                        <div class="seat-row">
+                            <div class="seat available" data-seat="@(row)A">
+                                <span>@($"{row}A")</span>
+                            </div>
+                            <div class="seat available" data-seat="@(row)B">
+                                <span>@($"{row}B")</span>
+                            </div>
+                            <div class="seat available" data-seat="@(row)C">
+                                <span>@($"{row}C")</span>
+                            </div>
+                            <div class="seat available" data-seat="@(row)D">
+                                <span>@($"{row}D")</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+            <input type="hidden" id="selectedSeat" name="Seat" required />
+        </div>
+
+        <button type="button" class="btn btn-primary" id="createBookingBtn">Create Booking</button>
+    </form>
+</div>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #e3f2fd;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 40px auto;
+    }
+
+    h2 {
+        color: #0d6efd;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .bus-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .seat-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .aisle {
+        width: 20px;
+    }
+
+    .seat {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 2px solid #0d6efd;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .seat:hover {
+            background: #e9ecef;
+        }
+
+        .seat.selected {
+            background: #28a745 !important;
+            color: white;
+        }
+
+        .seat.occupied {
+            background: #dc3545 !important;
+            color: white;
+            cursor: not-allowed;
+        }
+
+    .btn {
+        position: relative;
+        z-index: 10; 
+        width: 100%; 
+        padding: 10px;
+        font-size: 16px;
+    }
+</style>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let selectedSeats = []; // Store selected seats
+            let canSelectSeats = false; // Disable seat selection initially
+
+            //set Date to Today
+            $("#DepartureDate").val(new Date().toISOString().slice(0, 10));
+            // Fetch Destination Cities
+            $('#startCitySelect').change(function () {
+                var startCity = $(this).val();
+                canSelectSeats = false; // Reset seat selection state
+                $('.seat').removeClass('selected'); // Clear selected seats
+                selectedSeats = [];
+                $('#selectedSeat').val('');
+
+                if (startCity) {
+                    $.getJSON('@Url.Action("GetDestinationCities", "Bookings")', { startCity: startCity }, function (data) {
+                        var destinationSelect = $('#destinationCitySelect');
+                        destinationSelect.empty();
+                        destinationSelect.append('<option value="">Select Destination City</option>');
+                        $.each(data, function (index, item) {
+                            destinationSelect.append('<option value="' + item + '">' + item + '</option>');
+                        });
+                    }).fail(function () {
+                        $('#destinationCitySelect').empty().append('<option value="">Select Destination City</option>');
+                    });
+                } else {
+                    $('#destinationCitySelect').empty().append('<option value="">Select Destination City</option>');
+                }
+            });
+
+            var updateAvailableSeats = () => {
+                var optionSelected = $("option:selected", $("#DepartureTimes"));
+                var timeSelected = optionSelected.val();
+                var dateSelected = $("#DepartureDate").val();
+
+                var startCity = $('#startCitySelect').val();
+                var destinationCity = $('#destinationCitySelect').val();
+                if (startCity && destinationCity) {
+                    $.getJSON('@Url.Action("GetLineByRoute", "Lines")', { startCity, destinationCity }, function (line) {
+
+                        $.getJSON('@Url.Action("GetOccupiedSeats", "Bookings")', { lineId: line.id, dateSelected, timeSelected }, function (seats) {
+                            console.log(seats);
+                            $('.seat').removeClass("occupied");
+                            $('.seat').removeClass("selected");
+                            selectedSeats = [];
+                            $('#selectedSeat').val("");
+                            var occupiedSeats = $(".seat").filter(function (item) {
+                                return seats.indexOf($(this).data("seat"))>-1;
+                            });
+                            occupiedSeats.addClass("occupied");
+                        }).fail(function () {
+                           
+                        });
+                    }).fail(function () {
+
+                    });
+                }
+                console.log("seats updated");
+            }
+
+            $('#DepartureTimes').on('change', function (e) {
+                updateAvailableSeats();
+            });
+
+            $('#DepartureDate').on('change', function (e) {
+                updateAvailableSeats();
+            });
+
+            // Enable Seat Selection After Choosing Destination
+            $('#destinationCitySelect').change(function () {
+                var startCity = $('#startCitySelect').val();
+                var destinationCity = $(this).val();
+
+                if (startCity && destinationCity) {
+                    canSelectSeats = true; // Enable seat selection
+                    $.getJSON('@Url.Action("GetDepartureTimes", "Bookings")',
+                        { startCity: startCity, destinationCity: destinationCity }, function (departureTimes) {
+                            var departureTimesSelect = $('#DepartureTimes');
+                            departureTimesSelect.empty();
+
+                            departureTimes.forEach(dt => {
+                                departureTimesSelect.append(`<option value="${dt}">${dt}</option>`);
+                            });
+                            updateAvailableSeats();
+                    
+                        });
+
+                } else {
+                    canSelectSeats = false; // Disable seat selection again
+                    $('.seat').removeClass('selected');
+                    selectedSeats = [];
+                    $('#selectedSeat').val('');
+                }
+            });
+
+            // Fetch Price
+            $('#startCitySelect, #destinationCitySelect').change(function () {
+                var startCity = $('#startCitySelect').val();
+                var destinationCity = $('#destinationCitySelect').val();
+                if (startCity && destinationCity) {
+                    $.getJSON('@Url.Action("GetLineByRoute", "Lines")', { startCity: startCity, destinationCity: destinationCity }, function (line) {
+                        $('#priceInput').val(line.price);
+                        $('#priceInput').data('line-id', line.id);
+                    }).fail(function () {
+                        $('#priceInput').val('');
+                    });
+                } else {
+                    $('#priceInput').val('');
+                }
+            });
+
+            $('.seat').click(function (event) { 
+                if (!canSelectSeats) {
+                    event.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select a Start City and Destination City first.'
+                    });
+                    return;
+                }
+
+                if ($(this).hasClass('occupied')) return; // Ignore occupied seats
+
+                let seatNumber = $(this).data('seat');
+
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                    selectedSeats = selectedSeats.filter(seat => seat !== seatNumber);
+                } else {
+                    if (selectedSeats.length < 1) {
+                        $(this).addClass('selected');
+                        selectedSeats.push(seatNumber);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Limit Reached',
+                            text: 'You can only pick one seat.',
+                        });
+                    }
+                }
+
+                $('#selectedSeat').val(selectedSeats.join(',')); // Update form field
+            });
+
+            // Validate and Submit Form
+            $('.addForm').submit(function (e) {
+                var dateTime = $('#DateTime').val();
+                var departureTime = $('#DepartureTimes').val();
+
+                if (!dateTime || !departureTime) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select a Date and a Departure Time!'
+                    });
+                    return;
+                }
+
+                if (selectedSeats.length === 0) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select at least one seat!'
+                    });
+                }
+            });
+
+            // Create Booking Button Logic
+            $('#createBookingBtn').click(function () {
+                var startCity = $('#startCitySelect').val();
+                var destinationCity = $('#destinationCitySelect').val();
+                var price = $('#priceInput').val();
+                var departureDate = $('#DepartureDate').val();
+                var departureTime = $('#DepartureTimes').val();
+                var lineId = $('#priceInput').data('line-id');
+                var seatNrs = $('#selectedSeat').val();
+
+                if (!departureDate || !departureTime) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select a Date and a Departure Time before proceeding.'
+                    });
+                    return;
+                }
+                if (seatNrs=="") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select a seat before proceeding.'
+                    });
+                    return;
+                }
+
+                if (startCity && destinationCity && price) {
+                    window.location.href = '@Url.Action("CreateCheckoutSession", "Bookings")?startCity=' + startCity + '&destinationCity=' + destinationCity + '&price=' + price + '&departureDate=' + departureDate + '&departureTime=' + departureTime + '&lineId=' + lineId + '&seatNrs=' + seatNrs;
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select both Start and Destination City, and ensure the price is available.'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}

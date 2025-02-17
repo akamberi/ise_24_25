@@ -1,0 +1,220 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<style>
+    .dashboard-container {
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+    
+    .layout-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+    
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+    
+    .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        transition: all 0.3s ease;
+    }
+    
+    .chart-grid.vertical {
+        grid-template-columns: 1fr;
+    }
+    
+    .tile {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .metric-tile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 150px;
+    }
+    
+    .metric-label {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 8px;
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .chart-title {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 16px;
+        text-align: left;
+    }
+    
+    canvas {
+        width: 100% !important;
+        height: 300px !important;
+    }
+    
+    
+</style>
+
+<div class="dashboard-container">
+    <div class="header">
+        <h2>Dashboard</h2>
+        <div class="layout-toggle">
+            <span>Grid Layout</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="layoutToggle">
+                <span class="slider"></span>
+            </label>
+            <span>Vertical Layout</span>
+        </div>
+    </div>
+    
+    <div class="chart-grid">
+        <div class="tile metric-tile">
+            <div class="metric-label">Total Bookings</div>
+            <div class="metric-value">@ViewBag.TotalBookings</div>
+        </div>
+        <div class="tile metric-tile">
+            <div class="metric-label">Total Revenue</div>
+            <div class="metric-value">$@ViewBag.TotalRevenue</div>
+        </div>
+        <div class="tile">
+            <div class="chart-title">Daily Booking Trends</div>
+            <canvas id="dailyBookingsChart"></canvas>
+        </div>
+        <div class="tile">
+            <div class="chart-title">Most Popular Routes</div>
+            <canvas id="topRoutesChart"></canvas>
+        </div>
+       
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Toggle Layout functionality
+    const layoutToggle = document.getElementById('layoutToggle');
+    const chartGrid = document.querySelector('.chart-grid');
+    
+    layoutToggle.addEventListener('change', function() {
+        chartGrid.classList.toggle('vertical');
+        // Trigger resize on all charts to ensure proper rendering
+        [dailyBookingsChart, topRoutesChart, seatOccupancyChart].forEach(chart => {
+            chart.resize();
+        });
+    });
+
+    var pastelColors = ["#FFB3BA", "#FFDFBA", "#BBEE99", "#BAFFC9", "#7777CC"];
+    
+    var ctx1 = document.getElementById('dailyBookingsChart').getContext('2d');
+    var dailyBookingsChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: @Html.Raw(Json.Serialize(ViewBag.DailyBookings.Keys)),
+            datasets: [{
+                label: 'Daily Bookings',
+                data: @Html.Raw(Json.Serialize(ViewBag.DailyBookings.Values)),
+                borderColor: pastelColors[0],
+                backgroundColor: pastelColors[0] + '80',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    var ctx2 = document.getElementById('topRoutesChart').getContext('2d');
+    var topRoutesChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(ViewBag.TopRoutes.Keys)),
+            datasets: [{
+                label: 'Top Routes',
+                data: @Html.Raw(Json.Serialize(ViewBag.TopRoutes.Values)),
+                borderColor: pastelColors[2],
+                backgroundColor: pastelColors[2] + '80',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+</script>

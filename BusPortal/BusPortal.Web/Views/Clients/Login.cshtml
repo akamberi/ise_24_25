@@ -1,0 +1,63 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model BusPortal.Web.Models.DTO.LoginViewModel
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h1 class="display-6 text-center text-primary mb-4">Login</h1>
+        <form asp-action="Login" asp-controller="Clients" method="post">
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label fw-semibold">Username</label>
+                <input asp-for="Username" class="form-control" placeholder="Enter your username" />
+                <span asp-validation-for="Username" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                <input asp-for="Password" class="form-control" placeholder="Enter your password" type="password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Login</button>
+            <div class="mt-3 text-center">
+                <p class="mb-2">Don't have an account? 
+                    <a asp-action="Register" asp-controller="Clients" class="text-primary text-decoration-none">Register here</a>.
+                </p>
+                <p>Forgot your password? 
+                    <a asp-action="ForgotPassword" asp-controller="Clients" class="text-primary text-decoration-none">Reset here</a>.
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Display error message if available
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '@TempData["ErrorMessage"]'
+                    });
+                </text>
+            }
+
+            // Display success message if available
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: '@TempData["SuccessMessage"]'
+                    });
+                </text>
+            }
+        });
+    </script>
+}

@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Success";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .confirmation-card {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card confirmation-card text-center">
+            <div class="card-body">
+                <h2 class="card-title text-success">Booking Confirmed!</h2>
+                <p class="card-text">Thank you for booking with us, <strong>@ViewBag.success.clientName</strong>!</p>
+                <hr>
+                <h5>Travel Details</h5>
+                <p><strong>From:</strong> @ViewBag.success.startingCity</p>
+                <p><strong>To:</strong> @ViewBag.success.destinationCity</p>
+                <p><strong>Departure Date:</strong> @ViewBag.success.departureDate</p>
+                <p><strong>Departure Time:</strong> @ViewBag.success.departureTime</p>
+                <p><strong>Seat Number:</strong> @ViewBag.success.seatNrs</p>
+                <p><strong>Price:</strong> $@ViewBag.success.price</p>
+                <hr>
+                <p class="text-muted">Safe travels and see you on board!</p>
+                <a href="/" class="btn btn-primary">Go to Homepage</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

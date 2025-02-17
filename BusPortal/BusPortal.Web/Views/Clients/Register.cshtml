@@ -1,0 +1,74 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model BusPortal.Common.Models.RegisterViewModel
+
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="max-width: 450px; width: 100%;">
+        <h1 class="display-6 text-center text-primary mb-4">Register</h1>
+        <form asp-action="Register" asp-controller="Clients" method="post">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-semibold">Username</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter your username" autocomplete="off" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter your email" autocomplete="off" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Enter a password" autocomplete="off" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirm Password</label>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Re-enter your password" autocomplete="off" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Register</button>
+            <div class="mt-3 text-center">
+                <p class="mb-2">Already have an account? 
+                    <a asp-action="Login" asp-controller="Clients" class="text-primary text-decoration-none">Login here</a>.
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Display error message if available
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '@TempData["ErrorMessage"]'
+                    });
+                </text>
+            }
+
+            // Display success message if available
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: '@TempData["SuccessMessage"]'
+                    });
+                </text>
+            }
+        });
+    </script>
+}
+
+
+
