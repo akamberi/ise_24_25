@@ -6,7 +6,7 @@ namespace ISEPay.Controllers
 {
     [ApiController]
     [Route("transactions")]
-    [Authorize(Policy = "Authenticated")]
+  //  [Authorize(Policy = "Authenticated")]
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
@@ -39,6 +39,25 @@ namespace ISEPay.Controllers
             {
                 var transactions = _transactionService.GetTransactionsByFilter(startDate, endDate, type);
                 return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+        
+        // 3. Get a transaction by transactionId
+        [HttpGet("{transactionId}")]
+        public IActionResult GetTransactionById(Guid transactionId)
+        {
+            try
+            {
+                var transaction = _transactionService.GetTransactionById(transactionId);
+                return Ok(transaction);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { Message = ex.Message });
             }
             catch (Exception ex)
             {

@@ -50,11 +50,6 @@ namespace ISEPay.BLL.Services.Scoped
             
             _usersRepository.SaveChanges();
         }
-
-
-
-        
-        
         public Address GetAddressByUserId(Guid userId)
         {
             var address = _addressRepository.GetByUserId(userId);  

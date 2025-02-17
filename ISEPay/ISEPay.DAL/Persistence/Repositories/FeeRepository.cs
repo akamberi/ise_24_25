@@ -14,7 +14,7 @@ namespace ISEPay.DAL.Persistence.Repositories
         Fee GetById(Guid id);
         IEnumerable<Fee> GetAll();
         IEnumerable<Fee> GetFeesByTransactionType(TransactionType transactionType);
-        Fee GetFeeByCurrencyPair(Guid fromCurrency, Guid toCurrency, TransactionType transactionType);
+        Fee GetFeeByCurrencyPair(string fromCurrency, string toCurrency, TransactionType transactionType);
         void SaveChanges();
         void Delete(Fee fee);
     }
@@ -51,7 +51,7 @@ namespace ISEPay.DAL.Persistence.Repositories
                 .ToList();
         }
         
-        public Fee GetFeeByCurrencyPair(Guid fromCurrency, Guid toCurrency, TransactionType transactionType)
+        public Fee GetFeeByCurrencyPair(string fromCurrency, string toCurrency, TransactionType transactionType)
         {
             return _context.Fees
                 .Where(f => f.FromCurrency == fromCurrency && f.ToCurrency == toCurrency && f.TransactionType == transactionType && f.IsActive)

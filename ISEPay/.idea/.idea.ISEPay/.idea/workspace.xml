@@ -15,6 +15,18 @@
   <component name="ChangeListManager">
     <list default="true" id="cf5c6b13-1bb6-4d93-b026-f2132f1a88ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ISEPay/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/AddressService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/FeeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/FeeService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransactionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransactionService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Scoped/TransferService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.BLLTest/Services/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Fee.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Entities/Fee.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/FeeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/FeeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/TransactionsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay.DAL/Persistence/Repositories/TransactionsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/FeeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/FeeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +39,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="antoneta-branch-2" />
+        <entry key="$PROJECT_DIR$/.." value="suada-branch" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -38,27 +50,15 @@
     &quot;assignee&quot;: &quot;antonetagjana&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/akamberi/ise_24_25.git&quot;,
-    &quot;accountId&quot;: &quot;75b65ed6-8aee-4a4f-9091-6a65eb848852&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/akamberi/ise_24_25.git",
+    "accountId": "75b65ed6-8aee-4a4f-9091-6a65eb848852"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Scoped/AccountService.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.BLLTest/Services/Startup.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Migrations/ISEPayDBContextModelSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Migrations/ISEPayDBContextModelSnapshot.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/ISEPayDBContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/ISEPayDBContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay.DAL/Persistence/Repositories/AccountsRepository.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/User/Documents/GitHub/ise_24_25/ISEPay/ISEPay/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/294078ecfce6fdb942ecfee089f09717de7a6fcfe5efd9fdb6f4f93c0fb4813/ActionMethodExecutor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/487764c4dc815ef1e9090514895a23ed9e2d8eda1f7fd6958ac0fb25e8437/Guid.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Controllers/RolesController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ISEPay/Properties/launchSettings.json" root0="FORCE_HIGHLIGHTING" />
@@ -69,15 +69,19 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2qnnjd6djUsvbKUc78d9Z3RQlQN" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.ISEPay: http.executor": "Run",
+    ".NET Launch Settings Profile.ISEPay: http.executor": "Debug",
     ".NET Project.ISEPay.BLL.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "XThreadsFramesViewSplitterKey": "0.41732284",
+    "git-widget-placeholder": "antoneta-branch-2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -216,61 +220,28 @@
       <workItem from="1735307350389" duration="6635000" />
       <workItem from="1736368982829" duration="829000" />
       <workItem from="1736608696136" duration="1780000" />
-      <workItem from="1736624774468" duration="11022000" />
-      <workItem from="1736982095299" duration="1834000" />
-      <workItem from="1737402274343" duration="793000" />
-      <workItem from="1737652087180" duration="2637000" />
-      <workItem from="1737654967488" duration="11924000" />
-      <workItem from="1738419061550" duration="570000" />
-      <workItem from="1738419663759" duration="5126000" />
-      <workItem from="1738424882602" duration="15161000" />
-      <workItem from="1738613847650" duration="57000" />
-      <workItem from="1738752314704" duration="1616000" />
-      <workItem from="1738763386138" duration="127000" />
-      <workItem from="1738763576889" duration="5962000" />
-      <workItem from="1738937160552" duration="1023000" />
+      <workItem from="1736626947333" duration="11750000" />
+      <workItem from="1739703589984" duration="351000" />
+      <workItem from="1739705287149" duration="2067000" />
+      <workItem from="1739744173858" duration="15021000" />
     </task>
-    <task id="LOCAL-00001" summary="AddAddress and EditAddress">
+    <task id="LOCAL-00001" summary="deposit and withdraw implementation">
       <option name="closed" value="true" />
-      <created>1736699092032</created>
+      <created>1738863720062</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1736699092033</updated>
+      <updated>1738863720062</updated>
     </task>
-    <task id="LOCAL-00002" summary="Transfers and fee implementation">
+    <task id="LOCAL-00002" summary="Commit Changes">
       <option name="closed" value="true" />
-      <created>1738512328538</created>
+      <created>1739739957713</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1738512328538</updated>
+      <updated>1739739957713</updated>
     </task>
-    <task id="LOCAL-00003" summary="changing parameters">
-      <option name="closed" value="true" />
-      <created>1738937460641</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1738937460641</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Resolved merge conflicts (Merged Suada's branch)">
-      <option name="closed" value="true" />
-      <created>1739641652821</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1739641652821</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Resolved merge conflicts (Merged Arjol's branch)">
-      <option name="closed" value="true" />
-      <created>1739642398017</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1739642398017</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -278,37 +249,68 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="anxhelo-branch" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
-    <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="AddAddress and EditAddress" />
-    <MESSAGE value="Transfers and fee implementation" />
-    <MESSAGE value="changing parameters" />
-    <MESSAGE value="Resolved merge conflicts (Merged Suada's branch)" />
-    <MESSAGE value="Resolved merge conflicts (Merged Arjol's branch)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Resolved merge conflicts (Merged Arjol's branch)" />
+    <MESSAGE value="deposit and withdraw implementation" />
+    <MESSAGE value="Commit Changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit Changes" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs</url>
+          <line>82</line>
+          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay\Controllers\AccountController.cs" containingFunctionPresentation="Method 'Deposit'">
+            <startOffsets>
+              <option value="2555" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2594" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ISEPay/Controllers/AccountController.cs</url>
+          <line>98</line>
+          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay\Controllers\AccountController.cs" containingFunctionPresentation="Method 'Withdraw'">
+            <startOffsets>
+              <option value="3012" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3055" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ISEPay/Controllers/TransactionController.cs</url>
+          <line>54</line>
+          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay\Controllers\TransactionController.cs" containingFunctionPresentation="Method 'GetTransactionById'">
+            <startOffsets>
+              <option value="1803" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1875" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ISEPay/Controllers/AddressController.cs</url>
+          <line>60</line>
+          <properties documentPath="C:\Users\User\Documents\GitHub\ise_24_25\ISEPay\ISEPay\Controllers\AddressController.cs" containingFunctionPresentation="Method 'GetAddressByUserId'">
+            <startOffsets>
+              <option value="2040" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2096" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

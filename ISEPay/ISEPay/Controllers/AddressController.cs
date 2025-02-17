@@ -52,6 +52,20 @@ namespace ISEPay.Controllers
             {
                 return StatusCode(500, new { Message = "Error while adding the address", Error = ex.Message });
             } }
+       
+        [HttpGet("user/{userId}")]
+        public IActionResult GetAddressByUserId(Guid userId)
+        {
+            try
+            {
+                var address = addressService.GetAddressByUserId(userId);
+                return Ok(address);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Error while fetching the address", Error = ex.Message });
+            }
+        }
         
         
         

@@ -28,9 +28,11 @@ namespace ISEPay.DAL.Persistence.Repositories
   
         public Account? FindAccountByAccountNumber(string accountNumber)
         {
+            Console.WriteLine($"Searching for account with AccountNumber: {accountNumber}");
             return _context.Accounts
                 .Include(a => a.User)
                 .FirstOrDefault(a => a.AccountNumber == accountNumber); // Assuming AccountNumber is a property of Account entity
+       
         }
 
             // Add a new account

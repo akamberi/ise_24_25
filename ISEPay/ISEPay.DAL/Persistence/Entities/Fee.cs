@@ -21,7 +21,7 @@ namespace ISEPay.DAL.Persistence.Entities
         public Guid ToCountryId { get; set; }
         public DateTime EffectiveDate { get; set; }
         
-        public Guid FromCurrency { get; set; }
-        public Guid ToCurrency { get; set; }
+        public string FromCurrency { get; set; }
+        public string ToCurrency { get; set; }
     }
 }
