@@ -1,0 +1,3 @@
+[submodule "PostalManagementSystem"]
+	path = PostalManagementSystem
+	url = git@github.com:andripeti/PostalManagementAPI.git
